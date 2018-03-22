@@ -61,7 +61,7 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
             GroupModel group = new GroupModel(groupId, groupName);
             student = new StudentModel(id, firstName, lastName, email, password, group, wallet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException();
         }
         return student;
     }
