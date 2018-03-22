@@ -9,12 +9,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class StudentDaoTest extends TestableDatabaseUnit{
 
     private StudentDao studentDao = new StudentDao();
-
 
     @Mock
     private StudentModel mockStudent = Mockito.mock(StudentModel.class);
@@ -34,6 +34,11 @@ class StudentDaoTest extends TestableDatabaseUnit{
 
     @Test
     void insertNewStudent() {
+    }
+
+    @Test
+    void testGetByID1throwsIllegalArgumentEx() {
+        assertThrows(IllegalArgumentException.class, () -> {studentDao.getStudentByIdLogin(0);});
     }
 
     @Test
