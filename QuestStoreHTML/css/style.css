@@ -1,0 +1,38 @@
+body{
+  margin: 0;
+}
+
+.containter{
+  position: absolute;
+  min-height: 100%;
+  min-width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(../img/login.jpg);
+  background-position: 0 30%;
+}
+
+.login-form{
+  position: absolute;
+  left: 50%;
+  top: 72%;
+  transform: translate(-50%, -50%);
+
+}
+
+.login-form input{
+  text-align: center;
+  display: block;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.login-form input[type=submit]{
+  background: linear-gradient(#5a40c9, #ab1f96);
+  color: white;
+  margin-left: 30%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
