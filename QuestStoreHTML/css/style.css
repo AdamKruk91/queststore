@@ -1,7 +1,18 @@
 body{
   margin: 0;
-}
+  background-color: silver;
 
+}
+/* .content{
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+} */
 .containter{
   position: absolute;
   min-height: 100%;
@@ -35,4 +46,82 @@ body{
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+header {
+  background: url(../img/palmy.png), linear-gradient(#d03fba, #8eb0e7);
+  background-repeat: repeat-x;
+  text-align: center;
+  width: 100%;
+  padding: 1% 0 1% 0;
+}
+
+footer{
+  color: white;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  height: 2em;
+  width: 100%;
+  background: #8eb0e7;
+}
+
+nav{
+  margin: auto;
+}
+
+.aside-right{
+  display: inline-block;
+  width: 25%;
+  float: right;
+}
+
+.aside-left{
+  display: inline-block;
+  width: 25%;
+  float: left;
+}
+
+section{
+  margin-top: 1%;
+  height: 620px;
+  display: inline-block;
+  width: 49%;
+  border: black 1px solid;
+}
+
+.button{
+     display: inline-block;
+     background-color: #8eb0e7;
+     border: none;
+     color: white;
+     border-radius: 15px;
+     text-transform: uppercase;
+     padding: 7% 7%;
+     text-align: center;
+     text-decoration: none;
+     font-size: 16px;
+     width: 100px;
+}
+
+.button:hover{
+  background-color: black;
+
+}
+
+.sign-out-button{
+  float: right;
+  margin-right: 30%;
+  margin-top: 20%;
+  background-color: #e10aca;
+  padding: 5% 4%;
+}
+
+nav ul li {
+  text-align: center;
+  margin-top: 20%;
+}
+
+nav ul {
+  list-style-type: none;
 }
