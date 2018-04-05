@@ -168,34 +168,3 @@ footer{
 .submit-button{
   float: right;
 }
-
-.profile-info{
-  font-size: 20px;
-}
-
-.profile-info ul li {
-  list-style-type: none;
-  margin-top: 20px;
-}
-
-.user-info{
-  float: none;
-  margin: 0 auto;
-  margin-top: 10%;
-  background-color: white;
-  border-radius: 10px;
-  border: 1px black solid;
-}
-
-.contact-button{
-  position: relative;
-  width: 100%;
-  text-transform: uppercase;
-  font-weight: bold;
-  display: inline-block;
-  text-align: center;
-  padding: 5% 5%;
-  background-color:#e10aca;
-  color: white;
-  text-decoration: none;
-}
