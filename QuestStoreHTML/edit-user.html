@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/create-user.css">
+  <link rel="stylesheet" href="css/user-profile.css">
+  <link rel="stylesheet" href="css/edit-user.css">
+  <title>Edit User</title>
+</head>
+<body>
+
+  <header>
+    <img src="img/logo.png" alt="QuestStore logo">
+  </header>
+  <div class="row">
+  <aside class="menu col-3">
+  <nav>
+    <ul>
+      <li><a href="create-student.html" class="button">Create student</a></li>
+      <li><a href="#" class="button">Create quest</a></li>
+      <li><a href="#" class="button">Create artifact</a></li>
+      <li><a href="#" class="button">Edit student</a></li>
+      <li><a href="#" class="button">Display students</a></li>
+      <li><a href="#" class="button">Display students wallets</a></li>
+    </ul>
+  </nav>
+</aside>
+  <section class="col-6">
+    <div class="col-6 area">
+        <div class="col-12 dropdown">
+            <label for="group">Choose student:</label>
+            <select name="group" onchange="java_script_:show(this.options[this.selectedIndex].value)">
+              <option value="1" selected>Cooler Codecooler</option>
+              <option value="2">Marek Markdown</option>
+              <option value="3">Camille Cascade</option>
+            </select>
+            <script>
+            function show(aval) {
+               if (aval == "1") {
+                   hiddenDiv1.style.display='inline-block';
+                   hiddenDiv2.style.display='none';
+                   hiddenDiv3.style.display='none';
+                   Form.fileURL.focus();
+               }else if (aval == "2"){
+                   hiddenDiv2.style.display='inline-block';
+                   hiddenDiv1.style.display='none';
+                   hiddenDiv3.style.display='none';
+                   Form.fileURL.focus();
+               }else if (aval == "3") {
+                   hiddenDiv3.style.display='inline-block';
+                   hiddenDiv1.style.display='none';
+                   hiddenDiv2.style.display='none';
+                   Form.fileURL.focus();
+               }
+           }
+           </script>
+        </div>
+    <div class="col-12">
+        <div id="hiddenDiv1" style="display:inline-block">
+            <img class="col-12" src="img/emptyprofile.png" alt="Profile picture">
+            <div class="col-12 profile-info">
+              <ul class="edition">
+                <li><input type="text" placeholder="Name: Cooler"</li>
+                <li><input type="text" placeholder="Surname: Codecooler"</li>
+                <li><input type="text" placeholder="Email: john@gmail.com"</li>
+                <li><input type="text" placeholder="Class: KRK-2017-2"</li>
+                <li><input type="text" placeholder="Level: Master"</li>
+                <li><progress class="col-12" value="70" max="100">0%</progress></li>
+              </ul>
+        </div>
+        </div>
+        <div id="hiddenDiv2" style="display:none">
+            <img class="col-12" src="img/emptyprofile.png" alt="Profile picture">
+                <div class="col-12 profile-info">
+                  <ul class="edition">
+                    <li><input type="text" placeholder="Name: Marek"</li>
+                    <li><input type="text" placeholder="Surname: Markdown"</li>
+                    <li><input type="text" placeholder="Email: mark@down.pl"</li>
+                    <li><input type="text" placeholder="Class: KRK-2017-2"</li>
+                    <li><input type="text" placeholder="Level: Rookie"</li>
+                    <li><progress class="col-12" value="30" max="100">0%</progress></li>
+                  </ul>
+                </div>
+        </div>
+        <div id="hiddenDiv3" style="display:none">
+            <img class="col-12" src="img/emptyprofile.png" alt="Profile picture">
+                <div class="col-12 profile-info">
+                  <ul class="edition">
+                    <li><input type="text" placeholder="Name: Camille"</li>
+                    <li><input type="text" placeholder="Surname: Cascade"</li>
+                    <li><input type="text" placeholder="Email: camil@mail.com"</li>
+                    <li><input type="text" placeholder="Class: KRK-2017-2"</li>
+                    <li><input type="text" placeholder="Level: Master"</li>
+                    <li><progress class="col-12" value="90" max="100">0%</progress></li>
+              </ul>
+            </div>
+        </div>
+    </div>
+
+
+       <input class="col-4 submit-button" type="submit" value="Finish edition!" disabled>
+    </div>
+  </section>
+
+  <aside class="col-3 right-panel">
+    <a href="index.html" class="sign-out-button button">Sign out</a>
+    <script id="calendar" type="text/javascript" src="http://404bajery.pl/kalendarz/kal.php?tlo=8eb0e7&czcionka=FFFFFF&nag=8eb0e7&dni=8eb0e7&dzis=0099CC&szer=200"></script>
+</aside>
+</div>
+  <footer class="col-12">
+    Wszystkie prawa zastrzeżone.
+  </footer>
+</body>
+</html>

@@ -53,6 +53,7 @@ body {
 
 [class*="col-"] {
     width: 100%;
+
 }
 @media only screen and (min-width: 768px) {
     .col-1 {width: 8.33%;}
@@ -164,63 +165,7 @@ footer{
   margin-top: 10px;
   text-align: center;
 }
-
-.submit-button{
-  position: relative;
-  margin-left: 20%;
-  margin-right: 20%;
-  width: 60%;
-  background-color: #e10aca;
-  color: white;
-  border-radius: 15px;
-  text-align: center;
-}
-.submit-button:hover{
-    background-color: white;
-    color: black;
-}
 h2{
     font-style: italic;
     text-align: center;
-}
-#mentors {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-
-}
-
-#mentors td, #mentors th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-#mentors tr:nth-child(even){background-color: #f2f2f2;}
-
-#mentors tr:hover {
-    background-color: #ddd;
-    cursor: pointer;
-}
-
-#mentors th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #8eb0e7;
-    color: white;
-}
-
-.dropdown{
-    display: block;
-    margin-top: 5px;
-    border: 1px solid #8eb0e7;
-    background: #8eb0e7;
-    border-radius: 15px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    text-align: center;
-}
-
-label[for=group]{
-    color: white;
-    text-transform: uppercase;
 }
