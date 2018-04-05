@@ -75,7 +75,7 @@ body {
 [class*="col-"] {
     float: left;
     padding: 15px;
-    border: 1px solid red;
+
 }
 
 .row::after {
@@ -126,9 +126,7 @@ nav ul li {
   margin-bottom: 5%;
 }
 
-footer{
-  text-align: center;
-}
+
 
 .sign-out-button{
   margin-top: 0;
@@ -149,11 +147,12 @@ footer{
   color: white;
   text-align: center;
   background: #8eb0e7;
+
 }
 
 
 .right-panel{
-  margin-top: 3%;
+  float: right;
 }
 
 .area{
