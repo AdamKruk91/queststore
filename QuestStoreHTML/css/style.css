@@ -167,7 +167,18 @@ footer{
 }
 
 .submit-button{
-  float: right;
+  position: relative;
+  margin-left: 20%;
+  margin-right: 20%;
+  width: 60%;
+  background-color: #e10aca;
+  color: white;
+  border-radius: 15px;
+  text-align: center;
+}
+.submit-button:hover{
+    background-color: white;
+    color: black;
 }
 h2{
     font-style: italic;
