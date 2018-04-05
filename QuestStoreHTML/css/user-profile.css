@@ -7,10 +7,14 @@
   margin-top: 20px;
 }
 
+.profile-info > ul {
+  padding-left: 0px;
+}
+
 .user-info{
   float: none;
   margin: 0 auto;
-  margin-top: 10%;
+  margin-top: 5%;
   background-color: white;
   border-radius: 10px;
   border: 1px black solid;
