@@ -137,6 +137,7 @@ footer{
   width: 200px;
   background-color: #e10aca;
   padding: 3% 3%;
+  margin-bottom: 20px;
 }
 
 .sign-out-button:hover{
@@ -158,7 +159,6 @@ footer{
 .area{
   float: none;
   margin: 0 auto;
-  margin-top: 15%;
 }
 
 .area input{
@@ -168,4 +168,34 @@ footer{
 
 .submit-button{
   float: right;
+}
+h2{
+    font-style: italic;
+    text-align: center;
+}
+#mentors {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+#mentors td, #mentors th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#mentors tr:nth-child(even){background-color: #f2f2f2;}
+
+#mentors tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+#mentors th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #8eb0e7;
+    color: white;
 }
