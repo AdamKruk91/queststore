@@ -1,0 +1,26 @@
+#mentors {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+#mentors td, #mentors th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#mentors tr:nth-child(even){background-color: #f2f2f2;}
+
+#mentors tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+#mentors th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #8eb0e7;
+    color: white;
+}
