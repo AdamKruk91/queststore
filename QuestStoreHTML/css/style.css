@@ -75,7 +75,7 @@ body {
 [class*="col-"] {
     float: left;
     padding: 15px;
-    border: 1px solid red;
+
 }
 
 .row::after {
@@ -126,9 +126,7 @@ nav ul li {
   margin-bottom: 5%;
 }
 
-footer{
-  text-align: center;
-}
+
 
 .sign-out-button{
   margin-top: 0;
@@ -148,11 +146,12 @@ footer{
   color: white;
   text-align: center;
   background: #8eb0e7;
+
 }
 
 
 .right-panel{
-  margin-top: 3%;
+  float: right;
 }
 
 .area{
@@ -168,4 +167,35 @@ footer{
 
 .submit-button{
   float: right;
+}
+
+.profile-info{
+  font-size: 20px;
+}
+
+.profile-info ul li {
+  list-style-type: none;
+  margin-top: 20px;
+}
+
+.user-info{
+  float: none;
+  margin: 0 auto;
+  margin-top: 10%;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px black solid;
+}
+
+.contact-button{
+  position: relative;
+  width: 100%;
+  text-transform: uppercase;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  padding: 5% 5%;
+  background-color:#e10aca;
+  color: white;
+  text-decoration: none;
 }
