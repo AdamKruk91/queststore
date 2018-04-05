@@ -1,26 +1,10 @@
-body{
-  margin: 0;
-  background-color: silver;
-
+* {
+    box-sizing: border-box;
 }
-/* .content{
-  background-color: black;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-  flex-wrap: wrap;
 
-} */
-.containter{
-  position: absolute;
-  min-height: 100%;
-  min-width: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-image: url(../img/login.jpg);
-  background-position: 0 30%;
+html {
+position: relative;
+min-height: 100%;
 }
 
 .login-form{
@@ -48,80 +32,140 @@ body{
   cursor: pointer;
 }
 
+.containter{
+  position: absolute;
+  min-height: 100%;
+  min-width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(../img/login.jpg);
+  background-position: 0 30%;
+}
+
+
+body {
+    margin: 0;
+    margin-bottom: 70px;
+    padding: 0;
+    background-color: #ECF3FE;
+
+}
+
+[class*="col-"] {
+    width: 100%;
+}
+@media only screen and (min-width: 768px) {
+    .col-1 {width: 8.33%;}
+    .col-2 {width: 16.66%;}
+    .col-3 {width: 25%;}
+    .col-4 {width: 33.33%;}
+    .col-5 {width: 41.66%;}
+    .col-6 {width: 50%;}
+    .col-7 {width: 58.33%;}
+    .col-8 {width: 66.66%;}
+    .col-9 {width: 75%;}
+    .col-10 {width: 83.33%;}
+    .col-11 {width: 91.66%;}
+    .col-12 {width: 100%;}
+}
+
+@media (min-width:768px){ footer{position:absolute;bottom:0;height:60px;width:100%;}}
+
+
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+    border: 1px solid red;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+html {
+    font-family: "Lucida Sans", sans-serif;
+}
 header {
-  background: url(../img/palmy.png), linear-gradient(#d03fba, #8eb0e7);
+  background: url(../img/palmy.png), linear-gradient(#d03fba, #8eb0e7, #ECF3FE);
   background-repeat: repeat-x;
   text-align: center;
-  width: 100%;
   padding: 1% 0 1% 0;
+
 }
 
-footer{
-  color: white;
-  position: absolute;
-  bottom: 0;
-  text-align: center;
-  height: 2em;
-  width: 100%;
-  background: #8eb0e7;
-}
-
-nav{
-  margin: auto;
-}
-
-.aside-right{
-  display: inline-block;
-  width: 25%;
-  float: right;
-}
-
-.aside-left{
-  display: inline-block;
-  width: 25%;
-  float: left;
-}
-
-section{
+.menu{
   margin-top: 1%;
-  height: 620px;
-  display: inline-block;
-  width: 49%;
-  border: black 1px solid;
 }
-
-.button{
-     display: inline-block;
-     background-color: #8eb0e7;
-     border: none;
-     color: white;
-     border-radius: 15px;
-     text-transform: uppercase;
-     padding: 7% 7%;
-     text-align: center;
-     text-decoration: none;
-     font-size: 16px;
-     width: 100px;
+.menu ul {
+    margin-left: 25%;
+    list-style-type: none;
+    padding: 0;
 }
-
-.button:hover{
-  background-color: black;
-
+.button {
+  display: block;
+  background-color: #8eb0e7;
+  color: white;
+  border-radius: 15px;
+  text-transform: uppercase;
+  padding: 7% 7%;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  width: 200px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
-
-.sign-out-button{
-  float: right;
-  margin-right: 30%;
-  margin-top: 20%;
-  background-color: #e10aca;
-  padding: 5% 4%;
+.menu li .button:hover {
+    background-color: black;
 }
 
 nav ul li {
   text-align: center;
-  margin-top: 20%;
+  margin-top: 10%;
+  margin-bottom: 5%;
 }
 
-nav ul {
-  list-style-type: none;
+footer{
+  text-align: center;
+}
+
+.sign-out-button{
+  margin-top: 0;
+  display: inline-block;
+  text-align: center;
+  width: 200px;
+  background-color: #e10aca;
+  padding: 3% 3%;
+}
+
+.sign-out-button:hover{
+  background-color: white;
+  color: black;
+}
+
+footer{
+  color: white;
+  text-align: center;
+  background: #8eb0e7;
+}
+
+
+.right-panel{
+  margin-top: 3%;
+}
+
+.area{
+  float: none;
+  margin: 0 auto;
+  margin-top: 15%;
+}
+
+.area input{
+  margin-top: 10px;
+  text-align: center;
+}
+
+.submit-button{
+  float: right;
 }

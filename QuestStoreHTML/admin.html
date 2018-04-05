@@ -8,12 +8,12 @@
   <title>Admin Panel</title>
 </head>
 <body>
-  <div class="content">
 
   <header>
     <img src="img/logo.png" alt="QuestStore logo">
   </header>
-  <aside class="aside-left">
+  <div class="row">
+  <aside class="menu col-3">
   <nav>
     <ul>
       <li><a href="#" class="button">Create mentor</a></li>
@@ -23,16 +23,25 @@
     </ul>
   </nav>
 </aside>
-  <section>
-    SEKCJA SEKCJA
+  <section class="col-6">
+    <div class="col-6 area">
+      <h2>Create mentor!</h2>
+      <form>
+        <input class="col-12" type="text" placeholder="Name">
+        <input class="col-12" type="text" placeholder="Surname">
+        <input class="col-12" type="email" placeholder="Email">
+        <input class="col-12" type="password" placeholder="Password">
+        <input class="col-4 submit-button" type="submit" value="Add new mentor!" disabled>
+
+      </form>
+    </div>
   </section>
 
-  <aside class="aside-right">
+  <aside class="col-3 right-panel">
     <a href="index.html" class="sign-out-button button">Sign out</a>
-
   </aside>
-  </div>
-  <footer>
+</div>
+  <footer class="col-12">
     Wszystkie prawa zastrzeżone.
   </footer>
 </body>
