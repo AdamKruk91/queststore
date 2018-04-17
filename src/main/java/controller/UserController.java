@@ -1,15 +1,28 @@
 package controller;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import dao.LoginDao;
-import view.UserView;
+import view.LoginView;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 
-public class UserController {
+public class UserController implements HttpHandler {
 
-    private UserView view;
+    private LoginView view;
 
     public UserController() {
-        view = new UserView();
+        view = new LoginView();
+    }
+
+    public void handle(HttpExchange httpExchange) throws IOException {
+        String response = view.getLoginScreen();
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
     private String logInUser(String login, String password) {
@@ -43,7 +56,7 @@ public class UserController {
 
 
     private void displayUserMenu(int loginId, String statusName) {
-        view.displayWelcomeMessage();
+//        view.displayWelcomeMessage();
         switch (statusName) {
             case "Admin":
                 AdminController adminController = new AdminController();
