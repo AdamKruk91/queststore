@@ -95,6 +95,11 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         return loginDao.findLoginId(email, password);
     }
 
+    public void deleteStudent(int idStudent){
+        String condition = "Student.id_student = " +idStudent;
+        removeDataFromTable("Student", condition);
+    }
+
     public void insertNewStudent(StudentModel student) {
         int idLogin = insertNewLogin(student.getEmail(), student.getPassword());
         int id_group = student.getGroupId();
