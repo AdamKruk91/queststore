@@ -9,8 +9,6 @@ public interface StudentDaoInterface {
 
     StudentModel getStudentByIdLogin(int idLogin);
 
-    StudentModel createStudentObject(ResultSet result);
-
     List<StudentModel> getStudentsCollection();
 
     void insertNewStudent(StudentModel student);

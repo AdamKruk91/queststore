@@ -1,0 +1,28 @@
+.submit-button{
+  position: relative;
+  margin-left: 20%;
+  margin-right: 20%;
+  width: 60%;
+  background-color: #e10aca;
+  color: white;
+  border-radius: 15px;
+  text-align: center;
+}
+.submit-button:hover{
+    background-color: white;
+    color: black;
+}
+.dropdown{
+    display: block;
+    margin-top: 5px;
+    border: 1px solid #8eb0e7;
+    background: #8eb0e7;
+    border-radius: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    text-align: center;
+}
+
+label[for=group]{
+    color: white;
+    text-transform: uppercase;
+}

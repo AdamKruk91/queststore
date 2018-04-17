@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 public class ManipulationDao implements UserDaoInterface {
 
-    private DatabaseConnection database = DatabaseConnection.getInstance();
-    private Connection connection;
-    private Statement statement;
+    private static DatabaseConnection database = DatabaseConnection.getInstance();
+    private static Connection connection;
+    private static Statement statement;
 
     public ManipulationDao(){
         connection = database.getConnection();

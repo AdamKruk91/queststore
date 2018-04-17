@@ -11,13 +11,14 @@ import model.MentorModel;
 
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
+    private LoginDao loginDao = new LoginDao();
+
     private int getIdStatus() {
         ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
         return getIntFromResult(result, "id_status");
     }
 
     private int insertNewLogin(String email, String password) {
-        LoginDao loginDao = new LoginDao();
         int idStatus = loginDao.findStatusIdByName("Mentor");
         loginDao.insertNewLogin(email, password, idStatus);
         return loginDao.findLoginId(email, password);

@@ -44,7 +44,7 @@ public class StudentController {
     }
 
     private void  displayWallet(StudentModel student) {
-        view.displayWallet(student.getWallet());
+        view.displayWallet(student.getMyWallet());
         TransactionDao transactionDao = new TransactionDao();
         List<ItemModel> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
         view.displayBoughtArtifacts(artifactsCollection);

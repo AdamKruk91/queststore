@@ -3,11 +3,11 @@ package dao;
 import java.sql.*;
 
 
-public final class DatabaseConnection {
+public class DatabaseConnection {
 
     private static DatabaseConnection instance = null;
-    private Connection connection = null;
-    private final String DBNAME = "jdbc:sqlite:Queststore.db";
+    private static Connection connection = null;
+    private static String DBNAME = "jdbc:sqlite:Queststore.db";
 
     private DatabaseConnection() {
         getConnectionToDatabase();
@@ -17,6 +17,10 @@ public final class DatabaseConnection {
             instance = new DatabaseConnection();
         }
         return instance;
+    }
+
+    public static void setDBNAME(String DBNAME) {
+        DatabaseConnection.DBNAME = DBNAME;
     }
 
     private void getConnectionToDatabase () {
@@ -34,5 +38,15 @@ public final class DatabaseConnection {
 
     public Connection getConnection () {
         return connection;
+    }
+
+    public void closeConnection() {
+        if (this.connection != null){
+            try{
+                this.connection.close();
+            }catch (SQLException e){
+                System.out.println("Unable to close!");
+            }
+        }
     }
 }
