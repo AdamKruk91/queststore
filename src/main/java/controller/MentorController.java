@@ -49,7 +49,7 @@ public class MentorController {
                     changePriceOfItem("Artifact");
                     break; 
                 case 6:
-                    addValueForQuest("Quest");
+                    markStudentQuest("Quest");
                     break;
                 case 7:
                     markItem("Artifact");
@@ -175,7 +175,7 @@ public class MentorController {
         view.displayStudentArtifacts(studentArtifacts);
     }
 
-    private void addValueForQuest(String typeName) {
+    private void markStudentQuest(String typeName) {
         StudentDao studentDao = new StudentDao();
         StudentModel selectedStudent = selectStudent();
         ItemModel item = selectItem(typeName);
