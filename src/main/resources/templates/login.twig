@@ -10,11 +10,10 @@
 <body>
   <div class="containter">
       <div class="login-form">
-        <form>
-          <input type="text" placeholder="Login">
-          <input type="password" placeholder="Password">
-            <input type="submit" value="Sign in" disabled>
-
+        <form method="POST">
+          <input name="login" type="text" placeholder="Login" required>
+          <input name="password" type="password" placeholder="Password" required>
+          <input type="submit" value="Sign in">
         </form>
       </div>
   </div>
