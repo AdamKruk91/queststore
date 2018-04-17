@@ -43,7 +43,7 @@ public class LoginDao extends ManipulationDao {
     }
 
     public void removeLoginByMail(String email){
-            String condition = "Login.email = " +email;
-            removeDataFromTable("Login", condition);
+        String condition = "Login.email = " + "'" + email + "'";
+        removeDataFromTable("Login", condition);
     }
 }
