@@ -53,4 +53,12 @@ public class MentorView {
             System.out.println(group.getId() + ". "  +group.getGroupName());
         }
     }
+
+    public void displayEditStudentMenu() {
+        System.out.println("\n1. name\n"
+                + "2. last name\n"
+                + "3. email\n"
+                + "4. password\n"
+                + "5. exit\n");
+    }
 }
