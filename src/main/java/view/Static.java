@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class Static implements HttpHandler {
@@ -46,7 +47,12 @@ public class Static implements HttpHandler {
 
     private void sendFile(HttpExchange httpExchange, URL fileURL) throws IOException {
         // get the file
-        File file = new File(fileURL.getFile());
+        File file = null;
+        try {
+            file = new File(fileURL.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         // we need to find out the mime type of the file, see: https://en.wikipedia.org/wiki/Media_type
         MimeTypeResolver resolver = new MimeTypeResolver(file);
         String mime = resolver.getMimeType();
