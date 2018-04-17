@@ -20,7 +20,8 @@ public class MentorView {
                             + "6 - Mark student's achieved quests\n"
                             + "7 - Mark student's bought artifacts\n"
                             + "8 - See student's wallet\n"
-                            + "9 - Exit\n");
+                            + "9 - Display All Students\n"
+                            + "0 - Exit\n");
     }
 
     public void displayItemCollection(List<ItemModel> itemCollection) {

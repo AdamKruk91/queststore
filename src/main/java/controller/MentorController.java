@@ -19,6 +19,8 @@ public class MentorController {
 
     private MentorView view;
     private InputController inputController;
+    private StudentDao studentDao = new StudentDao();
+
 
     public MentorController() {
         view = new MentorView();
@@ -26,10 +28,10 @@ public class MentorController {
     }
 
     public void controlMenuOptions() {
-        int userChoice = 0;
-        while (userChoice != 9) {
+        boolean whileRunning = true;
+        while (whileRunning) {
             view.displayMentorMenu();
-            userChoice = inputController.getIntInput("SELECT AN OPTION: ");
+            int userChoice = inputController.getIntInput("SELECT AN OPTION: ");
             switch (userChoice) {
                 case 1:
                     createStudent();
@@ -54,6 +56,12 @@ public class MentorController {
                     break;
                 case 8:
                     displayStudentWallet();
+                    break;
+                case 9:
+                    showAllStudents();
+                    break;
+                case 0:
+                    whileRunning = false;
                     break;
                 default:
                     break;
@@ -117,7 +125,6 @@ public class MentorController {
     }
 
     private StudentModel selectStudent() {
-        StudentDao studentDao = new StudentDao();
         List<StudentModel> allStudents = studentDao.getStudentsCollection();
         view.displayAllStudents(allStudents);
         int id = inputController.getIntInput("Enter id of student: ");
@@ -177,5 +184,10 @@ public class MentorController {
         studentDao.updateWallet(selectedStudent);
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.insertTransaction(selectedStudent.getID(), item.getID());
+    }
+
+    private void showAllStudents(){
+        List<StudentModel> allStudents = studentDao.getStudentsCollection();
+        view.displayAllStudents(allStudents);
     }
 }
