@@ -60,6 +60,12 @@ public class MentorController {
                 case 9:
                     showAllStudents();
                     break;
+                case 10:
+                    editStudent();
+                    break;
+                case 11:
+                    deleteStudent();
+                    break;
                 case 0:
                     whileRunning = false;
                     break;
