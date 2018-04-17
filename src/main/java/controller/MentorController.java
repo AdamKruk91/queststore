@@ -196,4 +196,13 @@ public class MentorController {
         List<StudentModel> allStudents = studentDao.getStudentsCollection();
         view.displayAllStudents(allStudents);
     }
+
+    private void deleteStudent(){
+        StudentModel studentModel = selectStudent();
+        studentDao.deleteStudent(studentModel.getID());
+    }
+
+    private void editStudent(){
+
+    }
 }
