@@ -1,9 +1,6 @@
 package controller;
 
-import dao.ItemDao;
-import dao.StudentDao;
-import dao.TransactionDao;
-import dao.GroupDao;
+import dao.*;
 import view.MentorView;
 import model.StudentModel;
 import model.WalletModel;
@@ -203,6 +200,47 @@ public class MentorController {
     }
 
     private void editStudent(){
+        StudentModel studentToEdit = selectStudent();
+        String mentorLogin = studentToEdit.getEmail();
+        String mentorPassword = studentToEdit.getPassword();
+        boolean isChoosed =  true;
+        while (isChoosed) {
+            view.displayEditStudentMenu();
+            int userChoice = inputController.getIntInput("Select field number to edit: ");
+            switch (userChoice) {
+                case 1:
+                    String name = inputController.getStringInput("Enter mentor name:");
+                    studentToEdit.setName(name);
+                    break;
+                case 2:
+                    String lastName = inputController.getStringInput("Enter mentor last name");
+                    studentToEdit.setLastName(lastName);
+                    break;
+                case 3:
+                    String email = inputController.getStringInput("Enter mentor email");
+                    studentToEdit.setEmail(email);
+                    break;
+                case 4:
+                    String password = inputController.getStringInput("Enter mentor password");
+                    studentToEdit.setPassword(password);
+                    break;
+                case 5:
+                    isChoosed = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+        updateStudentData(studentToEdit);
+        updateLoginData(studentToEdit, mentorLogin, mentorPassword);
+    }
 
+    private void updateStudentData(StudentModel studentModel){
+        studentDao.updatStudentTable(studentModel);
+    }
+
+    private void updateLoginData(StudentModel studentModel, String login, String password) {
+        LoginDao loginDao = new LoginDao();
+        loginDao.updateLoginTable(studentModel, login, password);
     }
 }
