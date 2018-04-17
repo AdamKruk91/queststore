@@ -21,6 +21,8 @@ public class MentorView {
                             + "7 - Mark student's bought artifacts\n"
                             + "8 - See student's wallet\n"
                             + "9 - Display All Students\n"
+                            + "10 - Edit Student\n"
+                            + "11 - Delete Student\n"
                             + "0 - Exit\n");
     }
 
