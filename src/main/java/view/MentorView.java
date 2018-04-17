@@ -61,6 +61,7 @@ public class MentorView {
                 + "2. last name\n"
                 + "3. email\n"
                 + "4. password\n"
-                + "5. exit\n");
+                + "5. select group\n"
+                + "6. exit\n");
     }
 }
