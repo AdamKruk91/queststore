@@ -225,6 +225,9 @@ public class MentorController {
                     studentToEdit.setPassword(password);
                     break;
                 case 5:
+                    GroupModel groupModel = selectGroup();
+                    studentToEdit.setGroup(groupModel);
+                case 6:
                     isChoosed = false;
                     break;
                 default:
@@ -236,7 +239,7 @@ public class MentorController {
     }
 
     private void updateStudentData(StudentModel studentModel){
-        studentDao.updatStudentTable(studentModel);
+        studentDao.updateStudentTable(studentModel);
     }
 
     private void updateLoginData(StudentModel studentModel, String login, String password) {
