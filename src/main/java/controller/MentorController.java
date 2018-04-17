@@ -17,7 +17,7 @@ public class MentorController {
     private MentorView view;
     private InputController inputController;
     private StudentDao studentDao = new StudentDao();
-
+    LoginDao loginDao = new LoginDao();
 
     public MentorController() {
         view = new MentorView();
@@ -191,12 +191,14 @@ public class MentorController {
 
     private void showAllStudents(){
         List<StudentModel> allStudents = studentDao.getStudentsCollection();
+        System.out.println(allStudents.size());
         view.displayAllStudents(allStudents);
     }
 
     private void deleteStudent(){
         StudentModel studentModel = selectStudent();
         studentDao.deleteStudent(studentModel.getID());
+        loginDao.removeLoginByMail(studentModel.getEmail());
     }
 
     private void editStudent(){
@@ -243,7 +245,6 @@ public class MentorController {
     }
 
     private void updateLoginData(StudentModel studentModel, String login, String password) {
-        LoginDao loginDao = new LoginDao();
         loginDao.updateLoginTable(studentModel, login, password);
     }
 }

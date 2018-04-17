@@ -41,4 +41,9 @@ public class LoginDao extends ManipulationDao {
         int idLogin = findLoginId(email, password);
         updateDataInTable("Login", "email='"+newEmail+"', password='"+newPassword+"'", "id_login="+idLogin);
     }
+
+    public void removeLoginByMail(String email){
+            String condition = "Login.email = " +email;
+            removeDataFromTable("Login", condition);
+    }
 }
