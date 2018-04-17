@@ -209,19 +209,19 @@ public class MentorController {
             int userChoice = inputController.getIntInput("Select field number to edit: ");
             switch (userChoice) {
                 case 1:
-                    String name = inputController.getStringInput("Enter mentor name:");
+                    String name = inputController.getStringInput("Enter student name:");
                     studentToEdit.setName(name);
                     break;
                 case 2:
-                    String lastName = inputController.getStringInput("Enter mentor last name");
+                    String lastName = inputController.getStringInput("Enter student last name");
                     studentToEdit.setLastName(lastName);
                     break;
                 case 3:
-                    String email = inputController.getStringInput("Enter mentor email");
+                    String email = inputController.getStringInput("Enter student email");
                     studentToEdit.setEmail(email);
                     break;
                 case 4:
-                    String password = inputController.getStringInput("Enter mentor password");
+                    String password = inputController.getStringInput("Enter student password");
                     studentToEdit.setPassword(password);
                     break;
                 case 5:
