@@ -7,21 +7,74 @@ import dao.LoginDao;
 import view.LoginView;
 
 import java.io.*;
+import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.UUID;
 
 
 public class LoginController implements HttpHandler {
 
     private LoginView view;
-
+    private LoginDao loginDao;
+    public static Map<String,Integer> loggedInUsers;
 
     public LoginController() {
         view = new LoginView();
+        loginDao = new LoginDao();
+        loggedInUsers = new HashMap<>();
+
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
+
+        if(isCookieValid(httpExchange)) {
+           renderWithCookie(httpExchange);
+        } else {
+            renderWithoutCookie(httpExchange);
+        }
+    }
+
+    private boolean isCookieValid(HttpExchange httpExchange) {
+        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
+        HttpCookie cookie;
+
+        if (cookieStr != null) {
+            cookie = HttpCookie.parse(cookieStr).get(0);
+            if(loggedInUsers.containsKey(cookie.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void renderWithCookie(HttpExchange httpExchange) throws IOException {
+
+        int loginID = getLoginIdFromCookie(httpExchange);
+        String userType = loginDao.findStatusByLoginId(loginID);
+
+        switch (userType) {
+            case "Admin":
+                // todo
+                break;
+            case "Mentor":
+                // todo
+                break;
+            case "Student":
+                redirectTo(httpExchange, "/student");
+                break;
+        }
+    }
+
+    private int getLoginIdFromCookie(HttpExchange httpExchange) {
+        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
+        HttpCookie cookie;
+        cookie = HttpCookie.parse(cookieStr).get(0);
+        return loggedInUsers.get(cookie.getValue());
+    }
+
+    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException {
         String response = "";
         String method = httpExchange.getRequestMethod();
 
@@ -33,35 +86,35 @@ public class LoginController implements HttpHandler {
             Map<String, String> inputs = parseFormData(formData);
             String login = inputs.get("login");
             String password = inputs.get("password");
-            String userStatus = logInUser(login, password);
-            switch(userStatus) {
-                case "Admin":
-                    // todo
-                    break;
-                case "Mentor":
-                    // todo
-                    break;
-                case "Student":
-                    StudentController studentController = new StudentController();
-                    Headers responseHeaders = httpExchange.getResponseHeaders();
-                    responseHeaders.set("Location", "/student");
-                    httpExchange.sendResponseHeaders(302,-1);
-                    break;
-                case "Default":
-                    response = view.getWrongLoginScreen();
-                    httpExchange.sendResponseHeaders(200, response.length());
-                    break;
-            }
+            int loginID = loginDao.findLoginId(login, password);
+            createCookie(httpExchange, loginID);
+            renderWithCookie(httpExchange);
         } else if (method.equals("GET")) {
             response = view.getLoginScreen();
             httpExchange.sendResponseHeaders(200, response.length());
-        }
-
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
             os.close();
         }
+    }
 
+    private void createCookie(HttpExchange httpExchange, int loginID) throws IOException {
+        final UUID uuid = UUID.randomUUID();
+        HttpCookie cookie = new HttpCookie("sessionId", uuid.toString());
+        httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
+        loggedInUsers.put(uuid.toString(), loginID);
+        redirectTo(httpExchange,"/student");
+
+    }
+
+    private void redirectTo(HttpExchange httpExchange, String URI) throws IOException {
+        Headers responseHeaders = httpExchange.getResponseHeaders();
+        responseHeaders.set("Location", URI);
+        httpExchange.sendResponseHeaders(302, -1);
+        OutputStream os = httpExchange.getResponseBody();
+        os.write("".getBytes());
+        os.close();
+    }
 
     private String logInUser(String login, String password) {
         LoginDao loginDao = new LoginDao();

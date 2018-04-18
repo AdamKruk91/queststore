@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.net.HttpCookie;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class StudentController implements HttpHandler {
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
+
+        // TODO: check cookie for active user session and proceed, otherwise redirect to login screen
         System.out.println("Success i guess");
     }
 

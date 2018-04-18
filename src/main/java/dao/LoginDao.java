@@ -23,6 +23,12 @@ public class LoginDao extends ManipulationDao {
         return getIntFromResult(result, "id_status");
     }
 
+    public String findStatusByLoginId(int loginID) {
+        ResultSet result = selectDataFromTable("login", "id_status", "id_login='" + loginID + "'");
+        int statusID = getIntFromResult(result, "id_status");
+        return findStatus(statusID);
+    }
+
     public int findLoginId(String login, String password) {
         ResultSet result = selectDataFromTable("Login", "id_login", " email='" + login + "' AND password='" + password + "'");
         return getIntFromResult(result, "id_login");
