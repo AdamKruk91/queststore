@@ -1,28 +1,27 @@
 package controller;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.sql.SQLException;
 import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import dao.ItemDao;
-import dao.LevelDao;
-import dao.StudentDao;
-import dao.TransactionDao;
+import dao.*;
 import model.ItemModel;
 import model.Level;
 import view.StudentView;
 import model.StudentModel;
 
-public class StudentController implements HttpHandler {
+public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
     private InputController inputController;
+    private LoginDao loginDao = new LoginDao();
     private LevelDao levelDao = new LevelDao();
-    ItemDao itemDao = new ItemDao();
-    StudentDao studentDao = new StudentDao();
+    private ItemDao itemDao = new ItemDao();
+    private StudentDao studentDao = new StudentDao();
 
     public StudentController() {
         view = new StudentView();
@@ -31,8 +30,39 @@ public class StudentController implements HttpHandler {
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
-        // TODO: check cookie for active user session and proceed, otherwise redirect to login screen
+        if(isCookieValid(httpExchange)) {
+            int loginID = getLoginIdFromCookie(httpExchange);
+            String userType = "";
+
+            try {
+                userType = loginDao.findStatusByLoginId(loginID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if(!userType.equals("Student")) {
+                redirectTo(httpExchange, "/login");
+            } else {
+                handleRendering(httpExchange, loginID);
+            }
+        } else {
+            redirectTo(httpExchange, "/login");
+        }
         System.out.println("Success i guess");
+    }
+
+    private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
+        //TODO get URI and do switch on it
+        renderProfile(httpExchange, loginID);
+    }
+
+    private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
+        StudentModel student = getStudent(loginID);
+        String response = view.getProfileScreen(student);
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
     private StudentModel getStudent(int idLogin) {
