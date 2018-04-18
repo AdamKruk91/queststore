@@ -126,4 +126,14 @@ CREATE TABLE IF NOT EXISTS `Admin` (
 	`id_status`	INTEGER NOT NULL
 );
 INSERT INTO `Admin` VALUES (2,'Olaf','Lubaszenko',1,1);
+CREATE TABLE IF NOT EXISTS `Level` (
+	`id_level`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	`experience_amount`	INTEGER NOT NULL,
+	`name`	TEXT NOT NULL
+);
+INSERT INTO `Level` VALUES (1,300,'Newbie');
+INSERT INTO `Level` VALUES (2,1200,'Scratch Developer');
+INSERT INTO `Level` VALUES (3,2500,'Regular Codecooler');
+INSERT INTO `Level` VALUES (4,3500,'Mentor Slayer');
+INSERT INTO `Level` VALUES (5,5000,'UML Champion');
 COMMIT;
