@@ -2,6 +2,7 @@ package dao;
 
 import model.StudentModel;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface StudentDaoInterface {
@@ -10,7 +11,7 @@ public interface StudentDaoInterface {
 
     List<StudentModel> getStudentsCollection();
 
-    void insertNewStudent(StudentModel student);
+    void insertNewStudent(StudentModel student) throws SQLException;
 
     void updateWallet(StudentModel student);
 }

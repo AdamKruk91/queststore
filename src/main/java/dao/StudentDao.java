@@ -11,7 +11,7 @@ import java.util.List;
 public class StudentDao extends ManipulationDao implements StudentDaoInterface {
 
 
-    private int getIdStatus() {
+    private int getIdStatus() throws SQLException {
         ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
         return getIntFromResult(result, "id_status");
     }
@@ -88,7 +88,7 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         insertDataIntoTable(tableName, columns, values);
     }
 
-    private int insertNewLogin(String email, String password) {
+    private int insertNewLogin(String email, String password) throws SQLException {
         LoginDao loginDao = new LoginDao();
         int idStatus = loginDao.findStatusIdByName("Student");
         loginDao.insertNewLogin(email, password, idStatus);
@@ -114,7 +114,7 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
     }
 
 
-    public void insertNewStudent(StudentModel student) {
+    public void insertNewStudent(StudentModel student) throws SQLException {
         int idLogin = insertNewLogin(student.getEmail(), student.getPassword());
         int id_group = student.getGroupId();
         String table = "Student";

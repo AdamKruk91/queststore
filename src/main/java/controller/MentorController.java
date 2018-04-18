@@ -9,6 +9,7 @@ import model.ItemModel;
 import model.QuestModel;
 import model.ArtifactModel;
 
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class MentorController {
         inputController = new InputController();
     }
 
-    public void controlMenuOptions() {
+    public void controlMenuOptions() throws SQLException {
         boolean whileRunning = true;
         while (whileRunning) {
             view.displayMentorMenu();
@@ -84,7 +85,7 @@ public class MentorController {
         return selectedGroup;
     }
 
-    private ItemModel selectItem(String type) {
+    private ItemModel selectItem(String type) throws SQLException {
         ItemDao itemDao = new ItemDao();
         List<ItemModel> itemCollection = itemDao.getItemCollectionByType(type);
         view.displayItemCollection(itemCollection);
@@ -96,7 +97,7 @@ public class MentorController {
         return matchedItem;
     }
 
-    private void createStudent() {
+    private void createStudent() throws SQLException {
         String studentName = inputController.getStringInput("Enter student name: ");
         String studentLastName = inputController.getStringInput("Enter student last name: ");
         String studentEmail = inputController.getStringInput("Enter student email: ");
@@ -109,7 +110,7 @@ public class MentorController {
         studentDao.insertNewStudent(student);
     }
 
-    private void createQuest() {
+    private void createQuest() throws SQLException {
         String questName = inputController.getStringInput("Enter quest name: ");
         String questDescription = inputController.getStringInput("Enter quest description: ");
         int questValue = inputController.getIntInput("Enter quest value: ");
@@ -118,7 +119,7 @@ public class MentorController {
         itemDao.insertNewItem(newQuest);
     }
 
-    private void createArtifact() {
+    private void createArtifact() throws SQLException {
         String artifactName = inputController.getStringInput("Enter artifact name: ");
         String artifactDescription = inputController.getStringInput("Enter artifact description: ");
         int artifactValue = inputController.getIntInput("Enter artifact value: ");
@@ -138,7 +139,7 @@ public class MentorController {
         return matchedStudent;
     }
 
-    private void changePriceOfItem(String type) {
+    private void changePriceOfItem(String type) throws SQLException {
         ItemModel item = selectItem(type);
         int newPrice = inputController.getIntInput("Enter new price: ");
         item.setValue(newPrice);
@@ -146,7 +147,7 @@ public class MentorController {
         itemDao.updateValueOfItem(item);
     }
 
-    private ItemModel chooseItemToMark(String typeName) {
+    private ItemModel chooseItemToMark(String typeName) throws SQLException {
         StudentModel selectedStudent = selectStudent();
         int studentId = selectedStudent.getID();
         ItemDao itemDao = new ItemDao();
@@ -160,7 +161,7 @@ public class MentorController {
         return matchedItem;
     }
 
-    private void markItem(String typeName) {
+    private void markItem(String typeName) throws SQLException {
         ItemModel itemToMark = chooseItemToMark(typeName);
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.updateStatusOfTransaction(itemToMark);
@@ -178,7 +179,7 @@ public class MentorController {
         view.displayStudentArtifacts(studentArtifacts);
     }
 
-    private void markStudentQuest(String typeName) {
+    private void markStudentQuest(String typeName) throws SQLException {
         StudentDao studentDao = new StudentDao();
         StudentModel selectedStudent = selectStudent();
         ItemModel item = selectItem(typeName);
@@ -202,7 +203,7 @@ public class MentorController {
         loginDao.removeLoginByMail(studentModel.getEmail());
     }
 
-    private void editStudent(){
+    private void editStudent() throws SQLException {
         StudentModel studentToEdit = selectStudent();
         String mentorLogin = studentToEdit.getEmail();
         String mentorPassword = studentToEdit.getPassword();
@@ -245,7 +246,7 @@ public class MentorController {
         studentDao.updateStudentTable(studentModel);
     }
 
-    private void updateLoginData(StudentModel studentModel, String login, String password) {
+    private void updateLoginData(StudentModel studentModel, String login, String password) throws SQLException {
         loginDao.updateLoginTable(studentModel, login, password);
     }
 }

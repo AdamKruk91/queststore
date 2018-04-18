@@ -39,7 +39,7 @@ public class StudentController implements HttpHandler {
         return studentDao.getStudentByIdLogin(idLogin);
     }
 
-    private ItemModel selectArtifact() {
+    private ItemModel selectArtifact() throws SQLException {
         List<ItemModel> itemCollection  = itemDao.getItemCollectionByType("Artifact");
         view.displayCollectionOfItem(itemCollection);
         int idArtifact = inputController.getIntInput("Enter artifact id to buy: ");
@@ -50,7 +50,7 @@ public class StudentController implements HttpHandler {
         return matchedArtifact;
     }
 
-    private void buyArtifact(StudentModel student) {
+    private void buyArtifact(StudentModel student) throws SQLException {
         ItemModel artifact = selectArtifact();
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.insertTransaction(student.getID(), artifact.getID());
@@ -63,7 +63,7 @@ public class StudentController implements HttpHandler {
         view.displayBoughtArtifacts(artifactsCollection);
     }
 
-    public void controlMenuOptions(int loginId) {
+    public void controlMenuOptions(int loginId) throws SQLException {
         StudentModel student = getStudent(loginId);
         boolean whileRunning = true;
         while (whileRunning) {

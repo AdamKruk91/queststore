@@ -20,7 +20,7 @@ class MentorDaoTest extends TestableDatabaseUnit {
     }
 
     @Test
-    void testMentorInsertion() {
+    void testMentorInsertion() throws SQLException {
         MentorModel mentor = new MentorModel(
                 "TestMan",
                 "SuperMan",
@@ -46,7 +46,7 @@ class MentorDaoTest extends TestableDatabaseUnit {
     }
 
     @Test
-    void testSQLInjection() {
+    void testSQLInjection() throws SQLException {
         MentorModel mentor = new MentorModel(
                 "TestMan",
                 "SuperMan', 333, 444, 555); " +

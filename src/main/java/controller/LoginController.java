@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.UUID;
 
 
-public class LoginController implements HttpHandler {
+public class LoginController extends AbstractContoller implements HttpHandler {
 
     private LoginView view;
     private LoginDao loginDao;
@@ -28,28 +28,19 @@ public class LoginController implements HttpHandler {
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
-
-        if(isCookieValid(httpExchange)) {
-           renderWithCookie(httpExchange);
-        } else {
-            renderWithoutCookie(httpExchange);
-        }
-    }
-
-    private boolean isCookieValid(HttpExchange httpExchange) {
-        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-        HttpCookie cookie;
-
-        if (cookieStr != null) {
-            cookie = HttpCookie.parse(cookieStr).get(0);
-            if(loggedInUsers.containsKey(cookie.getValue())) {
-                return true;
+        try {
+            if (isCookieValid(httpExchange)) {
+                renderWithCookie(httpExchange);
+            } else {
+                renderWithoutCookie(httpExchange);
             }
+        }catch(SQLException e){
+            e.printStackTrace();
         }
-        return false;
     }
 
-    private void renderWithCookie(HttpExchange httpExchange) throws IOException {
+
+    private void renderWithCookie(HttpExchange httpExchange) throws IOException, SQLException {
 
         int loginID = getLoginIdFromCookie(httpExchange);
         String userType = loginDao.findStatusByLoginId(loginID);
@@ -67,14 +58,7 @@ public class LoginController implements HttpHandler {
         }
     }
 
-    private int getLoginIdFromCookie(HttpExchange httpExchange) {
-        String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
-        HttpCookie cookie;
-        cookie = HttpCookie.parse(cookieStr).get(0);
-        return loggedInUsers.get(cookie.getValue());
-    }
-
-    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException {
+    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException, SQLException {
         String response = "";
         String method = httpExchange.getRequestMethod();
 
@@ -98,32 +82,14 @@ public class LoginController implements HttpHandler {
         }
     }
 
-    private void createCookie(HttpExchange httpExchange, int loginID) throws IOException {
-        final UUID uuid = UUID.randomUUID();
-        HttpCookie cookie = new HttpCookie("sessionId", uuid.toString());
-        httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
-        loggedInUsers.put(uuid.toString(), loginID);
-        redirectTo(httpExchange,"/student");
-
-    }
-
-    private void redirectTo(HttpExchange httpExchange, String URI) throws IOException {
-        Headers responseHeaders = httpExchange.getResponseHeaders();
-        responseHeaders.set("Location", URI);
-        httpExchange.sendResponseHeaders(302, -1);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write("".getBytes());
-        os.close();
-    }
-
-    private String logInUser(String login, String password) {
+    private String logInUser(String login, String password) throws SQLException {
         LoginDao loginDao = new LoginDao();
         int idStatus = loginDao.findStatusId(login, password);
         String userStatus = loginDao.findStatus(idStatus);
         return userStatus;
     }
 
-    private int getLoginId(String login, String password) {
+    private int getLoginId(String login, String password) throws SQLException {
         LoginDao loginDao = new LoginDao();
         return loginDao.findLoginId(login, password);
     }
@@ -141,7 +107,7 @@ public class LoginController implements HttpHandler {
         return map;
     }
 
-    public void startApplication() {
+    public void startApplication() throws SQLException {
         InputController inputController = new InputController();
         String login = inputController.getStringInput("Enter login: ");
         String password = inputController.getStringInput("Enter password: ");
@@ -155,7 +121,7 @@ public class LoginController implements HttpHandler {
     }
 
 
-    private void displayUserMenu(int loginId, String statusName) {
+    private void displayUserMenu(int loginId, String statusName) throws SQLException {
 //        view.displayWelcomeMessage();
         switch (statusName) {
             case "Admin":
