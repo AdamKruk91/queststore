@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User profile</title>
+</head>
+<body>
+<header>
+</header>
+<div class="row">
+    <aside class="menu col-3">
+        <nav>
+            <ul>
+                <li><a href="#" class="button">Display Wallet</a></li>
+                <li><a href="#" class="button">Display Experience</a></li>
+                <li><a href="#" class="button">Buy Artifact</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <section class="col-6">
+        <div class="col-6 user-info">
+            <div class="col-12 profile-info">
+                <ul>
+                    <li>Full Name: {{ name }}</li>
+                    <li>Email: {{ email }}</li>
+                    <li>Class: {{ group }}</li>
+                    <li>Level: {{ level }}</li>
+                    <li><progress class="col-12" value="70" max="100">0%</progress></li>
+                </ul>
+            </div>
+            <a href="#" class="contact-button">Contact Me!</a>
+        </div>
+    </section>
+
+    <aside class="col-3 right-panel">
+        <a href="#" class="sign-out-button button">Sign out</a>
+    </aside>
+</div>
+<footer class="col-12">
+    Wszystkie prawa zastrzeżone.
+</footer>
+</body>
+</html>

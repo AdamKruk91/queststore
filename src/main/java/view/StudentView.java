@@ -1,7 +1,10 @@
 package view;
 
+import model.StudentModel;
 import model.WalletModel;
 import model.ItemModel;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
 
 import java.util.List;
 
@@ -39,5 +42,15 @@ public class StudentView {
     public void displayCurrentExperience(int totalExp, String levelName) {
         System.out.println(String.format("You gained: %d experience so far!" +
                                          "\nYour level: %s", totalExp, levelName));
+    }
+
+    public String getProfileScreen (StudentModel studentModel) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-profile.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("name", studentModel.getFullName());
+        model.with("email", studentModel.getEmail());
+        model.with("group", studentModel.getGroup().getGroupName());
+        model.with("level", "level"); // Todo add reading level
+        return template.render(model);
     }
 }

@@ -10,17 +10,17 @@ import java.util.ArrayList;
 import java.sql.SQLException;
 
 
-public class ItemDao extends ManipulationDao implements ItemDaoInterface {
+public class ItemDao extends ManipulationDao {
 
 
-    public void insertNewItem(ItemModel item) {
+    public void insertNewItem(ItemModel item) throws SQLException {
         String table = "Item";
         String columns = " ('item_name', 'description', 'price', 'id_type')";
         String values = "('" + item.getName() + "','" + item.getDescription() + "'," + item.getValue() + ", " + findIdType(item.getType()) + ")";
         insertDataIntoTable(table, columns, values);
     }
 
-    public int findIdType(String typeName) {
+    public int findIdType(String typeName) throws SQLException {
         ResultSet result = selectDataFromTable("ItemType", "id_type", "name='"+typeName+"'");
         return getIntFromResult(result, "id_type");
     }
@@ -62,7 +62,7 @@ public class ItemDao extends ManipulationDao implements ItemDaoInterface {
         return itemCollection;
     }
 
-    public List<ItemModel> getItemCollectionByType(String typeName) {
+    public List<ItemModel> getItemCollectionByType(String typeName) throws SQLException {
         int idType = findIdType(typeName);
         String columns = "id_item, item_name, description, price";
         String condition = "id_type='" + idType + "'";
@@ -72,7 +72,7 @@ public class ItemDao extends ManipulationDao implements ItemDaoInterface {
     }
 
 
-    public List<ItemModel> selectStudentsItems(int selectedStudentId, String typeName) {
+    public List<ItemModel> selectStudentsItems(int selectedStudentId, String typeName) throws SQLException {
         int idType = findIdType(typeName);
         String columns = "Transactions.id_item, Transactions.id_student, Transactions.used, item_name, description, price, id_type";
         String joinStatement = "Transactions.id_item = Item.id_item";

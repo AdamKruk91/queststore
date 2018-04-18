@@ -26,7 +26,7 @@ public class AdminController {
         inputController = new InputController();
     }
 
-    public void controlMenuOptions() {
+    public void controlMenuOptions() throws SQLException {
         boolean whileRunning = true;
         while (whileRunning) {
             view.displayAdminMenu();
@@ -75,7 +75,7 @@ public class AdminController {
         return selectedGroup;
     }
 
-    private void createMentor() {
+    private void createMentor() throws SQLException {
         String mentorName = inputController.getStringInput("Enter mentor name: ");
         String mentorLastName = inputController.getStringInput("Enter mentor last name: ");
         String mentorEmail = inputController.getStringInput("Enter mentor email: ");
@@ -110,11 +110,11 @@ public class AdminController {
         mentorDao.updateMentorTable(mentor);
     }
 
-    private void updateLoginData(MentorModel mentor, String login, String password) {
+    private void updateLoginData(MentorModel mentor, String login, String password) throws SQLException {
         loginDao.updateLoginTable(mentor, login, password);
     }
 
-    private void editMentorDataPanel() {
+    private void editMentorDataPanel() throws SQLException {
         MentorModel mentorToEdit = selectMentor();
         String mentorLogin = mentorToEdit.getEmail();
         String mentorPassword = mentorToEdit.getPassword();
