@@ -1,17 +1,29 @@
 package controller;
 
 
+import com.sun.net.httpserver.HttpServer;
+import view.Static;
+
+import java.net.InetSocketAddress;
+
 public class RootController {
 
-    private UserController userController;
-
-    public RootController() {
-        userController = new UserController();
-    }
-
     public static void main(String[] args) {
-        RootController controller = new RootController();
-        controller.userController.startApplication();
+
+//        new LoginController().startApplication();
+
+        try {
+            HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+
+            server.createContext("/login", new LoginController());
+            server.createContext("/static", new Static());
+            server.createContext("/student", new StudentController());
+            server.setExecutor(null);
+
+            server.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
