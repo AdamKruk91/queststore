@@ -6,14 +6,14 @@ import org.jtwig.JtwigTemplate;
 public class LoginView {
 
     public String getLoginScreen () {
-        String response = "";
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.twig");
         JtwigModel model = JtwigModel.newModel();
-        response = template.render(model);
-        return response;
+        return template.render(model);
     }
 
-    public void displayLoginFailed() {
-        System.out.println("Login failed.");
+    public String getWrongLoginScreen () {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/wrong-login.twig");
+        JtwigModel model = JtwigModel.newModel();
+        return template.render(model);
     }
 }
