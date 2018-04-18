@@ -101,10 +101,10 @@ public class AdminController {
         MentorModel mentorToEdit = selectMentor();
         String mentorLogin = mentorToEdit.getEmail();
         String mentorPassword = mentorToEdit.getPassword();
-        int userChoice = 0;
-        while (userChoice != 5) {
+        boolean isChoose = true;
+        while (isChoose) {
             view.displayEditMentorMenu();
-            userChoice = inputController.getIntInput("Select field number to edit: ");
+            int userChoice = inputController.getIntInput("Select field number to edit: ");
             switch (userChoice) {
                 case 1:
                     String name = inputController.getStringInput("Enter mentor name:");
@@ -125,6 +125,9 @@ public class AdminController {
                 case 5:
                     GroupModel groupModel = selectGroup();
                     mentorToEdit.setIdGroup(groupModel.getId());
+                case 0:
+                    isChoose = false;
+                    break;
                 default:
                     break;
             }

@@ -22,7 +22,8 @@ public class AdminView {
                         + "2. last name\n"
                         + "3. email\n"
                         + "4. password\n"
-                        + "5. exit\n");
+                        + "5. edit Group\n"
+                        + "0. exit\n");
     }
     public void displayAllMentors(List<MentorModel> mentorsCollection) {
         for (MentorModel mentor: mentorsCollection) {
