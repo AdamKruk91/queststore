@@ -14,6 +14,8 @@ public class AdminController {
 
     private AdminView view;
     private InputController inputController;
+    private MentorDao mentorDao = new MentorDao();
+    private LoginDao loginDao = new LoginDao();
 
     public AdminController() {
         view = new AdminView();
@@ -21,10 +23,10 @@ public class AdminController {
     }
 
     public void controlMenuOptions() {
-        int userChoice = 0;
-        while (userChoice != 5) {
+        boolean whileRunning = true;
+        while (whileRunning) {
             view.displayAdminMenu();
-            userChoice = inputController.getIntInput("SELECT AN OPTION: ");
+            int userChoice = inputController.getIntInput("SELECT AN OPTION: ");
             switch (userChoice) {
                 case 1:
                     createMentor();
@@ -37,6 +39,9 @@ public class AdminController {
                     break;
                 case 4:
                     displayMentorData();
+                    break;
+                case 5:
+                    deleteMentor();
                     break;
                 default:
                     break;
@@ -88,12 +93,10 @@ public class AdminController {
     }
 
     private void updateMentorData(MentorModel mentor) {
-        MentorDao mentorDao = new MentorDao();
         mentorDao.updateMentorTable(mentor);
     }
 
     private void updateLoginData(MentorModel mentor, String login, String password) {
-        LoginDao loginDao = new LoginDao();
         loginDao.updateLoginTable(mentor, login, password);
     }
 
@@ -101,10 +104,10 @@ public class AdminController {
         MentorModel mentorToEdit = selectMentor();
         String mentorLogin = mentorToEdit.getEmail();
         String mentorPassword = mentorToEdit.getPassword();
-        int userChoice = 0;
-        while (userChoice != 5) {
+        boolean isChoose = true;
+        while (isChoose) {
             view.displayEditMentorMenu();
-            userChoice = inputController.getIntInput("Select field number to edit: ");
+            int userChoice = inputController.getIntInput("Select field number to edit: ");
             switch (userChoice) {
                 case 1:
                     String name = inputController.getStringInput("Enter mentor name:");
@@ -122,6 +125,12 @@ public class AdminController {
                     String password = inputController.getStringInput("Enter mentor password");
                     mentorToEdit.setPassword(password);
                     break;
+                case 5:
+                    GroupModel groupModel = selectGroup();
+                    mentorToEdit.setIdGroup(groupModel.getId());
+                case 0:
+                    isChoose = false;
+                    break;
                 default:
                     break;
             }
@@ -133,6 +142,12 @@ public class AdminController {
     private void displayMentorData() {
         MentorModel mentor = selectMentor();
         view.displayMentorData(mentor);
+    }
+
+    private void deleteMentor(){
+        MentorModel mentorModel = selectMentor();
+        mentorDao.deleteMentor(mentorModel.getID());
+        loginDao.removeLoginByMail(mentorModel.getEmail());
     }
 
 }

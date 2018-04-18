@@ -37,7 +37,8 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         String name = mentor.getFirstName();
         String lastName = mentor.getLastName();
         int idMentor = mentor.getID();
-        updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'", "id_mentor=" + idMentor);
+        int groupId = mentor.getIdGroup();
+        updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'" + ", id_group='"+groupId+"'", "id_mentor=" + idMentor);
     }
 
     public List<MentorModel> getAllMentorsCollection() {
@@ -61,6 +62,12 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
             e.printStackTrace();
         }
         return mentorCollection;
+    }
+
+    public void deleteMentor(int idMentor){
+        String condition = "Mentor.id_mentor = " + idMentor;
+        removeDataFromTable("Mentor", condition);
+
     }
 
 }

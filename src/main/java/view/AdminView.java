@@ -1,12 +1,9 @@
 package view;
 
-
 import dao.GroupDao;
-import dao.MentorDao;
 import model.GroupModel;
 import model.MentorModel;
 
-import java.security.acl.Group;
 import java.util.List;
 
 public class AdminView {
@@ -17,7 +14,8 @@ public class AdminView {
                             "2 - Create new group\n" + 
                             "3 - Edit mentor\n" +
                             "4 - Display mentor data\n" +
-                            "5 - Exit\n");
+                            "5 - Delete mentor\n" +
+                            "6 - Exit\n");
     }
 
     public void displayEditMentorMenu() {
@@ -25,7 +23,8 @@ public class AdminView {
                         + "2. last name\n"
                         + "3. email\n"
                         + "4. password\n"
-                        + "5. exit\n");
+                        + "5. edit Group\n"
+                        + "0. exit\n");
     }
     public void displayAllMentors(List<MentorModel> mentorsCollection) {
         for (MentorModel mentor: mentorsCollection) {

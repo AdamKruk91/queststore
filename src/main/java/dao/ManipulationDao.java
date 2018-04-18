@@ -78,6 +78,11 @@ public class ManipulationDao implements UserDaoInterface {
         executeUpdate(sql);
     }
 
+    public void removeDataFromTable(String table, String condition){
+        String sql = "DELETE FROM " + table + " WHERE " + condition;
+        executeUpdate(sql);
+    }
+
     public ResultSet selectFromJoinedTablesWithCondition(String columns, String tableName, String joinTable, String joinStatement, String condition){
         String sql = "SELECT " + columns + " FROM " + tableName + " JOIN " + joinTable + " ON " + joinStatement + " WHERE " + condition +";";
         return executeSelect(sql);

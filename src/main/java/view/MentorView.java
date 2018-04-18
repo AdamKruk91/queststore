@@ -20,7 +20,10 @@ public class MentorView {
                             + "6 - Mark student's achieved quests\n"
                             + "7 - Mark student's bought artifacts\n"
                             + "8 - See student's wallet\n"
-                            + "9 - Exit\n");
+                            + "9 - Display All Students\n"
+                            + "10 - Edit Student\n"
+                            + "11 - Delete Student\n"
+                            + "0 - Exit\n");
     }
 
     public void displayItemCollection(List<ItemModel> itemCollection) {
@@ -51,5 +54,14 @@ public class MentorView {
         for (GroupModel group: groupsCollection) {
             System.out.println(group.getId() + ". "  +group.getGroupName());
         }
+    }
+
+    public void displayEditStudentMenu() {
+        System.out.println("\n1. name\n"
+                + "2. last name\n"
+                + "3. email\n"
+                + "4. password\n"
+                + "5. select group\n"
+                + "6. exit\n");
     }
 }

@@ -2,7 +2,6 @@ package dao;
 
 import model.StudentModel;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 public interface StudentDaoInterface {
