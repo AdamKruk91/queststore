@@ -122,6 +122,9 @@ public class AdminController {
                     String password = inputController.getStringInput("Enter mentor password");
                     mentorToEdit.setPassword(password);
                     break;
+                case 5:
+                    GroupModel groupModel = selectGroup();
+                    mentorToEdit.setIdGroup(groupModel.getId());
                 default:
                     break;
             }
