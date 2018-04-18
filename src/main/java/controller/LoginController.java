@@ -47,6 +47,10 @@ public class LoginController implements HttpHandler {
                     responseHeaders.set("Location", "/student");
                     httpExchange.sendResponseHeaders(302,-1);
                     break;
+                case "Default":
+                    response = view.getWrongLoginScreen();
+                    httpExchange.sendResponseHeaders(200, response.length());
+                    break;
             }
         } else if (method.equals("GET")) {
             response = view.getLoginScreen();
@@ -62,10 +66,6 @@ public class LoginController implements HttpHandler {
     private String logInUser(String login, String password) {
         LoginDao loginDao = new LoginDao();
         int idStatus = loginDao.findStatusId(login, password);
-        if (idStatus == 0) {
-            view.displayLoginFailed();
-            System.exit(0);
-        }
         String userStatus = loginDao.findStatus(idStatus);
         return userStatus;
     }
