@@ -1,13 +1,16 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import model.Iterator;
 import view.AdminView;
 import model.MentorModel;
 import model.GroupModel;
 import dao.MentorDao;
 import dao.GroupDao;
 import dao.LoginDao;
+import dao.LevelDao;
 
 
 public class AdminController {
@@ -16,6 +19,7 @@ public class AdminController {
     private InputController inputController;
     private MentorDao mentorDao = new MentorDao();
     private LoginDao loginDao = new LoginDao();
+    private LevelDao levelDAO = new LevelDao();
 
     public AdminController() {
         view = new AdminView();
@@ -42,6 +46,16 @@ public class AdminController {
                     break;
                 case 5:
                     deleteMentor();
+                    break;
+                case 6:
+                    try {
+                        manageLevels();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 0:
+                    whileRunning = false;
                     break;
                 default:
                     break;
@@ -148,6 +162,54 @@ public class AdminController {
         MentorModel mentorModel = selectMentor();
         mentorDao.deleteMentor(mentorModel.getID());
         loginDao.removeLoginByMail(mentorModel.getEmail());
+    }
+
+    private void manageLevels() throws SQLException {
+        boolean running = true;
+
+        while(running) {
+            Iterator levelsIterator = levelDAO.getLevels();
+            String userInput = view.displayLevelsMenu(levelsIterator);
+
+            switch (userInput) {
+                case "1":
+                    createNewLevel();
+                    break;
+                case "2":
+                    removeLevel();
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid input");
+                    break;
+            }
+        }
+    }
+
+    private void createNewLevel() {
+        String name = inputController.getStringInput("Please enter name:");
+        int expTier = inputController.getIntInput("Please enter exp amount:");
+        try {
+            levelDAO.addLevel(name, expTier);
+        } catch (SQLException e) {
+            System.out.println("ERROR: Level with this name or exp amount already exists!");
+        }
+    }
+
+    private void removeLevel() throws SQLException {
+        // TODO: Screen is cleared, levels not visible
+        view.displayLevels(levelDAO.getLevels());
+        String userInput = inputController.getStringInput("Choose ID to remove level: ");
+        int levelID = Integer.parseInt(userInput);
+        // TODO: check if exists first?
+        try {
+            levelDAO.deleteLevel(levelID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
     }
 
 }

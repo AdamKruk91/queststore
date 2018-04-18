@@ -39,11 +39,11 @@ public class ManipulationDao implements UserDaoInterface {
     }
 
     public int getIntFromResult(ResultSet result, String columnName) {
-        int intData = 0;
+        int intData;
         try {
             intData = result.getInt(columnName);
         } catch (SQLException e) {
-            e.printStackTrace();
+            intData = 0;
         }
         return intData;
     }
