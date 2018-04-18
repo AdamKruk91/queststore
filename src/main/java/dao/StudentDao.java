@@ -100,6 +100,11 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         removeDataFromTable("Student", condition);
     }
 
+    public void deleteWallet(int idStudent){
+        String condition = "Wallet.id_student = " +idStudent;
+        removeDataFromTable("Wallet", condition);
+    }
+
     public void updateStudentTable(StudentModel studentModel) {
         String name = studentModel.getFirstName();
         String lastName = studentModel.getLastName();

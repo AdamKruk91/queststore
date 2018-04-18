@@ -198,6 +198,7 @@ public class MentorController {
     private void deleteStudent(){
         StudentModel studentModel = selectStudent();
         studentDao.deleteStudent(studentModel.getID());
+        studentDao.deleteWallet(studentModel.getID());
         loginDao.removeLoginByMail(studentModel.getEmail());
     }
 
