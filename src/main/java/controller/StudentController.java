@@ -1,7 +1,10 @@
 package controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import dao.ItemDao;
 import dao.StudentDao;
 import dao.TransactionDao;
@@ -9,8 +12,7 @@ import model.ItemModel;
 import view.StudentView;
 import model.StudentModel;
 
-
-public class StudentController {
+public class StudentController implements HttpHandler {
 
     private StudentView view;
     private InputController inputController;
@@ -18,6 +20,10 @@ public class StudentController {
     public StudentController() {
         view = new StudentView();
         inputController = new InputController();
+    }
+
+    public void handle(HttpExchange httpExchange) throws IOException {
+        System.out.println("Success i guess");
     }
 
     private StudentModel getStudent(int idLogin) {

@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.LoginDao;
@@ -15,12 +16,13 @@ public class LoginController implements HttpHandler {
 
     private LoginView view;
 
+
     public LoginController() {
         view = new LoginView();
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
-        String response = view.getLoginScreen();
+        String response = "";
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("POST")) {
@@ -31,11 +33,26 @@ public class LoginController implements HttpHandler {
             Map<String, String> inputs = parseFormData(formData);
             String login = inputs.get("login");
             String password = inputs.get("password");
-            System.out.println("User type: " + logInUser(login, password) +
-            "\nUser login: " + login);
+            String userStatus = logInUser(login, password);
+            switch(userStatus) {
+                case "Admin":
+                    // todo
+                    break;
+                case "Mentor":
+                    // todo
+                    break;
+                case "Student":
+                    StudentController studentController = new StudentController();
+                    Headers responseHeaders = httpExchange.getResponseHeaders();
+                    responseHeaders.set("Location", "/student");
+                    httpExchange.sendResponseHeaders(302,-1);
+                    break;
+            }
+        } else if (method.equals("GET")) {
+            response = view.getLoginScreen();
+            httpExchange.sendResponseHeaders(200, response.length());
         }
 
-            httpExchange.sendResponseHeaders(200, response.length());
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
             os.close();
