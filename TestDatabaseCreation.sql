@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `status` (
 INSERT INTO `status` VALUES (1,'Admin');
 INSERT INTO `status` VALUES (2,'Mentor');
 INSERT INTO `status` VALUES (3,'Student');
+INSERT INTO `status` VALUES (0,'Default');
 CREATE TABLE IF NOT EXISTS `Wallet` (
 	`id_wallet`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`total_coolcoins`	INTEGER NOT NULL,
