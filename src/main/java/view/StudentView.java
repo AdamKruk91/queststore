@@ -35,4 +35,9 @@ public class StudentView {
         System.out.println("\nBALANCE: " + wallet.getBalance() +
                            "\nTOTAL COOLCOINS: " + wallet.getTotalCoolcoins());
     }
+
+    public void displayCurrentExperience(int totalExp, String levelName) {
+        System.out.println(String.format("You gained: %d experience so far!" +
+                                         "\nYour level: %s", totalExp, levelName));
+    }
 }
