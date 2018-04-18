@@ -63,6 +63,12 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         return mentorCollection;
     }
 
+    public void deleteMentor(int idMentor){
+        String condition = "Mentor.id_mentor = " + idMentor;
+        removeDataFromTable("Mentor", condition);
+
+    }
+
 }
 
 
