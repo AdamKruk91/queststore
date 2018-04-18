@@ -5,7 +5,7 @@ import model.Level;
 
 import java.sql.SQLException;
 
-public interface LevelDAO {
+public interface LevelDaoInterface {
     void addLevel(String name, int exp) throws SQLException;
     void deleteLevel(int id) throws SQLException;
     Iterator getLevels() throws SQLException;
