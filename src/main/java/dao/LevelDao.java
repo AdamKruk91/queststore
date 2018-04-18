@@ -27,7 +27,7 @@ public class LevelDao {
 
     public void deleteLevel(int id) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM level WHERE id = ?;");
+                "DELETE FROM level WHERE id_level = ?;");
         ps.setInt(1, id);
         ps.executeUpdate();
     }

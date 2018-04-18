@@ -2,9 +2,12 @@ package view;
 
 import dao.GroupDao;
 import model.GroupModel;
+import model.Iterator;
+import model.Level;
 import model.MentorModel;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class AdminView {
 
@@ -26,6 +29,24 @@ public class AdminView {
                         + "5. edit Group\n"
                         + "0. exit\n");
     }
+
+    public String displayLevelsMenu(Iterator iterator) {
+        displayLevels(iterator);
+        System.out.println("\n--------\n" +
+                "1. Add Level\n" +
+                "2. Delete Level\n" +
+                "0. ABORT\n\n");
+        System.out.print("Choose action: ");
+        return getUserInput().trim();
+}
+
+    public void displayLevels(Iterator iterator) {
+
+        while(iterator.hasNext()) {
+            Level level = (Level) iterator.next();
+            System.out.println(String.format("ID: %d, Name: %s, Exp: %s", level.getID(), level.getName(), level.getExperienceAmount()));
+        }
+    }
     public void displayAllMentors(List<MentorModel> mentorsCollection) {
         for (MentorModel mentor: mentorsCollection) {
             System.out.println(mentor.getID() + ". "  +mentor.getFullName());
@@ -46,5 +67,10 @@ public class AdminView {
         for (GroupModel group: groupsCollection) {
             System.out.println(group.getId() + ". "  +group.getGroupName());
         }
+    }
+
+    private String getUserInput(){
+        Scanner sc = new Scanner(System.in);
+        return sc.nextLine().trim();
     }
 }
