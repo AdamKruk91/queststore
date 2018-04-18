@@ -18,7 +18,8 @@ public class AdminView {
                             "3 - Edit mentor\n" +
                             "4 - Display mentor data\n" +
                             "5 - Delete mentor\n" +
-                            "6 - Exit\n");
+                            "6 - Manage levels\n" +
+                            "0 - Exit\n");
     }
 
     public void displayEditMentorMenu() {

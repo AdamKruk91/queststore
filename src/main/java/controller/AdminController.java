@@ -54,6 +54,9 @@ public class AdminController {
                         e.printStackTrace();
                     }
                     break;
+                case 0:
+                    whileRunning = false;
+                    break;
                 default:
                     break;
             }

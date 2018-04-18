@@ -62,10 +62,10 @@ public class StudentController implements HttpHandler {
 
     public void controlMenuOptions(int loginId) {
         StudentModel student = getStudent(loginId);
-        int userChoice = 0;
-        while (userChoice != 5) {
+        boolean whileRunning = true;
+        while (whileRunning) {
             view.displayStudentMenu();
-            userChoice = inputController.getIntInput("SELECT AN OPTION: ");
+            int userChoice = inputController.getIntInput("SELECT AN OPTION: ");
             switch (userChoice) {
                 case 1:
                     displayWallet(student);
