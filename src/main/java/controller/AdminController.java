@@ -54,8 +54,8 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         //TODO get URI and do switch on it
         String URI = httpExchange.getRequestURI().toString();
 
-        if(URI.startsWith("/admin/static")){
-            redirectTo(httpExchange, URI.replace("/admin", ""));
+        if(URI.contains("/static")) {
+            redirectTo(httpExchange, URI.substring(URI.indexOf("/static")));
         } else {
             System.out.println(URI);
             switch (URI) {
@@ -68,12 +68,19 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                 case "/admin/create-group":
                     handleCreateGroup(httpExchange);
                     break;
+                case "/admin/edit-mentor":
+                    handleEditMentor(httpExchange);
+                    break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
-                    System.out.println("admin");
                     break;
             }
         }
+    }
+
+    private void handleEditMentor(HttpExchange httpExchange) throws IOException{
+        String response = view.getEditMentor(mentorDao.getAllMentorsCollection());
+        handlePositiveResponse(httpExchange, response);
     }
 
     private void handleCreateGroup(HttpExchange httpExchange) throws IOException {
