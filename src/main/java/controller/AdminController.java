@@ -2,8 +2,10 @@ package controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.acl.Group;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -18,6 +20,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
     private AdminView view;
     private InputController inputController;
+    private GroupDao groupDao = new GroupDao();
     private MentorDao mentorDao = new MentorDao();
     private LoginDao loginDao = new LoginDao();
     private LevelDao levelDAO = new LevelDao();
@@ -63,6 +66,9 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                 case "/admin/display-mentors":
                     renderMentorsData(httpExchange);
                     break;
+                case "/admin/create-mentor":
+                    handleCreateMentor(httpExchange);
+                    break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
                     System.out.println("admin");
@@ -74,6 +80,21 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private void renderMentorsData(HttpExchange httpExchange) throws IOException {
         List<MentorModel> allMentors = mentorDao.getAllMentorsCollection();
         String response = view.getMentorsDisplay(allMentors);
+        handlePositiveResponse(httpExchange, response);
+    }
+
+    private void handleCreateMentor(HttpExchange httpExchange) throws IOException {
+        String method = httpExchange.getRequestMethod();
+        if(method.equals("POST")){
+            Map<String, String> inputs = getMapFromISR(httpExchange);
+            renderCreateMentor(httpExchange);
+        } else{
+            renderCreateMentor(httpExchange);
+        }
+    }
+
+    private void renderCreateMentor(HttpExchange httpExchange) throws IOException {
+        String response = view.getCreateUser(groupDao.getGroupsCollection());
         handlePositiveResponse(httpExchange, response);
     }
 
