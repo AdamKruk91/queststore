@@ -47,7 +47,7 @@ public class LoginController extends AbstractContoller implements HttpHandler {
 
         switch (userType) {
             case "Admin":
-                // todo
+                redirectTo(httpExchange, "/admin");
                 break;
             case "Mentor":
                 // todo

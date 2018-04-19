@@ -1,29 +1,70 @@
 package controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
 
-import model.Iterator;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import dao.*;
+import model.*;
 import view.AdminView;
-import model.MentorModel;
-import model.GroupModel;
-import dao.MentorDao;
-import dao.GroupDao;
-import dao.LoginDao;
-import dao.LevelDao;
 
 
-public class AdminController {
+public class AdminController extends AbstractContoller implements HttpHandler {
 
     private AdminView view;
     private InputController inputController;
     private MentorDao mentorDao = new MentorDao();
     private LoginDao loginDao = new LoginDao();
     private LevelDao levelDAO = new LevelDao();
+    private AdminDao adminDao = new AdminDao();
 
     public AdminController() {
         view = new AdminView();
         inputController = new InputController();
+    }
+
+    public void handle(HttpExchange httpExchange) throws IOException {
+
+        if(isCookieValid(httpExchange)) {
+            int loginID = getLoginIdFromCookie(httpExchange);
+            String userType = "";
+
+            try {
+                userType = loginDao.findStatusByLoginId(loginID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if(!userType.equals("Admin")) {
+                redirectTo(httpExchange, "/login");
+            } else {
+                handleRendering(httpExchange, loginID);
+            }
+        } else {
+            redirectTo(httpExchange, "/login");
+        }
+        System.out.println("Success i guess");
+    }
+
+    private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
+        //TODO get URI and do switch on it
+        renderProfile(httpExchange, loginID);
+    }
+
+    private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
+        AdminModel admin = getAdmin(loginID);
+        String response = view.getProfileScreen(admin);
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    private AdminModel getAdmin(int idLogin) {
+        return adminDao.getAdminByIdLogin(idLogin);
     }
 
     public void controlMenuOptions() throws SQLException {

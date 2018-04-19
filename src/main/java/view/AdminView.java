@@ -1,10 +1,9 @@
 package view;
 
 import dao.GroupDao;
-import model.GroupModel;
-import model.Iterator;
-import model.Level;
-import model.MentorModel;
+import model.*;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
 
 import java.util.List;
 import java.util.Scanner;
@@ -73,5 +72,13 @@ public class AdminView {
     private String getUserInput(){
         Scanner sc = new Scanner(System.in);
         return sc.nextLine().trim();
+    }
+
+    public String getProfileScreen (AdminModel adminModel) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin-profile.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("name", adminModel.getFullName());
+        model.with("email", adminModel.getEmail());
+        return template.render(model);
     }
 }
