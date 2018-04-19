@@ -79,7 +79,25 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void handleEditMentor(HttpExchange httpExchange) throws IOException{
-        String response = view.getEditMentor(mentorDao.getAllMentorsCollection());
+        String method = httpExchange.getRequestMethod();
+        if(method.equals("POST")) {
+            Map<String, String> inputs = getMapFromISR(httpExchange);
+            int id = Integer.parseInt(inputs.get("id"));
+            String firstName = inputs.get("name");
+            String lastName = inputs.get("surname");
+            String email = inputs.get("email");
+            String password = inputs.get("password");
+            int groupId = Integer.parseInt(inputs.get("dropdown"));
+            MentorModel mentorModel = new MentorModel(id, firstName, lastName, email, password, groupId);
+            mentorDao.updateMentorTable(mentorModel);
+            renderEditMentor(httpExchange);
+        } else {
+            renderEditMentor(httpExchange);
+        }
+    }
+
+    private void renderEditMentor(HttpExchange httpExchange) throws IOException{
+        String response = view.getEditMentor(mentorDao.getAllMentorsCollection(), groupDao.getGroupsCollection());
         handlePositiveResponse(httpExchange, response);
     }
 
