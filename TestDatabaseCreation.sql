@@ -1,6 +1,6 @@
 ﻿CREATE TABLE IF NOT EXISTS `Login` (
 	`id_login`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	`email`	TEXT NOT NULL,
+	`email`	TEXT NOT NULL UNIQUE,
 	`password`	TEXT NOT NULL,
 	`id_status`	INTEGER NOT NULL
 );
@@ -112,8 +112,8 @@ INSERT INTO `Item` VALUES (3,'Combat training','Private mentoring',100,2);
 INSERT INTO `Item` VALUES (4,'Master the mornings ','Attend 1 months without being late ',200,1);
 INSERT INTO `Item` VALUES (5,'Time Travel','extend SI week assignment deadline by one day',150,2);
 CREATE TABLE IF NOT EXISTS `Groups` (
-	`id_group`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	`name`	TEXT NOT NULL
+	`id_group`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	`name`	TEXT NOT NULL UNIQUE
 );
 INSERT INTO `Groups` VALUES (1,'A');
 INSERT INTO `Groups` VALUES (2,'B');
