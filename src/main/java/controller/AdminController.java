@@ -110,6 +110,11 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         handlePositiveResponse(httpExchange, response);
     }
 
+    private void renderCreateMentorWithMessage(HttpExchange httpExchange, String message) throws IOException{
+        String response = view.getCreateMentorMessage(groupDao.getGroupsCollection(), message);
+        handlePositiveResponse(httpExchange, response);
+    }
+
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
         AdminModel admin = getAdmin(loginID);
         String response = view.getProfileScreen(admin);
