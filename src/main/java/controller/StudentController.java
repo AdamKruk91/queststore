@@ -58,7 +58,15 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
         StudentModel student = getStudent(loginID);
-        String response = view.getProfileScreen(student);
+        int totalExp = student.getMyWallet().getTotalCoolcoins();
+        Level level = null;
+        // TODO: display error message in browser!
+        try {
+            level = levelDao.getLevel(totalExp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String response = view.getProfileScreen(student, level);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
