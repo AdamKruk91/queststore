@@ -29,7 +29,7 @@
     <section class="col-6">
         <div class="col-6 area">
             <div class="col-12 dropdown">
-                <label for="dropdown">Choose student:</label>
+                <label for="dropdown">Choose mentor:</label>
                 <select id="dropdown" name="group" onchange="java_script_:show(this.options[this.selectedIndex].value)">
                 {% for mentor in mentors %}
                     <option value="{{ mentor.id }}" selected>{{ mentor.firstName }} {{ mentor.lastName }}</option>
