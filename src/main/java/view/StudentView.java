@@ -51,7 +51,9 @@ public class StudentView {
         model.with("name", studentModel.getFullName());
         model.with("email", studentModel.getEmail());
         model.with("group", studentModel.getGroup().getGroupName());
-        model.with("level", level.getName()); // Todo add reading level
+        int totalExp = studentModel.getMyWallet().getTotalCoolcoins();
+        String levelStr = String.format("%s (%d EXP)", level.getName(), totalExp);
+        model.with("level", levelStr); // Todo add reading level
         return template.render(model);
     }
 }
