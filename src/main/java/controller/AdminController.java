@@ -1,19 +1,15 @@
 package controller;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.security.acl.Group;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
 import model.*;
-import org.apache.commons.lang3.ArrayUtils;
 import view.AdminView;
-import view.Static;
+
 
 
 public class AdminController extends AbstractContoller implements HttpHandler {
@@ -69,6 +65,9 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                 case "/admin/create-mentor":
                     handleCreateMentor(httpExchange);
                     break;
+                case "/admin/create-group":
+                    handleCreateGroup(httpExchange);
+                    break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
                     System.out.println("admin");
@@ -77,9 +76,32 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         }
     }
 
+    private void handleCreateGroup(HttpExchange httpExchange) throws IOException {
+        String method = httpExchange.getRequestMethod();
+        if(method.equals("POST")){
+            Map<String, String> inputs = getMapFromISR(httpExchange);
+            String name = inputs.get("name");
+
+            groupDao.addNewGroup(name);
+            renderCreateGroupWithMessage(httpExchange, "Group creation was successful!");
+        } else{
+            renderCreateGroup(httpExchange);
+        }
+    }
+
+    private void renderCreateGroup(HttpExchange httpExchange) throws IOException {
+        String response = view.getCreateGroup();
+        handlePositiveResponse(httpExchange, response);
+    }
+
     private void renderMentorsData(HttpExchange httpExchange) throws IOException {
         List<MentorModel> allMentors = mentorDao.getAllMentorsCollection();
         String response = view.getMentorsDisplay(allMentors);
+        handlePositiveResponse(httpExchange, response);
+    }
+
+    private void renderCreateGroupWithMessage(HttpExchange httpExchange, String message) throws IOException{
+        String response = view.getCreateGroupMessage(message);
         handlePositiveResponse(httpExchange, response);
     }
 
