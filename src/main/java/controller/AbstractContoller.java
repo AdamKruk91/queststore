@@ -48,11 +48,9 @@ abstract class AbstractContoller{
     }
 
     void handlePositiveResponse(HttpExchange httpExchange, String response) throws IOException{
-        httpExchange.sendResponseHeaders(200, response.length());
+        httpExchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
     }
-
-
 }

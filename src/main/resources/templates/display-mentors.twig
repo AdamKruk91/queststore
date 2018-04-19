@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,32 +28,21 @@
         <div class="col-12 area">
           <h2>Our Mentors:</h2>
           <table class="default-table">
-            <tr>
-              <th>Mentor ID</th>
-              <th>Name</th>
-              <th>Surname</th>
-              <th>Group</th>
-            </tr>
-
-            <tr onclick="location.href='#'">
-              <td>1</td>
-              <td>Zenek</td>
-              <td>Mrozowski</td>
-              <td>A</td>
-            </tr>
-            <tr onclick="location.href='#'">
-              <td>2</td>
-              <td>Piotr</td>
-              <td>Podsiadlo</td>
-              <td>A</td>
-            </tr>
-            <tr onclick="location.href='#'">
-                <td>3</td>
-                <td>Marzena</td>
-                <td>Mruwka</td>
-                <td>B</td>
-            </tr>
-          </table>
+              <tr>
+                <th>Mentor ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Group</th>
+              </tr>
+              {% for mentor in mentors %}
+                  <tr>
+                      <td>{{ mentor.id }}</td>
+                      <td>{{ mentor.firstName }}</td>
+                      <td>{{ mentor.lastName }}</td>
+                      <td>{{ mentor.email }}</td>
+                  </tr>
+              {% endfor %}
+        </table>
         </div>
     </section>
 
