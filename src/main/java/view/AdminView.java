@@ -83,7 +83,7 @@ public class AdminView {
     }
 
     public String getMentorsDisplay (List<MentorModel> mentors) {
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin-profile.twig");
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/display-mentors.twig");
         JtwigModel model = JtwigModel.newModel();
         return template.render(model);
     }

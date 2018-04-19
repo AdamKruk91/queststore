@@ -9,6 +9,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
 import model.*;
+import org.apache.commons.lang3.ArrayUtils;
 import view.AdminView;
 import view.Static;
 
@@ -57,7 +58,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         switch (URI){
             case "/admin/display-mentors":
                 renderMentorsData(httpExchange);
-                System.out.println("Renderuje mentorów");
                 break;
             case "/admin":
                 renderProfile(httpExchange, loginID);
