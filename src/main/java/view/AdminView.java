@@ -96,4 +96,12 @@ public class AdminView {
         model.with("groups", groups);
         return template.render(model);
     }
+
+    public String getCreateMentorMessage (List<GroupModel> groups, String message) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-mentor-alert.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("groups", groups);
+        model.with("message", message);
+        return template.render(model);
+    }
 }
