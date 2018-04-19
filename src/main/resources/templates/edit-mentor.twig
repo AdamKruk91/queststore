@@ -54,13 +54,24 @@
                         <div id="hiddenDiv1">
                             <img class="col-12" src="static\img\emptyprofile.png" alt="Profile picture">
                             <div class="col-12 profile-info">
+                                <form>
                                 <ul class="edition">
+                                    <li><input type="text" name="id" value="{{ mentor.id }}" readonly></li>
                                     <li><input type="text" name="name" value="{{ mentor.firstName }}"></li>
                                     <li><input type="text" name="surname" value="{{ mentor.LastName }}"></li>
                                     <li><input type="text" name="email" value="{{ mentor.email }}"></li>
                                     <li><input type="text" name="password" value="{{ mentor.password }}"></li>
+                                    <div class="col-12 dropdown">
+                                        <label>Choose Group:</label>
+                                        <select name="dropdown">
+                                            {% for group in groups %}
+                                                <option value="{{group.id}}">{{group.groupName}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                     <input class="col-4 submit-button" type="submit" value="Edit Mentor!" formmethod="post">
                                 </ul>
+                                </form>
                             </div>
                         </div>
                     </div>
