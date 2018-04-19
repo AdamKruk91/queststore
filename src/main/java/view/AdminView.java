@@ -120,10 +120,11 @@ public class AdminView {
         return template.render(model);
     }
 
-    public String getEditMentor(List<MentorModel> mentors) {
+    public String getEditMentor(List<MentorModel> mentors, List<GroupModel> groups) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/edit-mentor.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("mentors", mentors);
+        model.with("groups", groups);
         return template.render(model);
     }
 }
