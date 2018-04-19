@@ -87,6 +87,19 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         if(method.equals("POST")){
             Map<String, String> inputs = getMapFromISR(httpExchange);
+            String firstName = inputs.get("name");
+            String lastName = inputs.get("surname");
+            String email = inputs.get("email");
+            String password = inputs.get("password");
+            int groupId = Integer.parseInt(inputs.get("dropdown"));
+            MentorModel mentorModel = new MentorModel(firstName, lastName, email, password, groupId);
+            try {
+                mentorDao.insertNewMentor(mentorModel);
+                renderCreateMentorWithMessage(httpExchange, "Mentor creation was successful!");
+            } catch (SQLException e){
+                e.printStackTrace();
+                renderCreateMentorWithMessage(httpExchange, "Mentor creation failed!");
+            }
         } else{
             renderCreateMentor(httpExchange);
         }
