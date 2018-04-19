@@ -25,7 +25,7 @@ class TransactionDaoTest extends TestableDatabaseUnit{
     void testUpdateStatusOfTransaction() {
         ItemModel mockItem = Mockito.mock(ItemModel.class);
         Mockito.when(mockItem.getID()).thenReturn(1);
-        transactionDao.updateStatusOfTransaction(mockItem);
+        transactionDao.updateStatusOfTransaction(mockItem, 1);
 
         String query = "SELECT count(*) as rows_count FROM Transactions WHERE id_item = 1;";
         ResultSet rs = transactionDao.executeSelect(query);
