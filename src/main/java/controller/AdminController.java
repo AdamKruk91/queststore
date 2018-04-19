@@ -54,17 +54,21 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
         //TODO get URI and do switch on it
         String URI = httpExchange.getRequestURI().toString();
-        System.out.println(URI);
-        switch (URI){
-            case "/admin/display-mentors":
-                renderMentorsData(httpExchange);
-                break;
-            case "/admin":
-                renderProfile(httpExchange, loginID);
-                System.out.println("admin");
-                break;
-        }
 
+        if(URI.startsWith("/admin/static")){
+            redirectTo(httpExchange, URI.replace("/admin", ""));
+        } else {
+            System.out.println(URI);
+            switch (URI) {
+                case "/admin/display-mentors":
+                    renderMentorsData(httpExchange);
+                    break;
+                case "/admin":
+                    renderProfile(httpExchange, loginID);
+                    System.out.println("admin");
+                    break;
+            }
+        }
     }
 
     private void renderMentorsData(HttpExchange httpExchange) throws IOException {
