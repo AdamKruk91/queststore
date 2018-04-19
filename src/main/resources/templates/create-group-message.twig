@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="static\css\style.css">
-    <link rel="stylesheet" href="static\css\user-profile.css">
-    <title>User profile</title>
+    <link rel="stylesheet" href="static\css\create-user.css">
+    <title>Admin Panel</title>
 </head>
 <body>
 <header>
@@ -25,14 +25,13 @@
         </nav>
     </aside>
     <section class="col-6">
-        <div class="col-6 user-info">
-            <div class="col-12 profile-info">
-                <ul>
-                    <li>Full Name: {{ name }}</li>
-                    <li>Email: {{ email }}</li>
-                </ul>
-            </div>
-            <a href="#" class="contact-button">Contact Me!</a>
+        <div class="col-6 area">
+            <h2>Create group!</h2>
+            <form>
+                <input class="col-12" type="text" name="name" placeholder="Name">
+                <p><br>{{ message }}</p>
+                <input class="col-4 submit-button" type="submit" value="Create new group!" formmethod="post">
+            </form>
         </div>
     </section>
 
