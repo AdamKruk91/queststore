@@ -54,8 +54,8 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         //TODO get URI and do switch on it
         String URI = httpExchange.getRequestURI().toString();
 
-        if(URI.startsWith("/admin/static")){
-            redirectTo(httpExchange, URI.replace("/admin", ""));
+        if(URI.contains("/static")) {
+            redirectTo(httpExchange, URI.substring(URI.indexOf("/static")));
         } else {
             System.out.println(URI);
             switch (URI) {
@@ -68,12 +68,37 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                 case "/admin/create-group":
                     handleCreateGroup(httpExchange);
                     break;
+                case "/admin/edit-mentor":
+                    handleEditMentor(httpExchange);
+                    break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
-                    System.out.println("admin");
                     break;
             }
         }
+    }
+
+    private void handleEditMentor(HttpExchange httpExchange) throws IOException{
+        String method = httpExchange.getRequestMethod();
+        if(method.equals("POST")) {
+            Map<String, String> inputs = getMapFromISR(httpExchange);
+            int id = Integer.parseInt(inputs.get("id"));
+            String firstName = inputs.get("name");
+            String lastName = inputs.get("surname");
+            String email = inputs.get("email");
+            String password = inputs.get("password");
+            int groupId = Integer.parseInt(inputs.get("dropdown"));
+            MentorModel mentorModel = new MentorModel(id, firstName, lastName, email, password, groupId);
+            mentorDao.updateMentorTable(mentorModel);
+            renderEditMentor(httpExchange);
+        } else {
+            renderEditMentor(httpExchange);
+        }
+    }
+
+    private void renderEditMentor(HttpExchange httpExchange) throws IOException{
+        String response = view.getEditMentor(mentorDao.getAllMentorsCollection(), groupDao.getGroupsCollection());
+        handlePositiveResponse(httpExchange, response);
     }
 
     private void handleCreateGroup(HttpExchange httpExchange) throws IOException {
