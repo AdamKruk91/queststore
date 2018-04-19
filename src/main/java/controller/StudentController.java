@@ -55,8 +55,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
         final String URI = httpExchange.getRequestURI().toString();
 
-        if(URI.startsWith("/student/static")) {
-            redirectTo(httpExchange, URI.replace("/student", ""));
+        if(URI.contains("/static")) {
+            redirectTo(httpExchange, URI.substring(URI.indexOf("/static")));
 
         } else if(URI.startsWith("/student/wallet/use/")) {
             useArtifact(httpExchange);
@@ -68,6 +68,12 @@ public class StudentController extends AbstractContoller implements HttpHandler 
                     break;
                 case "/student/wallet":
                     renderWallet(httpExchange, loginID);
+                    break;
+                case "/student/wallet/pending":
+                    renderWalletPending(httpExchange, loginID);
+                    break;
+                case "/student/wallet/used":
+                    renderWalletUsed(httpExchange, loginID);
                     break;
 
                 default:
@@ -112,6 +118,30 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         os.write(response.getBytes());
         os.close();
     }
+
+    private void renderWalletPending(HttpExchange httpExchange, int loginID) throws IOException {
+        StudentModel student = getStudent(loginID);
+        TransactionDao transactionDao = new TransactionDao();
+        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 2);
+        String response = view.getWalletPendingScreen(student, artifacts);
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    private void renderWalletUsed(HttpExchange httpExchange, int loginID) throws IOException {
+        StudentModel student = getStudent(loginID);
+        TransactionDao transactionDao = new TransactionDao();
+        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 1);
+        String response = view.getWalletUsedScreen(student, artifacts);
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+
 
     private StudentModel getStudent(int idLogin) {
         return studentDao.getStudentByIdLogin(idLogin);

@@ -26,12 +26,8 @@
     <aside class="menu col-3">
         <nav>
             <ul>
-                <li><a href="create-student.html" class="button">Create student</a></li>
-                <li><a href="#" class="button">Create quest</a></li>
-                <li><a href="#" class="button">Create artifact</a></li>
-                <li><a href="edit-user.html" class="button">Edit student</a></li>
-                <li><a href="#" class="button">Display students</a></li>
-                <li><a href="display-wallet.html" class="button">Display wallet</a></li>
+                <li><a href="/student" class="button">Display profile</a></li>
+                <li><a href="/wallet" class="button">Display wallet</a></li>
             </ul>
         </nav>
     </aside>
@@ -40,9 +36,9 @@
             <h4 class="col-6 far fa-user" id="owner"> : {{ fullname }}</h4>
             <h4 class="col-6 far fa-closed-captioning" id="coolcoins"> : {{ coins }}cc</h4>
             <div class="tab col-12">
-                <button class="tablinks" onclick="openTab(event, 'Owned')">Owned</button>
-                <button class="tablinks" onclick="openTab(event, 'Pending')">Pending</button>
-                <button class="tablinks" onclick="openTab(event, 'Used')">Used</button>
+                <a href="\student\wallet" class="tablinks active">Owned</a>
+                <a href="\student\wallet\pending" class="tablinks" >Pending</a>
+                <a href="\student\wallet\used\" class="tablinks" >Used</a>
             </div>
             <table class="default-table">
                 <col width="70%">

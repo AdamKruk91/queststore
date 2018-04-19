@@ -63,4 +63,24 @@ public class StudentView {
         model.with("artifact_list", artifacts);
         return template.render(model);
     }
+
+    public String getWalletUsedScreen (StudentModel student, List<ItemModel> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-used.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("fullname", student.getFullName());
+        model.with("coins", student.getMyWallet().getBalance());
+        model.with("artifact_list", artifacts);
+        return template.render(model);
+    }
+
+    public String getWalletPendingScreen (StudentModel student, List<ItemModel> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-pending.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("fullname", student.getFullName());
+        model.with("coins", student.getMyWallet().getBalance());
+        model.with("artifact_list", artifacts);
+        return template.render(model);
+    }
 }

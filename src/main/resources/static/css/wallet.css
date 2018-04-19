@@ -6,7 +6,7 @@
 }
 
 /* Style the buttons that are used to open the tab content */
-.tab button {
+.tab a {
     font-size: 12px;
     background-color: #f1f1f1;
     float: left;
@@ -16,15 +16,16 @@
     cursor: pointer;
     padding: 5px 16px;
     transition: 0.3s;
+    text-decoration: none;
 }
 
 /* Change background color of buttons on hover */
-.tab button:hover {
+.tab a:hover {
     background-color: #ddd;
 }
 
 /* Create an active/current tablink class */
-.tab button.active {
+.tab a.active {
     background-color: #ccc;
 }
 
