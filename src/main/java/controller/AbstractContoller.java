@@ -47,5 +47,12 @@ abstract class AbstractContoller{
         return LoginController.loggedInUsers.get(cookie.getValue());
     }
 
+    void handlePositiveResponse(HttpExchange httpExchange, String response) throws IOException{
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
 
 }

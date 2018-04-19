@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpHandler;
 import dao.*;
 import model.*;
 import view.AdminView;
+import view.Static;
 
 
 public class AdminController extends AbstractContoller implements HttpHandler {
@@ -20,6 +21,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private LoginDao loginDao = new LoginDao();
     private LevelDao levelDAO = new LevelDao();
     private AdminDao adminDao = new AdminDao();
+
 
     public AdminController() {
         view = new AdminView();
@@ -46,21 +48,35 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         } else {
             redirectTo(httpExchange, "/login");
         }
-        System.out.println("Success i guess");
     }
 
     private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
         //TODO get URI and do switch on it
-        renderProfile(httpExchange, loginID);
+        String URI = httpExchange.getRequestURI().toString();
+        System.out.println(URI);
+        switch (URI){
+            case "/admin/display-mentors":
+                renderMentorsData(httpExchange);
+                System.out.println("Renderuje mentorów");
+                break;
+            case "/admin":
+                renderProfile(httpExchange, loginID);
+                System.out.println("admin");
+                break;
+        }
+
+    }
+
+    private void renderMentorsData(HttpExchange httpExchange) throws IOException {
+        List<MentorModel> allMentors = mentorDao.getAllMentorsCollection();
+        String response = view.getMentorsDisplay(allMentors);
+        handlePositiveResponse(httpExchange, response);
     }
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
         AdminModel admin = getAdmin(loginID);
         String response = view.getProfileScreen(admin);
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        handlePositiveResponse(httpExchange, response);
     }
 
     private AdminModel getAdmin(int idLogin) {
@@ -135,7 +151,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private MentorModel selectMentor() {
-        MentorDao mentorDao = new MentorDao();
         List<MentorModel> allMentors = mentorDao.getAllMentorsCollection();
         view.displayAllMentors(allMentors);
         int id = inputController.getIntInput("Enter mentor id to edit: ");

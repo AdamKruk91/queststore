@@ -81,4 +81,10 @@ public class AdminView {
         model.with("email", adminModel.getEmail());
         return template.render(model);
     }
+
+    public String getMentorsDisplay (List<MentorModel> mentors) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin-profile.twig");
+        JtwigModel model = JtwigModel.newModel();
+        return template.render(model);
+    }
 }
