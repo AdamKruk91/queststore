@@ -1,9 +1,6 @@
 package view;
 
-import model.Level;
-import model.StudentModel;
-import model.WalletModel;
-import model.ItemModel;
+import model.*;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
@@ -54,6 +51,16 @@ public class StudentView {
         int totalExp = studentModel.getMyWallet().getTotalCoolcoins();
         String levelStr = String.format("%s (%d EXP)", level.getName(), totalExp);
         model.with("level", levelStr); // Todo add reading level
+        return template.render(model);
+    }
+
+    public String getWalletScreen (StudentModel student, List<ItemModel> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("fullname", student.getFullName());
+        model.with("coins", student.getMyWallet().getBalance());
+        model.with("artifact_list", artifacts);
         return template.render(model);
     }
 }

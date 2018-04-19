@@ -52,8 +52,25 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
-        //TODO get URI and do switch on it
-        renderProfile(httpExchange, loginID);
+
+        final String URI = httpExchange.getRequestURI().toString();
+
+        if(URI.startsWith("/student/static")) {
+            redirectTo(httpExchange, URI.replace("/student", ""));
+
+        } else {
+
+            switch (URI) {
+                case "/student":
+                    renderProfile(httpExchange, loginID);
+                    break;
+                case "/student/wallet":
+                    renderWallet(httpExchange, loginID);
+                    break;
+                default:
+                    System.out.println("Wrong address:" + URI);
+            }
+        }
     }
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
@@ -67,6 +84,17 @@ public class StudentController extends AbstractContoller implements HttpHandler 
             e.printStackTrace();
         }
         String response = view.getProfileScreen(student, level);
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    private void renderWallet(HttpExchange httpExchange, int loginID) throws IOException {
+        StudentModel student = getStudent(loginID);
+        TransactionDao transactionDao = new TransactionDao();
+        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID());
+        String response = view.getWalletScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
