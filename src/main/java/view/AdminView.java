@@ -5,6 +5,7 @@ import model.*;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -89,9 +90,10 @@ public class AdminView {
         return template.render(model);
     }
 
-    public String getCreateMentor (List<MentorModel> mentors) {
+    public String getCreateMentor (List<GroupModel> groups) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-mentor.twig");
         JtwigModel model = JtwigModel.newModel();
+        model.with("groups", groups);
         return template.render(model);
     }
 }

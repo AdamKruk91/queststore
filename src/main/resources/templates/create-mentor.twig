@@ -34,10 +34,10 @@
                 <input class="col-12" type="password" placeholder="Password">
                 <div class="col-12 dropdown">
                     <label>Choose Group:</label>
-                    <select name="group">
-                        {{% for group in groups %}}
-                        <option value={{group.id}}>{{group.groupName}}</option>
-                        {{% endfor %}}
+                    <select name="dropdown">
+                        {% for group in groups %}
+                        <option value="{{group.id}}">{{group.groupName}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <input class="col-4 submit-button" type="submit" value="Add new mentor!" formmethod="post">

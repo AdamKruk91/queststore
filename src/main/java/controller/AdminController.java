@@ -87,14 +87,13 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         if(method.equals("POST")){
             Map<String, String> inputs = getMapFromISR(httpExchange);
-            renderCreateMentor(httpExchange);
         } else{
             renderCreateMentor(httpExchange);
         }
     }
 
     private void renderCreateMentor(HttpExchange httpExchange) throws IOException {
-        String response = view.getCreateUser(groupDao.getGroupsCollection());
+        String response = view.getCreateMentor(groupDao.getGroupsCollection());
         handlePositiveResponse(httpExchange, response);
     }
 
