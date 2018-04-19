@@ -164,7 +164,7 @@ public class MentorController {
     private void markItem(String typeName) throws SQLException {
         ItemModel itemToMark = chooseItemToMark(typeName);
         TransactionDao transactionDao = new TransactionDao();
-        transactionDao.updateStatusOfTransaction(itemToMark);
+        transactionDao.updateStatusOfTransaction(itemToMark, 1);
     }
 
     private List<ItemModel> getStudentArtifacts(int id) {

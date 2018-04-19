@@ -22,6 +22,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private LevelDao levelDao = new LevelDao();
     private ItemDao itemDao = new ItemDao();
     private StudentDao studentDao = new StudentDao();
+    private TransactionDao transactionDao = new TransactionDao();
 
     public StudentController() {
         view = new StudentView();
@@ -29,35 +30,36 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
+        try {
+            if (isCookieValid(httpExchange)) {
+                int loginID = getLoginIdFromCookie(httpExchange);
+                String userType = loginDao.findStatusByLoginId(loginID);
 
-        if(isCookieValid(httpExchange)) {
-            int loginID = getLoginIdFromCookie(httpExchange);
-            String userType = "";
 
-            try {
-                userType = loginDao.findStatusByLoginId(loginID);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            if(!userType.equals("Student")) {
-                redirectTo(httpExchange, "/login");
+                if (!userType.equals("Student")) {
+                    redirectTo(httpExchange, "/login");
+                } else {
+                    handleRendering(httpExchange, loginID);
+                }
             } else {
-                handleRendering(httpExchange, loginID);
+                redirectTo(httpExchange, "/login");
             }
-        } else {
-            redirectTo(httpExchange, "/login");
+            System.out.println("Success i guess");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // TODO : display error message in browser
         }
-        System.out.println("Success i guess");
     }
 
-    private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
+    private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException, SQLException {
 
         final String URI = httpExchange.getRequestURI().toString();
 
         if(URI.startsWith("/student/static")) {
             redirectTo(httpExchange, URI.replace("/student", ""));
 
+        } else if(URI.startsWith("/student/wallet/use/")) {
+            useArtifact(httpExchange);
         } else {
 
             switch (URI) {
@@ -67,10 +69,20 @@ public class StudentController extends AbstractContoller implements HttpHandler 
                 case "/student/wallet":
                     renderWallet(httpExchange, loginID);
                     break;
+
                 default:
                     System.out.println("Wrong address:" + URI);
             }
         }
+    }
+
+    private void useArtifact(HttpExchange httpExchange) throws SQLException, IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/student/wallet/use/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        ItemModel artifact = itemDao.getItemByID(artifactID);
+        transactionDao.updateStatusOfTransaction(artifact, 2);
+        redirectTo(httpExchange,"/student/wallet");
     }
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {

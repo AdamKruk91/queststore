@@ -80,4 +80,12 @@ public class ItemDao extends ManipulationDao {
         ResultSet result = selectFromJoinedTablesWithCondition(columns, "Item", "Transactions", joinStatement, condition);
         return fillCollection(result, typeName);
     }
+
+    public ItemModel getItemByID(int itemID) {
+        String columns = "id_item, item_name, description, price";
+        String joinStatement = "item.id_type = ItemType.id_type";
+        String condition = " id_item ="+itemID;
+        ResultSet result = selectFromJoinedTablesWithCondition(columns, "Item", "ItemType", joinStatement, condition);
+        return createItemObject(result, "Artifact");
+    }
 }

@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TransactionDao extends ManipulationDao implements TransationDaoInterface {
+public class TransactionDao extends ManipulationDao {
 
     public void insertTransaction(int idStudent, int idItem) {
         String values =  "("+ idStudent +", " + idItem+ "," + 0 + ")";
         insertDataIntoTable("Transactions ", "(id_student, id_item, used)", values);
     }
 
-    public void updateStatusOfTransaction(ItemModel item) {
+    public void updateStatusOfTransaction(ItemModel item, int statusID) {
         int itemId = item.getID();
-        updateDataInTable("Transactions", "used = 1", "id_item="+itemId);
+        updateDataInTable("Transactions", "used = "+statusID, "id_item="+itemId);
     }
 
     private String prepareGetArtifactsSql(int idStudent) {
