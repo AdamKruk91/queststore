@@ -11,7 +11,7 @@ import java.util.List;
 public class StudentDao extends ManipulationDao implements StudentDaoInterface {
 
 
-    private int getIdStatus() {
+    private int getIdStatus() throws SQLException {
         ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
         return getIntFromResult(result, "id_status");
     }
@@ -88,14 +88,33 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         insertDataIntoTable(tableName, columns, values);
     }
 
-    private int insertNewLogin(String email, String password) {
+    private int insertNewLogin(String email, String password) throws SQLException {
         LoginDao loginDao = new LoginDao();
         int idStatus = loginDao.findStatusIdByName("Student");
         loginDao.insertNewLogin(email, password, idStatus);
         return loginDao.findLoginId(email, password);
     }
 
-    public void insertNewStudent(StudentModel student) {
+    public void deleteStudent(int idStudent){
+        String condition = "Student.id_student = " +idStudent;
+        removeDataFromTable("Student", condition);
+    }
+
+    public void deleteWallet(int idStudent){
+        String condition = "Wallet.id_student = " +idStudent;
+        removeDataFromTable("Wallet", condition);
+    }
+
+    public void updateStudentTable(StudentModel studentModel) {
+        String name = studentModel.getFirstName();
+        String lastName = studentModel.getLastName();
+        int idStudent = studentModel.getID();
+        int groupId = studentModel.getGroup().getId();
+        updateDataInTable("Student", "first_name='"+name+"', last_name='"+lastName+"'" + ", id_group='"+groupId+"'","id_student=" + idStudent);
+    }
+
+
+    public void insertNewStudent(StudentModel student) throws SQLException {
         int idLogin = insertNewLogin(student.getEmail(), student.getPassword());
         int id_group = student.getGroupId();
         String table = "Student";

@@ -1,0 +1,31 @@
+#hiddenDiv1{
+    display: inline-block;
+    margin-top: 5%;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px black solid;
+}
+
+#hiddenDiv2{
+    display: inline-block;
+    margin-top: 5%;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px black solid;
+}
+
+#hiddenDiv3{
+    display: inline-block;
+    margin-top: 5%;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px black solid;
+}
+
+.edition {
+  text-align: center;
+}
+label[for=edition]{
+    text-align: center;
+    font-size: small;
+}

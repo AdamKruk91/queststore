@@ -18,4 +18,8 @@ public class MentorModel extends UserModel {
     public int getIdGroup() {
         return idGroup;
     }
+
+    public void setIdGroup(int idGroup) {
+        this.idGroup = idGroup;
+    }
 }

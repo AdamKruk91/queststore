@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TransactionDao extends ManipulationDao implements TransationDaoInterface {
+public class TransactionDao extends ManipulationDao {
 
     public void insertTransaction(int idStudent, int idItem) {
         String values =  "("+ idStudent +", " + idItem+ "," + 0 + ")";
         insertDataIntoTable("Transactions ", "(id_student, id_item, used)", values);
     }
 
-    public void updateStatusOfTransaction(ItemModel item) {
+    public void updateStatusOfTransaction(ItemModel item, int statusID) {
         int itemId = item.getID();
-        updateDataInTable("Transactions", "used = 1", "id_item="+itemId);
+        updateDataInTable("Transactions", "used = "+statusID, "id_item="+itemId);
     }
 
-    private String prepareGetArtifactsSql(int idStudent) {
+    private String prepareGetArtifactsSql(int idStudent, int idStatus) {
         String columns = "Item.id_item, item_name, description, price, used";
         String joinStmt1 = "Item.id_item = Transactions.id_item";
         String joinStmt2 = "Item.id_type = ItemType.id_type";
@@ -28,7 +28,7 @@ public class TransactionDao extends ManipulationDao implements TransationDaoInte
         String sql = "SELECT " + columns + " FROM Transactions " +
                 " JOIN Item ON " + joinStmt1 +
                 " JOIN ItemType ON " + joinStmt2 +
-                " WHERE id_student= '" + idStudent + "' AND ItemType.name='Artifact' AND used=0";
+                " WHERE id_student= '" + idStudent + "' AND ItemType.name='Artifact' AND used= " + idStatus + ";";
         return sql;
     }
 
@@ -46,10 +46,22 @@ public class TransactionDao extends ManipulationDao implements TransationDaoInte
         return artifact;
     }
 
-    public List<ItemModel> getStudentArtifact(int idStudent) {
-        List<ItemModel> artifactsCollection = new ArrayList<>();
-        String sql = prepareGetArtifactsSql(idStudent);
+    public List<ItemModel> getStudentArtifact(int idStudent, int idStatus) {
+        String sql = prepareGetArtifactsSql(idStudent, idStatus);
         ResultSet result = executeSelect(sql);
+
+        return getArtifactsFromResultSet(result);
+    }
+
+    public List<ItemModel> getStudentArtifact(int idStudent) {
+        String sql = prepareGetArtifactsSql(idStudent, 0);
+        ResultSet result = executeSelect(sql);
+
+        return getArtifactsFromResultSet(result);
+    }
+
+    private List<ItemModel> getArtifactsFromResultSet(ResultSet result){
+        List<ItemModel> artifactsCollection = new ArrayList<>();
         try {
             while (result.next()) {
                 ItemModel artifact = getItemObject(result);
@@ -60,4 +72,5 @@ public class TransactionDao extends ManipulationDao implements TransationDaoInte
         }
         return artifactsCollection;
     }
+
 }

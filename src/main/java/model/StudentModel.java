@@ -33,6 +33,10 @@ public class StudentModel extends UserModel {
         return this.myGroupId;
     }
 
+    public void setGroup(GroupModel group) {
+        this.group = group;
+    }
+
     public void updateAccountBalance(int value){
         this.myWallet.setBalance(value);
         this.myWallet.setTotalCoolcoins(value);

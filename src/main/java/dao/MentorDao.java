@@ -13,18 +13,18 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
     private LoginDao loginDao = new LoginDao();
 
-    private int getIdStatus() {
+    private int getIdStatus() throws SQLException {
         ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
         return getIntFromResult(result, "id_status");
     }
 
-    private int insertNewLogin(String email, String password) {
+    private int insertNewLogin(String email, String password) throws SQLException {
         int idStatus = loginDao.findStatusIdByName("Mentor");
         loginDao.insertNewLogin(email, password, idStatus);
         return loginDao.findLoginId(email, password);
     }
 
-    public void insertNewMentor(MentorModel mentor) {
+    public void insertNewMentor(MentorModel mentor) throws SQLException {
         int idLogin = insertNewLogin(mentor.getEmail(), mentor.getPassword());
         String table = "Mentor";
         String columns = "(first_name, last_name, id_login, id_status, id_group)";
@@ -37,7 +37,8 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         String name = mentor.getFirstName();
         String lastName = mentor.getLastName();
         int idMentor = mentor.getID();
-        updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'", "id_mentor=" + idMentor);
+        int groupId = mentor.getIdGroup();
+        updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'" + ", id_group='"+groupId+"'", "id_mentor=" + idMentor);
     }
 
     public List<MentorModel> getAllMentorsCollection() {
@@ -61,6 +62,12 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
             e.printStackTrace();
         }
         return mentorCollection;
+    }
+
+    public void deleteMentor(int idMentor){
+        String condition = "Mentor.id_mentor = " + idMentor;
+        removeDataFromTable("Mentor", condition);
+
     }
 
 }

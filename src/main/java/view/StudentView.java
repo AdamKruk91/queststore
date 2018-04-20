@@ -1,7 +1,8 @@
 package view;
 
-import model.WalletModel;
-import model.ItemModel;
+import model.*;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
 
 import java.util.List;
 
@@ -34,5 +35,52 @@ public class StudentView {
     public void displayWallet(WalletModel wallet) {
         System.out.println("\nBALANCE: " + wallet.getBalance() +
                            "\nTOTAL COOLCOINS: " + wallet.getTotalCoolcoins());
+    }
+
+    public void displayCurrentExperience(int totalExp, String levelName) {
+        System.out.println(String.format("You gained: %d experience so far!" +
+                                         "\nYour level: %s", totalExp, levelName));
+    }
+
+    public String getProfileScreen (StudentModel studentModel, Level level) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-profile.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("name", studentModel.getFullName());
+        model.with("email", studentModel.getEmail());
+        model.with("group", studentModel.getGroup().getGroupName());
+        int totalExp = studentModel.getMyWallet().getTotalCoolcoins();
+        String levelStr = String.format("%s (%d EXP)", level.getName(), totalExp);
+        model.with("level", levelStr); // Todo add reading level
+        return template.render(model);
+    }
+
+    public String getWalletScreen (StudentModel student, List<ItemModel> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("fullname", student.getFullName());
+        model.with("coins", student.getMyWallet().getBalance());
+        model.with("artifact_list", artifacts);
+        return template.render(model);
+    }
+
+    public String getWalletUsedScreen (StudentModel student, List<ItemModel> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-used.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("fullname", student.getFullName());
+        model.with("coins", student.getMyWallet().getBalance());
+        model.with("artifact_list", artifacts);
+        return template.render(model);
+    }
+
+    public String getWalletPendingScreen (StudentModel student, List<ItemModel> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-pending.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("fullname", student.getFullName());
+        model.with("coins", student.getMyWallet().getBalance());
+        model.with("artifact_list", artifacts);
+        return template.render(model);
     }
 }

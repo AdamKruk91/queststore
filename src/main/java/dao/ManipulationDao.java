@@ -38,14 +38,8 @@ public class ManipulationDao implements UserDaoInterface {
         }
     }
 
-    public int getIntFromResult(ResultSet result, String columnName) {
-        int intData = 0;
-        try {
-            intData = result.getInt(columnName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return intData;
+    public int getIntFromResult(ResultSet result, String columnName) throws SQLException{
+        return result.getInt(columnName);
     }
 
     public String getStringFromResult(ResultSet result, String columnName) {
@@ -75,6 +69,11 @@ public class ManipulationDao implements UserDaoInterface {
 
     public void updateDataInTable(String table, String setQuerry, String condition) {
         String sql = "UPDATE " + table + " SET " + setQuerry + " WHERE " + condition;
+        executeUpdate(sql);
+    }
+
+    public void removeDataFromTable(String table, String condition){
+        String sql = "DELETE FROM " + table + " WHERE " + condition;
         executeUpdate(sql);
     }
 
