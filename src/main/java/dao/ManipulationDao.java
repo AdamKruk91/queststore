@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 
 
-public class ManipulationDao implements UserDaoInterface {
+public class ManipulationDao{
 
     private static DatabaseConnection database = DatabaseConnection.getInstance();
     private static Connection connection;

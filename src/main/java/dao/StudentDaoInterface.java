@@ -7,12 +7,11 @@ import java.util.List;
 
 public interface StudentDaoInterface {
 
-    StudentModel getStudentByIdLogin(int idLogin);
-
+    StudentModel getStudentById(int id);
     List<StudentModel> getStudentsCollection();
-
-    void insertNewStudent(StudentModel student) throws SQLException;
-
+    void addStudent(StudentModel student) throws SQLException;
+    void deleteStudent(int id) throws SQLException;
+    void updateStudent(StudentModel student) throws SQLException;
     void updateWallet(StudentModel student);
 }
 

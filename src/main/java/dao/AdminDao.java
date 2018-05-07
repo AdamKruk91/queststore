@@ -1,19 +1,15 @@
 package dao;
 
 import model.AdminModel;
-import model.GroupModel;
-import model.StudentModel;
-import model.WalletModel;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AdminDao extends ManipulationDao{
+public class AdminDao extends ManipulationDao implements AdminDaoInterface{
 
-    public AdminModel getAdminByIdLogin(int idLogin) {
+    public AdminModel getAdminById(int id) {
         String columns = "Login.email, Login.password, Admin.id_admin, first_name, last_name";
         String joinStmt1 = "Login.id_login=Admin.id_login";
-        String condition = "Admin.id_login=" +idLogin;
+        String condition = "Admin.id_login=" +id;
 
         String sql = "SELECT " + columns + " FROM Admin JOIN Login ON " +  joinStmt1 +
                      " WHERE " +  condition;

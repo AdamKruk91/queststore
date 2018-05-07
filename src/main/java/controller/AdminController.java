@@ -10,8 +10,6 @@ import dao.*;
 import model.*;
 import view.AdminView;
 
-
-
 public class AdminController extends AbstractContoller implements HttpHandler {
 
     private AdminView view;
@@ -176,8 +174,8 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         return new MentorModel(id, firstName, lastName, email, password, groupId);
     }
 
-    private AdminModel getAdmin(int idLogin) {
-        return adminDao.getAdminByIdLogin(idLogin);
+    private AdminModel getAdmin(int id) {
+        return adminDao.getAdminById(id);
     }
 
     private MentorModel selectMentor() {
@@ -247,53 +245,4 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

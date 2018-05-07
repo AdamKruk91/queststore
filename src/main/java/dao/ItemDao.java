@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.sql.SQLException;
 
 
-public class ItemDao extends ManipulationDao {
+public class ItemDao extends ManipulationDao{
 
 
     public void insertNewItem(ItemModel item) throws SQLException {

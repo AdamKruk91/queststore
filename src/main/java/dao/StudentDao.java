@@ -29,12 +29,12 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         return sql;
     }
 
-    public StudentModel  getStudentByIdLogin(int idLogin) { // todo change method name, it's confusing becouse we get only id
+    public StudentModel  getStudentById(int id) { // todo change method name, it's confusing becouse we get only id
         String columns = "Login.email, Login.password, Student.id_student, first_name, last_name, id_wallet, total_coolcoins, balance, Student.id_group, Groups.name AS group_name";
         String joinStmt1 = "Login.id_login=Student.id_login";
         String joinStmt2 = "Wallet.id_student=Student.id_student";
         String joinStmt3 = "Groups.id_group = Student.id_group";
-        String condition = "Student.id_login=" +idLogin;
+        String condition = "Student.id_login=" +id;
 
         String sql = "SELECT " + columns + " FROM Student JOIN Login ON " +  joinStmt1 +
                     " JOIN Wallet ON " + joinStmt2 +
@@ -95,8 +95,8 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         return loginDao.findLoginId(email, password);
     }
 
-    public void deleteStudent(int idStudent){
-        String condition = "Student.id_student = " +idStudent;
+    public void deleteStudent(int id){
+        String condition = "Student.id_student = " +id;
         removeDataFromTable("Student", condition);
     }
 
@@ -105,7 +105,7 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         removeDataFromTable("Wallet", condition);
     }
 
-    public void updateStudentTable(StudentModel studentModel) {
+    public void updateStudent(StudentModel studentModel) {
         String name = studentModel.getFirstName();
         String lastName = studentModel.getLastName();
         int idStudent = studentModel.getID();
@@ -114,7 +114,7 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
     }
 
 
-    public void insertNewStudent(StudentModel student) throws SQLException {
+    public void addStudent(StudentModel student) throws SQLException {
         int idLogin = insertNewLogin(student.getEmail(), student.getPassword());
         int id_group = student.getGroupId();
         String table = "Student";

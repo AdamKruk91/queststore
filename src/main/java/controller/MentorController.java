@@ -107,7 +107,7 @@ public class MentorController {
         StudentDao studentDao = new StudentDao();
         WalletModel wallet = new WalletModel();
         StudentModel student = new StudentModel(studentName, studentLastName, studentEmail, studentPassword, idGroup, wallet);
-        studentDao.insertNewStudent(student);
+        studentDao.addStudent(student);
     }
 
     private void createQuest() throws SQLException {
@@ -243,7 +243,7 @@ public class MentorController {
     }
 
     private void updateStudentData(StudentModel studentModel){
-        studentDao.updateStudentTable(studentModel);
+        studentDao.updateStudent(studentModel);
     }
 
     private void updateLoginData(StudentModel studentModel, String login, String password) throws SQLException {
