@@ -61,7 +61,7 @@ INSERT INTO `user` VALUES (3,'Creepy','1234','Lucjan','Belzebub','lucek666@piekl
 INSERT INTO `user` VALUES (4,'adi6','haslo','Adrian','Scrum','adisc@email.com',1);
 INSERT INTO `user` VALUES (5,'wtf6','pass','Pawel','Komit','pkomit@email.com',1);
 CREATE TABLE IF NOT EXISTS `session` (
-	`id`	INTEGER NOT NULL UNIQUE,
+	`id`	TEXT NOT NULL UNIQUE,
 	`user_id`	INTEGER NOT NULL,
 	PRIMARY KEY(`id`)
 );
