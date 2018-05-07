@@ -70,6 +70,10 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
     }
 
+    public MentorModel getMentorById(int id) {
+        return null;
+    }
+
 }
 
 

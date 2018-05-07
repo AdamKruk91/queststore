@@ -143,8 +143,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
 
 
-    private StudentModel getStudent(int idLogin) {
-        return studentDao.getStudentByIdLogin(idLogin);
+    private StudentModel getStudent(int id) {
+        return studentDao.getStudentById(id);
     }
 
     private ItemModel selectArtifact() throws SQLException {

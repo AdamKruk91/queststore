@@ -28,7 +28,7 @@ class StudentDaoTest extends TestableDatabaseUnit{
     @Test
     void getStudentByLoginIdReturnsGoodIdTest(){
         Mockito.when(mockStudent.getID()).thenReturn(1);
-        assertEquals(mockStudent.getID(), studentDao.getStudentByIdLogin(4).getID());
+        assertEquals(mockStudent.getID(), studentDao.getStudentById(4).getID());
     }
 
     @Test
@@ -47,7 +47,7 @@ class StudentDaoTest extends TestableDatabaseUnit{
         Mockito.when(mockStudent.getMyWallet()).thenReturn(wallet);
 
         studentDao.updateWallet(mockStudent);
-        StudentModel testStudent = studentDao.getStudentByIdLogin(4);
+        StudentModel testStudent = studentDao.getStudentById(4);
 
         assertEquals(mockStudent.getMyWallet().getTotalCoolcoins(), testStudent.getMyWallet().getTotalCoolcoins());
     }
