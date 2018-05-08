@@ -41,27 +41,22 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'" + ", id_group='"+groupId+"'", "id_mentor=" + idMentor);
     }
 
-    public List<MentorModel> getAllMentorsCollection() {
+    public List<MentorModel> getAllMentors() throws DataAccessException {
 
-        List<MentorModel> mentorCollection = new ArrayList<>();
-        String columns = "email, password, Mentor.first_name, Mentor.last_name, Mentor.id_mentor, Mentor.id_group";
-        String joinStatement = "Mentor.id_login = Login.id_login";
-        ResultSet result = selectFromJoinedTables(columns, "Login", "Mentor", joinStatement);
+        List<MentorModel> mentors = new ArrayList<>();
+
         try {
-            while (result.next()) {
-                String firstName = result.getString("first_name");
-                String lastName = result.getString("last_name");
-                String email = result.getString("email");
-                String password = result.getString("password");
-                int id = result.getInt("id_mentor");
-                int idGroup = result.getInt("id_group");
-                MentorModel mentor = new MentorModel(id, firstName, lastName, email, password, idGroup);
-                mentorCollection.add(mentor);
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT * FROM user WHERE user_category_id=2;");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                mentors.add(createMentorFrom(ResultSet rs));
             }
+            return mentors;
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataAccessException("Delete mentor error!");
         }
-        return mentorCollection;
     }
 
     @Override
