@@ -43,7 +43,19 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    public void addArtifact(ArtifactModel artifact) {
+    public void addArtifact(ArtifactModel artifact) throws DataAccessException {
+        try{
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "INSERT INTO `artifact`(`name`,`description`,`price`,`category_id`)" +
+                    " VALUES (?, ?, ?, ?);");
+            ps.setString(1, artifact.getName());
+            ps.setString(2, artifact.getDescription());
+            ps.setInt(3, artifact.getPrice());
+            int category = getCategoryID(artifact.getCategory());
+            ps.setInt(4, category);
+        }catch(SQLException e){
+            throw new DataAccessException("Add artifact error");
+        }
 
     }
 
@@ -147,5 +159,17 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
             userArtifact.add(getArtifactWithStatus(rs));
         }
         return userArtifact;
+    }
+
+    private int getCategoryID(String category) throws DataAccessException{
+        try{
+            PreparedStatement ps = getConnection().prepareStatement("SELECT id " +
+                    "FROM artifact_category " +
+                    "WHERE name = ?");
+            ps.setString(1, category);
+            return ps.executeQuery().getInt("id");
+        }catch(SQLException e){
+            throw new DataAccessException("Get status error");
+        }
     }
 }
