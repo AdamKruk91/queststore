@@ -12,6 +12,10 @@ public class ManipulationDao{
     private static Connection connection;
     private static Statement statement;
 
+    public static Connection getConnection() {
+        return connection;
+    }
+
     public ManipulationDao(){
         connection = database.getConnection();
         try {
