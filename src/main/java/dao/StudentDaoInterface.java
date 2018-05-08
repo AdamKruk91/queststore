@@ -12,6 +12,5 @@ public interface StudentDaoInterface {
     void addStudent(StudentModel student) throws DataAccessException;
     void deleteStudent(StudentModel student) throws DataAccessException;
     void updateStudent(StudentModel student) throws DataAccessException;
-    void updateWallet(StudentModel student) throws DataAccessException;
-}
+    }
 
