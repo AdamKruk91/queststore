@@ -33,7 +33,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             String userType = "";
 
             try {
-                userType = loginDao.findStatusByLoginId(loginID);
+                userType = loginDao.getUserCategory(loginID);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

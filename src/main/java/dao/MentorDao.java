@@ -21,7 +21,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
     private int insertNewLogin(String email, String password) throws SQLException {
         int idStatus = loginDao.findStatusIdByName("Mentor");
         loginDao.insertNewLogin(email, password, idStatus);
-        return loginDao.findLoginId(email, password);
+        return loginDao.getUserId(email, password);
     }
 
     public void insertNewMentor(MentorModel mentor) throws SQLException {

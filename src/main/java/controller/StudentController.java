@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpCookie;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         try {
             if (isCookieValid(httpExchange)) {
                 int loginID = getLoginIdFromCookie(httpExchange);
-                String userType = loginDao.findStatusByLoginId(loginID);
+                String userType = loginDao.getUserCategory(loginID);
 
 
                 if (!userType.equals("Student")) {
