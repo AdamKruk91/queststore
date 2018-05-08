@@ -55,7 +55,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
             return mentors;
 
         } catch (SQLException e) {
-            throw new DataAccessException("Delete mentor error!");
+            throw new DataAccessException("Get all mentors error!");
         }
     }
 
@@ -67,7 +67,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Delete user error!");
+            throw new DataAccessException("Delete mentor error!");
         }
     }
 
@@ -80,7 +80,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
             ResultSet rs = ps.executeQuery();
             return createMentorFrom(ResultSet rs);
         } catch (SQLException e) {
-            throw new DataAccessException("Delete mentor error!");
+            throw new DataAccessException("Get mentor error!");
         }
     }
 
