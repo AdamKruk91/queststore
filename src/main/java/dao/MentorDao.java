@@ -76,10 +76,33 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         }
     }
 
-    public MentorModel getMentorById(int id) {
-        return null;
+    @Override
+    public MentorModel getMentor(int id) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT * FROM user WHERE id=?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return createMentorFrom(ResultSet rs);
+        } catch (SQLException e) {
+            throw new DataAccessException("Delete mentor error!");
+        }
     }
 
+    public MentorModel createMentorFrom(ResultSet rs) throws DataAccessException {
+        try {
+            int id = rs.getInt("id");
+            String login = rs.getString("login");
+            String password = rs.getString("password");
+            String name = rs.getString("name");
+            String surname = rs.getString("surname");
+            String email = rs.getString("email");
+            // TODO: create groupList
+            return new MentorModel(id, login, password, name, surname, email, null);
+        } catch (SQLException e) {
+            throw new DataAccessException("Create mentor error!");
+        }
+    }
 }
 
 
