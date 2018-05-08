@@ -67,8 +67,16 @@ public class WalletDao extends ManipulationDao implements WalletDaoInterface{
 
 
     @Override
-    public boolean checkIfExist(int user_id) {
-        return false;
+    public boolean checkIfExist(int user_id) throws DataAccessException{
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT * FROM wallet WHERE user_id=?;");
+            ps.setInt(1, user_id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e){
+            throw new DataAccessException("Problem with checking if wallet exist");
+        }
     }
 
     @Override
