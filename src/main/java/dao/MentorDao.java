@@ -11,19 +11,6 @@ import exceptions.DataAccessException;
 
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
-    private LoginDao loginDao = new LoginDao();
-
-//    private int getIdStatus() throws SQLException {
-//        ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
-//        return getIntFromResult(result, "id_status");
-//    }
-
-    private int insertNewLogin(String email, String password) throws SQLException {
-        int idStatus = loginDao.findStatusIdByName("Mentor");
-        loginDao.insertNewLogin(email, password, idStatus);
-        return loginDao.getUserId(email, password);
-    }
-
     public void addMentor(MentorModel mentor) throws DataAccessException {
         final int CATEGORY_ID = 2;
         try {
