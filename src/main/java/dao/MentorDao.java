@@ -1,20 +1,22 @@
 package dao;
 
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import model.MentorModel;
+import exceptions.DataAccessException;
 
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
     private LoginDao loginDao = new LoginDao();
 
-    private int getIdStatus() throws SQLException {
-        ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
-        return getIntFromResult(result, "id_status");
-    }
+//    private int getIdStatus() throws SQLException {
+//        ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
+//        return getIntFromResult(result, "id_status");
+//    }
 
     private int insertNewLogin(String email, String password) throws SQLException {
         int idStatus = loginDao.findStatusIdByName("Mentor");
@@ -62,10 +64,16 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         return mentorCollection;
     }
 
-    public void deleteMentor(int idMentor){
-        String condition = "Mentor.id_mentor = " + idMentor;
-        removeDataFromTable("Mentor", condition);
-
+    @Override
+    public void deleteMentor(int id) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "DELETE FROM user WHERE id=?;");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Delete user error!");
+        }
     }
 
     public MentorModel getMentorById(int id) {
