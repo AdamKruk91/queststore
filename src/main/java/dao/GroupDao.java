@@ -62,35 +62,39 @@ public class GroupDao extends ManipulationDao implements GroupDaoInterface {
         }
     }
 
-    private GroupModel getByID(int id) throws SQLException {
-        PreparedStatement ps = getConnection().prepareStatement(
-                "SELECT DISTINCT user_id, user_category_id, 'group'.name as group_name FROM 'group' " +
-                        "  LEFT JOIN 'user_group' ON 'group'.id = 'user_group'.group_id" +
-                        "    LEFT JOIN 'user' ON user.id = user_group.user_id" +
-                        "      WHERE 'group'.id = ?;");
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
+    public GroupModel getByID(int id) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT DISTINCT user_id, user_category_id, 'group'.name as group_name FROM 'group' " +
+                            "  LEFT JOIN 'user_group' ON 'group'.id = 'user_group'.group_id" +
+                            "    LEFT JOIN 'user' ON user.id = user_group.user_id" +
+                            "      WHERE 'group'.id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-        ArrayList<StudentModel> students = new ArrayList<>();
-        ArrayList<MentorModel> mentors = new ArrayList<MentorModel>();
+            ArrayList<StudentModel> students = new ArrayList<>();
+            ArrayList<MentorModel> mentors = new ArrayList<MentorModel>();
 
-        String groupName = null;
-        while(rs.next()) {
-            if (groupName == null) {
-                groupName = rs.getString("group_name");
+            String groupName = null;
+            while (rs.next()) {
+                if (groupName == null) {
+                    groupName = rs.getString("group_name");
+                }
+                int userID = rs.getInt("user_id");
+                int userCategoryID = rs.getInt("user_category_id");
+                switch (userCategoryID) {
+                    case CODECOOLER_CATEGORY_ID:
+                        students.add(studentDao.getStudentById(userID));
+                        break;
+                    case MENTOR_CATEGORY_ID:
+                        mentors.add(mentorDAO.getMentorById(userID));
+                        break;
+                }
             }
-            int userID = rs.getInt("user_id");
-            int userCategoryID = rs.getInt("user_category_id");
-            switch(userCategoryID) {
-                case CODECOOLER_CATEGORY_ID:
-                    students.add(studentDao.getByID(userID));
-                    break;
-                case MENTOR_CATEGORY_ID:
-                    mentors.add(mentorDAO.getByID(userID));
-                    break;
-            }
+            return new GroupModel(id, groupName, students, mentors);
+        } catch (SQLException e) {
+            throw new DataAccessException("Group getById failed!");
         }
-        return new GroupModel(id, groupName, students, mentors);
     }
 
 }
