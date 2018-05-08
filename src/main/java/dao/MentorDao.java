@@ -1,77 +1,112 @@
 package dao;
 
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import model.MentorModel;
+import exceptions.DataAccessException;
 
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
-    private LoginDao loginDao = new LoginDao();
-
-    private int getIdStatus() throws SQLException {
-        ResultSet result = selectDataFromTable("Status", "id_status", "name='Mentor'");
-        return getIntFromResult(result, "id_status");
-    }
-
-    private int insertNewLogin(String email, String password) throws SQLException {
-        int idStatus = loginDao.findStatusIdByName("Mentor");
-        loginDao.insertNewLogin(email, password, idStatus);
-        return loginDao.getUserId(email, password);
-    }
-
-    public void insertNewMentor(MentorModel mentor) throws SQLException {
-        int idLogin = insertNewLogin(mentor.getEmail(), mentor.getPassword());
-        String table = "Mentor";
-        String columns = "(first_name, last_name, id_login, id_status, id_group)";
-        int idStatus = getIdStatus();
-        String values = "('" + mentor.getFirstName() + "', '" + mentor.getLastName() + "', " + idLogin +", "+ idStatus + ", " + mentor.getIdGroup() + ");";
-        insertDataIntoTable(table, columns, values);
-    }
-
-    public void updateMentorTable(MentorModel mentor) {
-        String name = mentor.getFirstName();
-        String lastName = mentor.getLastName();
-        int idMentor = mentor.getID();
-        int groupId = mentor.getIdGroup();
-        updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'" + ", id_group='"+groupId+"'", "id_mentor=" + idMentor);
-    }
-
-    public List<MentorModel> getAllMentorsCollection() {
-
-        List<MentorModel> mentorCollection = new ArrayList<>();
-        String columns = "email, password, Mentor.first_name, Mentor.last_name, Mentor.id_mentor, Mentor.id_group";
-        String joinStatement = "Mentor.id_login = Login.id_login";
-        ResultSet result = selectFromJoinedTables(columns, "Login", "Mentor", joinStatement);
+    @Override
+    public void add(MentorModel mentor) throws DataAccessException {
+        final int CATEGORY_ID = 2;
         try {
-            while (result.next()) {
-                String firstName = result.getString("first_name");
-                String lastName = result.getString("last_name");
-                String email = result.getString("email");
-                String password = result.getString("password");
-                int id = result.getInt("id_mentor");
-                int idGroup = result.getInt("id_group");
-                MentorModel mentor = new MentorModel(id, firstName, lastName, email, password, idGroup);
-                mentorCollection.add(mentor);
-            }
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "INSERT INTO user (login, password, name, surname, email, user_category_id) " +
+                            "  VALUES (?, ?, ?, ?, ?, ?);");
+            ps.setString(1, mentor.getLogin());
+            ps.setString(2, mentor.getPassword());
+            ps.setString(3, mentor.getName());
+            ps.setString(4, mentor.getSurname());
+            ps.setString(5, mentor.getEmail());
+            ps.setInt(6, CATEGORY_ID);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataAccessException("Add mentor error!");
         }
-        return mentorCollection;
     }
 
-    public void deleteMentor(int idMentor){
-        String condition = "Mentor.id_mentor = " + idMentor;
-        removeDataFromTable("Mentor", condition);
-
+    @Override
+    public void update(MentorModel mentor) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "UPDATE user " +
+                            "  SET login=?, password=?, name=?, surname=?, email=? " +
+                            "    WHERE id=?;");
+            ps.setString(1, mentor.getLogin());
+            ps.setString(2, mentor.getPassword());
+            ps.setString(3, mentor.getName());
+            ps.setString(4, mentor.getSurname());
+            ps.setString(5, mentor.getEmail());
+            ps.setInt(6, mentor.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Update mentor error!");
+        }
     }
 
-    public MentorModel getMentorById(int id) {
-        return null;
+    @Override
+    public List<MentorModel> getAll() throws DataAccessException {
+
+        List<MentorModel> mentors = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT * FROM user WHERE user_category_id=2;");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                mentors.add(createFrom(rs));
+            }
+            return mentors;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Get all mentors error!");
+        }
     }
 
+    @Override
+    public void delete(int id) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "DELETE FROM user WHERE id=?;");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Delete mentor error!");
+        }
+    }
+
+    @Override
+    public MentorModel get(int id) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT * FROM user WHERE id=?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return createFrom(rs);
+        } catch (SQLException e) {
+            throw new DataAccessException("Get mentor error!");
+        }
+    }
+
+    private MentorModel createFrom(ResultSet rs) throws DataAccessException {
+        try {
+            int id = rs.getInt("id");
+            String login = rs.getString("login");
+            String password = rs.getString("password");
+            String name = rs.getString("name");
+            String surname = rs.getString("surname");
+            String email = rs.getString("email");
+            // TODO: create groupList
+            return new MentorModel(id, login, password, name, surname, email, null);
+        } catch (SQLException e) {
+            throw new DataAccessException("Create mentor error!");
+        }
+    }
 }
 
 

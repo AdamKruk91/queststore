@@ -175,7 +175,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private AdminModel getAdmin(int id) {
-        return adminDao.getAdminById(id);
+        return adminDao.getAdmin(id);
     }
 
     private MentorModel selectMentor() {
