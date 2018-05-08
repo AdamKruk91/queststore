@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import model.AdminModel;
 
 public class AdminDao extends ManipulationDao implements AdminDaoInterface{
 

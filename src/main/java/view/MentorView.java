@@ -3,6 +3,7 @@ package view;
 import model.UsableObjectModel;
 import model.WalletModel;
 import model.GroupModel;
+import model.StudentModel;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class MentorView {
     }
     public void displayAllGroups(List<GroupModel> groupsCollection) {
         for (GroupModel group: groupsCollection) {
-            System.out.println(group.getId() + ". "  +group.getGroupName());
+            System.out.println(group.getID() + ". "  +group.getGroupName());
         }
     }
 

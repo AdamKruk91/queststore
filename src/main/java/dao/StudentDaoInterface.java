@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import model.StudentModel;
 
 public interface StudentDaoInterface {
 

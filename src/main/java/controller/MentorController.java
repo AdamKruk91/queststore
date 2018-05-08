@@ -7,6 +7,7 @@ import model.GroupModel;
 import model.UsableObjectModel;
 import model.QuestModel;
 import model.ArtifactModel;
+import model.StudentModel;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -102,7 +103,7 @@ public class MentorController {
         String studentEmail = inputController.getStringInput("Enter student email: ");
         String studentPassword = inputController.getStringInput("Enter student password: ");
         GroupModel selectedGroup = selectGroup();
-        int idGroup = selectedGroup.getId();
+        int idGroup = selectedGroup.getID();
         StudentDao studentDao = new StudentDao();
         WalletModel wallet = new WalletModel();
         StudentModel student = new StudentModel(studentName, studentLastName, studentEmail, studentPassword, idGroup, wallet);

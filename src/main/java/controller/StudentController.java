@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpHandler;
 import dao.*;
 import model.UsableObjectModel;
 import model.Level;
+import model.StudentModel;
 import view.StudentView;
 
 public class StudentController extends AbstractContoller implements HttpHandler {
@@ -163,7 +164,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     private void  displayWallet(StudentModel student) {
-        view.displayWallet(student.getMyWallet());
+        view.displayWallet(student.getWallet());
         TransactionDao transactionDao = new TransactionDao();
         List<UsableObjectModel> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
         view.displayBoughtArtifacts(artifactsCollection);
