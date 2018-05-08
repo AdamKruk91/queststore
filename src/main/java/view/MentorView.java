@@ -1,9 +1,9 @@
 package view;
 
-import model.ItemModel;
-import model.StudentModel;
+import model.UsableObjectModel;
 import model.WalletModel;
 import model.GroupModel;
+import model.StudentModel;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ public class MentorView {
                             + "0 - Exit\n");
     }
 
-    public void displayItemCollection(List<ItemModel> itemCollection) {
-        for (ItemModel item: itemCollection) 
+    public void displayItemCollection(List<UsableObjectModel> itemCollection) {
+        for (UsableObjectModel item: itemCollection)
             System.out.println("\nid: " + item.getID()
                             + "\ntype: " + item.getType()
                             + "\nname: " +item.getName()
@@ -44,15 +44,15 @@ public class MentorView {
                            "\nTOTAL COOLCOINS: " + wallet.getTotalCoolcoins());
     }
 
-    public void displayStudentArtifacts(List<ItemModel> artifactsCollection) {
+    public void displayStudentArtifacts(List<UsableObjectModel> artifactsCollection) {
         System.out.println("Students artifacts: \n");
-        for (ItemModel artifact : artifactsCollection) {
+        for (UsableObjectModel artifact : artifactsCollection) {
             System.out.println(artifact.getID() + ". " + artifact.getName());
         }
     }
     public void displayAllGroups(List<GroupModel> groupsCollection) {
         for (GroupModel group: groupsCollection) {
-            System.out.println(group.getId() + ". "  +group.getGroupName());
+            System.out.println(group.getID() + ". "  +group.getGroupName());
         }
     }
 

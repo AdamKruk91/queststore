@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
-
-
 import model.MentorModel;
 
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {

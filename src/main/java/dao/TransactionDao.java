@@ -1,6 +1,6 @@
 package dao;
 
-import model.ItemModel;
+import model.UsableObjectModel;
 import model.ArtifactModel;
 
 import java.sql.*;
@@ -15,7 +15,7 @@ public class TransactionDao extends ManipulationDao {
         insertDataIntoTable("Transactions ", "(id_student, id_item, used)", values);
     }
 
-    public void updateStatusOfTransaction(ItemModel item, int statusID) {
+    public void updateStatusOfTransaction(UsableObjectModel item, int statusID) {
         int itemId = item.getID();
         updateDataInTable("Transactions", "used = "+statusID, "id_item="+itemId);
     }
@@ -32,7 +32,7 @@ public class TransactionDao extends ManipulationDao {
         return sql;
     }
 
-    public ItemModel getItemObject(ResultSet result) {
+    public UsableObjectModel getItemObject(ResultSet result) {
         ArtifactModel artifact = null;
         try {
             int id = result.getInt("id_item");
@@ -46,25 +46,25 @@ public class TransactionDao extends ManipulationDao {
         return artifact;
     }
 
-    public List<ItemModel> getStudentArtifact(int idStudent, int idStatus) {
+    public List<UsableObjectModel> getStudentArtifact(int idStudent, int idStatus) {
         String sql = prepareGetArtifactsSql(idStudent, idStatus);
         ResultSet result = executeSelect(sql);
 
         return getArtifactsFromResultSet(result);
     }
 
-    public List<ItemModel> getStudentArtifact(int idStudent) {
+    public List<UsableObjectModel> getStudentArtifact(int idStudent) {
         String sql = prepareGetArtifactsSql(idStudent, 0);
         ResultSet result = executeSelect(sql);
 
         return getArtifactsFromResultSet(result);
     }
 
-    private List<ItemModel> getArtifactsFromResultSet(ResultSet result){
-        List<ItemModel> artifactsCollection = new ArrayList<>();
+    private List<UsableObjectModel> getArtifactsFromResultSet(ResultSet result){
+        List<UsableObjectModel> artifactsCollection = new ArrayList<>();
         try {
             while (result.next()) {
-                ItemModel artifact = getItemObject(result);
+                UsableObjectModel artifact = getItemObject(result);
                 artifactsCollection.add(artifact);
             }
         } catch (SQLException e) {

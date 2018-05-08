@@ -8,10 +8,10 @@ import java.util.List;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
-import model.ItemModel;
+import model.UsableObjectModel;
 import model.Level;
-import view.StudentView;
 import model.StudentModel;
+import view.StudentView;
 
 public class StudentController extends AbstractContoller implements HttpHandler {
 
@@ -85,7 +85,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         final String URI = httpExchange.getRequestURI().toString();
         String artifactStrID = URI.replace("/student/wallet/use/", "");
         int artifactID = Integer.parseInt(artifactStrID);
-        ItemModel artifact = itemDao.getItemByID(artifactID);
+        UsableObjectModel artifact = itemDao.getItemByID(artifactID);
         transactionDao.updateStatusOfTransaction(artifact, 2);
         redirectTo(httpExchange,"/student/wallet");
     }
@@ -110,7 +110,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private void renderWallet(HttpExchange httpExchange, int loginID) throws IOException {
         StudentModel student = getStudent(loginID);
         TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID());
+        List<UsableObjectModel> artifacts = transactionDao.getStudentArtifact(student.getID());
         String response = view.getWalletScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
@@ -121,7 +121,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private void renderWalletPending(HttpExchange httpExchange, int loginID) throws IOException {
         StudentModel student = getStudent(loginID);
         TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 2);
+        List<UsableObjectModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 2);
         String response = view.getWalletPendingScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
@@ -132,7 +132,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private void renderWalletUsed(HttpExchange httpExchange, int loginID) throws IOException {
         StudentModel student = getStudent(loginID);
         TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 1);
+        List<UsableObjectModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 1);
         String response = view.getWalletUsedScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
@@ -146,27 +146,27 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         return studentDao.getStudentById(id);
     }
 
-    private ItemModel selectArtifact() throws SQLException {
-        List<ItemModel> itemCollection  = itemDao.getItemCollectionByType("Artifact");
+    private UsableObjectModel selectArtifact() throws SQLException {
+        List<UsableObjectModel> itemCollection  = itemDao.getItemCollectionByType("Artifact");
         view.displayCollectionOfItem(itemCollection);
         int idArtifact = inputController.getIntInput("Enter artifact id to buy: ");
-        ItemModel matchedArtifact = null;
-        for (ItemModel artifact: itemCollection)
+        UsableObjectModel matchedArtifact = null;
+        for (UsableObjectModel artifact: itemCollection)
             if(artifact.getID() == idArtifact)
                 matchedArtifact = artifact;
         return matchedArtifact;
     }
 
     private void buyArtifact(StudentModel student) throws SQLException {
-        ItemModel artifact = selectArtifact();
+        UsableObjectModel artifact = selectArtifact();
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.insertTransaction(student.getID(), artifact.getID());
     }
 
     private void  displayWallet(StudentModel student) {
-        view.displayWallet(student.getMyWallet());
+        view.displayWallet(student.getWallet());
         TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
+        List<UsableObjectModel> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
         view.displayBoughtArtifacts(artifactsCollection);
     }
 
