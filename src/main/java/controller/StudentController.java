@@ -19,7 +19,6 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private InputController inputController;
     private LoginDao loginDao = new LoginDao();
     private LevelDao levelDao = new LevelDao();
-    private ItemDao itemDao = new ItemDao();
     private StudentDao studentDao = new StudentDao();
     private TransactionDao transactionDao = new TransactionDao();
 
