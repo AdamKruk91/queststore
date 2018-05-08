@@ -11,7 +11,8 @@ import exceptions.DataAccessException;
 
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
-    public void addMentor(MentorModel mentor) throws DataAccessException {
+    @Override
+    public void add(MentorModel mentor) throws DataAccessException {
         final int CATEGORY_ID = 2;
         try {
             PreparedStatement ps = getConnection().prepareStatement(
@@ -29,7 +30,8 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         }
     }
 
-    public void updateMentor(MentorModel mentor) throws DataAccessException {
+    @Override
+    public void update(MentorModel mentor) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "UPDATE user " +
@@ -47,7 +49,8 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         }
     }
 
-    public List<MentorModel> getAllMentors() throws DataAccessException {
+    @Override
+    public List<MentorModel> getAll() throws DataAccessException {
 
         List<MentorModel> mentors = new ArrayList<>();
 
@@ -56,7 +59,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
                     "SELECT * FROM user WHERE user_category_id=2;");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                mentors.add(createMentorFrom(ResultSet rs));
+                mentors.add(createFrom(ResultSet rs));
             }
             return mentors;
 
@@ -66,7 +69,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
     }
 
     @Override
-    public void deleteMentor(int id) throws DataAccessException {
+    public void delete(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "DELETE FROM user WHERE id=?;");
@@ -78,19 +81,19 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
     }
 
     @Override
-    public MentorModel getMentor(int id) throws DataAccessException {
+    public MentorModel get(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT * FROM user WHERE id=?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            return createMentorFrom(ResultSet rs);
+            return createFrom(ResultSet rs);
         } catch (SQLException e) {
             throw new DataAccessException("Get mentor error!");
         }
     }
 
-    public MentorModel createMentorFrom(ResultSet rs) throws DataAccessException {
+    private MentorModel createFrom(ResultSet rs) throws DataAccessException {
         try {
             int id = rs.getInt("id");
             String login = rs.getString("login");
