@@ -2,39 +2,46 @@ package model;
 
 
 public abstract class UsableObjectModel {
-    
-    private String type;
+
+    private int id;
     private String name;
     private String description;
-    private int ID;
-    private int value;
+    private String category;
 
-    public UsableObjectModel(String type, String name, String description, int value) {
-        this.type = type;
+    public UsableObjectModel(String name, String description, String category) {
         this.name = name;
         this.description = description;
-        this.value = value;
+        this.category = category;
     }
     
-    public UsableObjectModel(int ID, String type, String name, String description, int value) {
-        this(type, name, description, value);
-        this.ID = ID;
+    public UsableObjectModel(int id, String name, String description, String category) {
+        this(name, description, category);
+        this.id = id;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
-    public String getType() {
-        return this.type;
+
+    public void setName(String name) {
+        this.name = name;
     }
+
     public String getDescription() {
-        return this.description;
+        return description;
     }
-    public int getValue() {
-        return this.value;
+
+    public void setDescription(String description) {
+        this.description = description;
     }
-    public void setValue(int newValue) {
-        this.value = newValue;
+
+    public String getCategory() {
+        return category;
     }
-    public int getID() {return this.ID; }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getID() {return this.id; }
 }
