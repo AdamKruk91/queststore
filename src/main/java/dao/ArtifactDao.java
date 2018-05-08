@@ -59,8 +59,16 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
 
     }
 
-    public void removeArtifact(ArtifactModel artifact) {
-
+    public void removeArtifact(ArtifactModel artifact) throws DataAccessException{
+        try{
+            PreparedStatement ps = getConnection().prepareStatement("DELETE " +
+                    "FROM artifact" +
+                    " WHERE" +
+                    " id = ?");
+            ps.setInt(1, artifact.getID());
+        }catch(SQLException e){
+            throw new DataAccessException("Remove artifact error");
+        }
     }
 
     public void updateArtifact(ArtifactModel artifact) {
@@ -112,8 +120,16 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    private int getStatusID(String status) {
-        return 0;
+    private int getStatusID(String status) throws DataAccessException{
+        try{
+            PreparedStatement ps = getConnection().prepareStatement("SELECT id " +
+                    "FROM artifact_status " +
+                    "WHERE name = ?");
+            ps.setString(1, status);
+            return ps.executeQuery().getInt("id");
+        }catch(SQLException e){
+            throw new DataAccessException("Get status error");
+        }
     }
 
     private ArtifactModel getArtifactWithoutStatus(ResultSet rs) throws SQLException {
