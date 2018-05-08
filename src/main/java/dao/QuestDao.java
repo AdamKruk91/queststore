@@ -82,7 +82,12 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     @Override
     public QuestModel getByID(int id) throws DataAccessException {
         try{
-            return null;
+            PreparedStatement ps = getConnection().prepareStatement("SELECT quest.id, quest.name, quest.reward," +
+                    "quest.description, quest_category.name as 'category_name' FROM quest JOIN quest_category " +
+                    "ON quest.category_id = quest_category.id WHERE quest.id=?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return getQuestFromResultSet(rs);
         } catch (SQLException e){
             throw new DataAccessException("Fail to get Quest");
         }
@@ -95,5 +100,14 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
         } catch (SQLException e){
             throw new DataAccessException("Fail to update user Quest");
         }
+    }
+
+    private QuestModel getQuestFromResultSet(ResultSet rs) throws SQLException {
+        int id = rs.getInt("id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        String categoryName = rs.getString("category_name");
+        int reward = rs.getInt("reward");
+        return new QuestModel(id, name, description, categoryName, reward);
     }
 }
