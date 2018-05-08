@@ -16,17 +16,17 @@ public class StudentView {
                 + "5 - Exit");
     }
 
-    public void displayCollectionOfItem(List<ItemModel> itemCollection) {
+    public void displayCollectionOfItem(List<UsableObjectModel> itemCollection) {
         System.out.println("\nAvailable artifacts: ");
-        for (ItemModel item: itemCollection) {
+        for (UsableObjectModel item: itemCollection) {
             System.out.println(item.getID() + ". " + item.getName() + " value: " + item.getValue());
         }
         System.out.println("\n");
     }
 
-    public void displayBoughtArtifacts(List<ItemModel>  itemCollection) {
+    public void displayBoughtArtifacts(List<UsableObjectModel>  itemCollection) {
         System.out.println("YOUR ARTIFACTS: ");
-        for (ItemModel item: itemCollection) {
+        for (UsableObjectModel item: itemCollection) {
             System.out.println("==> " + item.getName() + item.getValue());
         }
         System.out.println("\n");
@@ -54,7 +54,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletScreen (StudentModel student, List<ItemModel> artifacts) {
+    public String getWalletScreen (StudentModel student, List<UsableObjectModel> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet.twig");
         JtwigModel model = JtwigModel.newModel();
 
@@ -64,7 +64,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletUsedScreen (StudentModel student, List<ItemModel> artifacts) {
+    public String getWalletUsedScreen (StudentModel student, List<UsableObjectModel> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-used.twig");
         JtwigModel model = JtwigModel.newModel();
 
@@ -74,7 +74,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletPendingScreen (StudentModel student, List<ItemModel> artifacts) {
+    public String getWalletPendingScreen (StudentModel student, List<UsableObjectModel> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-pending.twig");
         JtwigModel model = JtwigModel.newModel();
 

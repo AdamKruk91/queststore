@@ -68,7 +68,7 @@ public class AdminView {
 
     public void displayAllGroups(List<GroupModel> groupsCollection) {
         for (GroupModel group : groupsCollection) {
-            System.out.println(group.getId() + ". " + group.getGroupName());
+            System.out.println(group.getID() + ". " + group.getGroupName());
         }
     }
 

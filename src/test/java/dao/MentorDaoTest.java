@@ -1,7 +1,6 @@
 package dao;
 
 
-import model.MentorModel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 

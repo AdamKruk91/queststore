@@ -1,36 +1,57 @@
 package model;
 
 
+import java.util.ArrayList;
+
 public class WalletModel {
 
-    private int totalCoolcoins;
-    private int balance;
-    private int id;
+    private final int ID;
+    private int amount;
+    private int totalCoinsEarned;
+    private ArrayList<ArtifactModel> ownedArtifacts;
 
-    public WalletModel() {
-        this.totalCoolcoins = 0;
-        this.balance = 0;
-    }
-
-    public WalletModel(int id, int totalCoolcoins, int balance) {
-        this.id = id;
-        this.totalCoolcoins = totalCoolcoins;
-        this.balance = balance;
+    public WalletModel(int ID){
+        this.ID = ID;
+        this.amount = 0;
+        this.ownedArtifacts = new ArrayList<ArtifactModel>();
     }
 
-    public int getBalance() {
-        return balance;
+    public WalletModel(int ID, int amount, int totalCoinsEarned, ArrayList<ArtifactModel> ownedArtifacts){
+        this.ID = ID;
+        this.amount = amount;
+        this.totalCoinsEarned = totalCoinsEarned;
+        this.ownedArtifacts = ownedArtifacts;
     }
-    public int getId() {
-        return id;
+
+    public int getID() {
+        return ID;
     }
-    public int getTotalCoolcoins() {
-        return totalCoolcoins;
+
+    public int getAmount() {
+        return amount;
     }
-    public void setTotalCoolcoins(int value) {
-        this.totalCoolcoins += value;
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
-    public void setBalance(int value) {
-        this.balance += value;
+
+    public int getTotalCoinsEarned() {
+        return totalCoinsEarned;
+    }
+
+    public void setTotalCoinsEarned(int totalCoinsEarned) {
+        this.totalCoinsEarned = totalCoinsEarned;
+    }
+
+    public void addToArtifact(ArtifactModel artifact){
+        ownedArtifacts.add(artifact);
+    }
+
+    public void removeFromArtifact(ArtifactModel artifact){
+        ownedArtifacts.remove(artifact);
+    }
+
+    public Iterator getOwnedArtifactIterator(){
+        return new Iterator<ArtifactModel>(ownedArtifacts);
     }
 }

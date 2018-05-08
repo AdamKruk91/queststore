@@ -1,7 +1,7 @@
 package dao;
 
 import model.ArtifactModel;
-import model.ItemModel;
+import model.UsableObjectModel;
 import model.QuestModel;
 
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class ItemDao extends ManipulationDao{
 
 
-    public void insertNewItem(ItemModel item) throws SQLException {
+    public void insertNewItem(UsableObjectModel item) throws SQLException {
         String table = "Item";
         String columns = " ('item_name', 'description', 'price', 'id_type')";
         String values = "('" + item.getName() + "','" + item.getDescription() + "'," + item.getValue() + ", " + findIdType(item.getType()) + ")";
@@ -25,14 +25,14 @@ public class ItemDao extends ManipulationDao{
         return getIntFromResult(result, "id_type");
     }
 
-    public void updateValueOfItem(ItemModel item) {
+    public void updateValueOfItem(UsableObjectModel item) {
         int value = item.getValue();
         String name = item.getName();
         updateDataInTable("Item", "price=" + value, "item_name ='" + name + "'");
     }
 
-    public ItemModel createItemObject(ResultSet result, String typeName) {
-        ItemModel item = null;
+    public UsableObjectModel createItemObject(ResultSet result, String typeName) {
+        UsableObjectModel item = null;
         try {
             int idItem = result.getInt("id_item");
             String name = result.getString("item_name");
@@ -49,11 +49,11 @@ public class ItemDao extends ManipulationDao{
         return item;
     }
 
-    private List<ItemModel> fillCollection(ResultSet result, String typeName) {
-        List<ItemModel> itemCollection = new ArrayList<>();
+    private List<UsableObjectModel> fillCollection(ResultSet result, String typeName) {
+        List<UsableObjectModel> itemCollection = new ArrayList<>();
         try {
             while (result.next()) {
-                ItemModel item = createItemObject(result, typeName);
+                UsableObjectModel item = createItemObject(result, typeName);
                 itemCollection.add(item);
             }
         } catch (SQLException e) {
@@ -62,7 +62,7 @@ public class ItemDao extends ManipulationDao{
         return itemCollection;
     }
 
-    public List<ItemModel> getItemCollectionByType(String typeName) throws SQLException {
+    public List<UsableObjectModel> getItemCollectionByType(String typeName) throws SQLException {
         int idType = findIdType(typeName);
         String columns = "id_item, item_name, description, price";
         String condition = "id_type='" + idType + "'";
@@ -72,7 +72,7 @@ public class ItemDao extends ManipulationDao{
     }
 
 
-    public List<ItemModel> selectStudentsItems(int selectedStudentId, String typeName) throws SQLException {
+    public List<UsableObjectModel> selectStudentsItems(int selectedStudentId, String typeName) throws SQLException {
         int idType = findIdType(typeName);
         String columns = "Transactions.id_item, Transactions.id_student, Transactions.used, item_name, description, price, id_type";
         String joinStatement = "Transactions.id_item = Item.id_item";
@@ -81,7 +81,7 @@ public class ItemDao extends ManipulationDao{
         return fillCollection(result, typeName);
     }
 
-    public ItemModel getItemByID(int itemID) {
+    public UsableObjectModel getItemByID(int itemID) {
         String columns = "id_item, item_name, description, price";
         String joinStatement = "item.id_type = ItemType.id_type";
         String condition = " id_item ="+itemID;
