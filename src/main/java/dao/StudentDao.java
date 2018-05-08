@@ -92,7 +92,7 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         LoginDao loginDao = new LoginDao();
         int idStatus = loginDao.findStatusIdByName("Student");
         loginDao.insertNewLogin(email, password, idStatus);
-        return loginDao.findLoginId(email, password);
+        return loginDao.getUserId(email, password);
     }
 
     public void deleteStudent(int id){
