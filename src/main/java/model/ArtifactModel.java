@@ -1,7 +1,7 @@
 package model;
 
 
-public class ArtifactModel extends ItemModel { 
+public class ArtifactModel extends UsableObjectModel {
     
     private boolean used;
 

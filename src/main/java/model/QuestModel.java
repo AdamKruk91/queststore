@@ -1,7 +1,7 @@
 package model;
 
 
-public class QuestModel extends ItemModel { 
+public class QuestModel extends UsableObjectModel {
     
     public QuestModel(int id, String type, String name, String description, int value) {
         super(id, type, name, description, value);

@@ -1,7 +1,7 @@
 package model;
 
 
-public abstract class ItemModel {
+public abstract class UsableObjectModel {
     
     private String type;
     private String name;
@@ -9,14 +9,14 @@ public abstract class ItemModel {
     private int ID;
     private int value;
 
-    public ItemModel(String type, String name, String description, int value) {
+    public UsableObjectModel(String type, String name, String description, int value) {
         this.type = type;
         this.name = name;
         this.description = description;
         this.value = value;
     }
     
-    public ItemModel(int ID, String type, String name, String description, int value) {
+    public UsableObjectModel(int ID, String type, String name, String description, int value) {
         this(type, name, description, value);
         this.ID = ID;
     }
