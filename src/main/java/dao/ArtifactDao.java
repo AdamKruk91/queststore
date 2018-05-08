@@ -71,8 +71,19 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    public void updateArtifact(ArtifactModel artifact) {
-
+    public void updateArtifact(ArtifactModel artifact) throws DataAccessException{
+        try{
+            PreparedStatement ps = getConnection().prepareStatement("UPDATE artifact\n" +
+                    "SET name = ?, desciption = ?, price = ?, category_id = ?\n" +
+                    "WHERE id = ?;");
+            ps.setString(1, artifact.getName());
+            ps.setString(2, artifact.getDescription());
+            int categoryID = getCategoryID(artifact.getCategory());
+            ps.setInt(3, categoryID);
+            ps.setInt(4, artifact.getID());
+        }catch (SQLException e){
+            throw new DataAccessException("Update artifact error");
+        }
     }
 
     public List<ArtifactModel> getArtifacts(int user_id) throws DataAccessException{

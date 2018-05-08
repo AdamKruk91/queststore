@@ -12,7 +12,7 @@ public interface ArtifactDaoInterface {
     List<ArtifactModel> getArtifactCollection() throws DataAccessException;
     void addArtifact(ArtifactModel artifact) throws DataAccessException;
     void removeArtifact(ArtifactModel artifact) throws DataAccessException;
-    void updateArtifact(ArtifactModel artifact);
+    void updateArtifact(ArtifactModel artifact) throws DataAccessException;
     List<ArtifactModel> getUserUnusedArtifacts(int userID) throws DataAccessException;
     List<ArtifactModel> getUserUsedArtifacts(int userID) throws DataAccessException;
     List<ArtifactModel> getUserRequestedArtifacts(int userID) throws DataAccessException;
