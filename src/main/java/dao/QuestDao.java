@@ -34,7 +34,9 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     @Override
     public void removeQuest(QuestModel removeQuest) throws DataAccessException {
         try{
-
+            PreparedStatement ps = getConnection().prepareStatement("DELETE FROM quest WHERE id = ?");
+            ps.setInt(1, removeQuest.getID());
+            ps.executeUpdate();
         } catch (SQLException e){
             throw new DataAccessException("Fail to remove Quest");
         }
