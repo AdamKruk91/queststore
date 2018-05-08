@@ -45,7 +45,19 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     @Override
     public void updateQuest(QuestModel updateQuest) throws DataAccessException {
         try{
-
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "UPDATE quest SET " +
+                            "name=?," +
+                            "reward=?," +
+                            "description=?," +
+                            "category_id = (SELECT quest_category.id FROM quest_category WHERE quest_category.name=?)" +
+                            "WHERE quest.id=?;");
+            ps.setString(1, updateQuest.getName());
+            ps.setInt(2, updateQuest.getReward());
+            ps.setString(3, updateQuest.getDescription());
+            ps.setString(4, updateQuest.getCategory());
+            ps.setInt(5, updateQuest.getID());
+            ps.executeUpdate();
         } catch (SQLException e){
             throw new DataAccessException("Fail to update Quest");
         }
