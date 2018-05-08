@@ -18,7 +18,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
                     "SELECT artifact.id as 'id', artifact.name as 'name', description, price, artifact_category.name as 'category'\n" +
                             "FROM artifact\n" +
                             "INNER JOIN artifact_category ON category_id = `artifact_category`.id\n" +
-                            "WHERE artifact.id = ?;";
+                            "WHERE artifact.id = ?;");
             ps.setInt(1, artifactID);
 
             ResultSet rs = ps.executeQuery();
@@ -35,7 +35,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
                     "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
                             "artifact.price as 'price', artifact_category.name as 'category name', artifact_status.name as 'status' " +
                             "FROM user_artifact JOIN artifact ON user_artifact.artifact_id = artifact.id JOIN artifact_status ON " +
-                            " user_artifact.status_id = artifact_status.id JOIN artifact_category ON artifact.category_id = artifact_category.id;";
+                            " user_artifact.status_id = artifact_status.id JOIN artifact_category ON artifact.category_id = artifact_category.id;");
             ResultSet rs = ps.executeQuery();
             return getArtifacts(rs);
         } catch (SQLException e){
@@ -91,7 +91,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         PreparedStatement ps = getConnection().prepareStatement(
                 "UPDATE user_artifact " +
                         "SET status_id = ? " +
-                        "WHERE id = ?;";
+                        "WHERE id = ?;");
         int statusID = getStatusID(artifact.getStatus());
         ps.setInt(1, statusID);
         ps.setInt(2, artifact.getID());
