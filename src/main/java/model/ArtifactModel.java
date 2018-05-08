@@ -22,4 +22,5 @@ public class ArtifactModel extends UsableObjectModel {
     public void setPrice(int price) {
         this.price = price;
     }
+
 }

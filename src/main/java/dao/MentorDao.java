@@ -6,9 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
-
-import model.MentorModel;
-
 public class MentorDao extends ManipulationDao implements MentorDaoInterface {
 
     private LoginDao loginDao = new LoginDao();

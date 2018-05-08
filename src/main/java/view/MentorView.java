@@ -1,7 +1,6 @@
 package view;
 
 import model.UsableObjectModel;
-import model.StudentModel;
 import model.WalletModel;
 import model.GroupModel;
 

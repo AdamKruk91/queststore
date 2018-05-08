@@ -1,6 +1,5 @@
 package dao;
 
-import model.MentorModel;
 import java.sql.SQLException;
 import java.util.List;
 

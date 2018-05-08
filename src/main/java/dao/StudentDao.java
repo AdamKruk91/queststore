@@ -1,7 +1,6 @@
 package dao;
 
 import model.GroupModel;
-import model.StudentModel;
 import model.WalletModel;
 
 import java.sql.*;

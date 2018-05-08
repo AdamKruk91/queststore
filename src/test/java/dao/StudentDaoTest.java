@@ -1,6 +1,5 @@
 package dao;
 
-import model.StudentModel;
 import model.WalletModel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;

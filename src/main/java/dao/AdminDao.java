@@ -1,6 +1,5 @@
 package dao;
 
-import model.AdminModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

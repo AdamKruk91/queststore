@@ -1,25 +1,30 @@
 package model;
 
+import java.util.ArrayList;
 
-public class MentorModel extends UserModel {
+public class MentorModel extends UserModel{
 
-    private int idGroup;
+    private ArrayList<GroupModel> groupList;
+    private String userCategory = "Mentor";
 
-    public MentorModel(int id, String firstName, String lastName, String email, String password, int idGroup) {
-        super(id, firstName, lastName, email, password);
-        this.idGroup = idGroup;
+    public MentorModel(String login, String password,
+                  String name, String surname, String email){
+        super(login, password, name, surname, email);
+        this.groupList = new ArrayList<GroupModel>();
     }
 
-    public MentorModel( String firstName, String lastName, String email, String password, int idGroup) {
-        super(firstName, lastName, email, password);
-        this.idGroup =idGroup ;
+    public MentorModel(int ID, String login, String password,
+                  String name, String surname, String email,
+                  ArrayList<GroupModel> groupList){
+        super(ID, login, password, name, surname, email);
+        this.groupList = groupList;
     }
 
-    public int getIdGroup() {
-        return idGroup;
+    public String getUserCategory() {
+        return userCategory;
     }
 
-    public void setIdGroup(int idGroup) {
-        this.idGroup = idGroup;
+    public void setUserCategory(String userCategory) {
+        this.userCategory = userCategory;
     }
 }

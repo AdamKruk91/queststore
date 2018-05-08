@@ -1,12 +1,18 @@
 package model;
 
-
 public class AdminModel extends UserModel {
 
-    
-    public AdminModel(int id, String firstName, String lastName, String email, String password) {
-        super(id, firstName, lastName, email, password);
+    private String userCategory = "Creepy Guy";
+
+    public AdminModel(int ID, String login, String password, String name, String surname, String email){
+        super(ID, login, password, name, surname, email);
+    }
+
+    public String getUserCategory() {
+        return userCategory;
+    }
+
+    public void setUserCategory(String userCategory) {
+        this.userCategory = userCategory;
     }
 }
-
-
