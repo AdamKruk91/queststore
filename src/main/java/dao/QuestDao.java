@@ -66,7 +66,14 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     @Override
     public List<String> getCategoriesName() throws DataAccessException {
         try{
-            return null;
+            PreparedStatement ps = getConnection().prepareStatement("SELECT name FROM quest_category;");
+            List<String> categoryNameList = new ArrayList<>();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String categoryName = rs.getString("name");
+                categoryNameList.add(categoryName);
+            }
+            return  categoryNameList;
         } catch (SQLException e){
             throw new DataAccessException("Fail to get categories names");
         }
