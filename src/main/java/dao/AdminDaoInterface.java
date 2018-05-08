@@ -1,8 +1,11 @@
 package dao;
 
+import exceptions.DataAccessException;
 import model.AdminModel;
+
+import java.sql.SQLException;
 
 public interface AdminDaoInterface {
 
-    AdminModel getAdminById(int id);
+    AdminModel getAdmin(int id) throws DataAccessException;
 }
