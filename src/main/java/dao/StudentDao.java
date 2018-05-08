@@ -77,7 +77,15 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
     @Override
     public void updateStudent(StudentModel student) throws DataAccessException {
         try{
-
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "UPDATE user SET login=?, password=?, name=?, surname=?, email=? WHERE id=?;");
+            ps.setString(1, student.getLogin());
+            ps.setString(2, student.getPassword());
+            ps.setString(3, student.getName());
+            ps.setString(4, student.getSurname());
+            ps.setString(5, student.getEmail());
+            ps.setInt(6, student.getID());
+            ps.executeUpdate();
         }catch (SQLException e) {
             throw new DataAccessException("Update student failed!");
         }
