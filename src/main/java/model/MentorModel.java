@@ -27,4 +27,17 @@ public class MentorModel extends UserModel{
     public void setUserCategory(String userCategory) {
         this.userCategory = userCategory;
     }
+
+    public void addGroup(GroupModel group){
+        groupList.add(group);
+    }
+
+    public void removeGroup(GroupModel group){
+        groupList.remove(group);
+    }
+
+    public Iterator getGroupIterator() {
+        Iterator<GroupModel> iterator = new Iterator<GroupModel>(groupList);
+        return iterator;
+    }
 }
