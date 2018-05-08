@@ -1,16 +1,17 @@
 package dao;
 
-import java.sql.SQLException;
 import java.util.List;
+
+import exceptions.DataAccessException;
 import model.StudentModel;
 
 public interface StudentDaoInterface {
 
-    StudentModel getStudentById(int id);
-    List<StudentModel> getStudentsCollection();
-    void addStudent(StudentModel student) throws SQLException;
-    void deleteStudent(int id) throws SQLException;
-    void updateStudent(StudentModel student) throws SQLException;
-    void updateWallet(StudentModel student);
+    StudentModel getStudentById(int id) throws DataAccessException;
+    List<StudentModel> getStudentsCollection()throws DataAccessException;
+    void addStudent(StudentModel student) throws DataAccessException;
+    void deleteStudent(int id) throws DataAccessException;
+    void updateStudent(StudentModel student) throws DataAccessException;
+    void updateWallet(StudentModel student) throws DataAccessException;
 }
 
