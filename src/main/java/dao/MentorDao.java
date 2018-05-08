@@ -59,7 +59,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
                     "SELECT * FROM user WHERE user_category_id=2;");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                mentors.add(createFrom(ResultSet rs));
+                mentors.add(createFrom(rs));
             }
             return mentors;
 
@@ -87,7 +87,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
                     "SELECT * FROM user WHERE id=?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            return createFrom(ResultSet rs);
+            return createFrom(rs);
         } catch (SQLException e) {
             throw new DataAccessException("Get mentor error!");
         }
