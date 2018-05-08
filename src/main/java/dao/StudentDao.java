@@ -33,7 +33,14 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
     @Override
     public List<StudentModel> getStudentsCollection() throws DataAccessException {
         try{
-
+            List<StudentModel> mentors = new ArrayList<>();
+            PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user WHERE user_category_id=?;");
+            ps.setInt(1, USER_CATEGORY_ID);
+            ResultSet rs = ps.executeQuery();
+            while ( rs.next() ) {
+                mentors.add(getCodecoolerFromResultSet(rs));
+            }
+            return mentors;
         }catch (SQLException e) {
             throw new DataAccessException("Getting student collection failed!");
         }
