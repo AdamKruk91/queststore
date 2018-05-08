@@ -2,19 +2,24 @@ package model;
 
 
 public class ArtifactModel extends UsableObjectModel {
-    
-    private boolean used;
 
-    public ArtifactModel(int id, String type, String name, String description, int value) {
-        super(id, type, name, description, value);
-        this.used = false;    
+    private int price;
+
+    public ArtifactModel(int id, String name, String description, int price, String category) {
+        super(id, name, description, category);
+        this.price = price;
     }
 
-    public ArtifactModel(String type, String name, String description, int value) {
-        super(type, name, description, value);
+    public ArtifactModel(String name, String description, int price, String category) {
+        super(name, description, category);
+        this.price = price;
     }
-    
-    public boolean getIsUsed() {
-        return this.used;
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }
