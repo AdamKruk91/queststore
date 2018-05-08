@@ -51,9 +51,11 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         }
     }
     @Override
-    public void deleteStudent(int id) throws DataAccessException {
+    public void deleteStudent(StudentModel student) throws DataAccessException {
         try{
-
+            PreparedStatement ps = getConnection().prepareStatement("DELETE FROM user WHERE id = ? AND user_category_id=?;");
+            ps.setInt(1, student.getID());
+            ps.executeUpdate();
         }catch (SQLException e) {
             throw new DataAccessException("Remove student failed!");
         }
