@@ -73,8 +73,8 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
 
     public void updateArtifact(ArtifactModel artifact) throws DataAccessException{
         try{
-            PreparedStatement ps = getConnection().prepareStatement("UPDATE artifact\n" +
-                    "SET name = ?, desciption = ?, price = ?, category_id = ?\n" +
+            PreparedStatement ps = getConnection().prepareStatement("UPDATE artifact " +
+                    " SET name = ?, desciption = ?, price = ?, category_id = ? " +
                     "WHERE id = ?;");
             ps.setString(1, artifact.getName());
             ps.setString(2, artifact.getDescription());
