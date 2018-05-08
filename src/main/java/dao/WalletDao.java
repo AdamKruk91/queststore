@@ -42,9 +42,29 @@ public class WalletDao extends ManipulationDao implements WalletDaoInterface{
     }
 
     @Override
-    public WalletModel getByID(int id) {
-        return null;
+    public WalletModel getByID(int id) throws DataAccessException{
+        try {
+            if (!checkIfExist(id)) {
+                WalletModel wallet = new WalletModel(id);
+                addWallet(wallet);
+            }
+            PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM wallet WHERE user_id=?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return getWalletFromResultSet(rs);
+        }catch (SQLException e) {
+            throw new DataAccessException("Problem with getting wallet by ID");
+        }
     }
+
+    private WalletModel getWalletFromResultSet(ResultSet rs) throws DataAccessException, SQLException {
+        int user_id = rs.getInt("user_id");
+        int amount = rs.getInt("amount");
+        int total_coins_earned = rs.getInt("total_coins_earned");
+        ArrayList<ArtifactModel> OwnedArtifacts = (ArrayList<ArtifactModel>) getArtifactByUserId(user_id);
+        return new WalletModel(user_id, amount, total_coins_earned, OwnedArtifacts);
+    }
+
 
     @Override
     public boolean checkIfExist(int user_id) {
