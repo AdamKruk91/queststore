@@ -3,14 +3,29 @@ package dao;
 import exceptions.DataAccessException;
 import model.QuestModel;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class QuestDao implements QuestDaoInterface{
+public class QuestDao extends ManipulationDao implements QuestDaoInterface{
+
+    private final int QUEST_STATUS_ID = 2;
+
     @Override
     public void addQuest(QuestModel newQuest) throws DataAccessException {
         try{
-
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "INSERT INTO quest (name, reward, description, category_id)" +
+                            "SELECT ?,?,?, quest_category.id " +
+                            "FROM quest_category " +
+                            "WHERE quest_category.name = ?;");
+            ps.setString(1, newQuest.getName());
+            ps.setInt(2, newQuest.getReward());
+            ps.setString(3, newQuest.getDescription());
+            ps.setString(4, newQuest.getCategory());
+            ps.executeUpdate();
         } catch (SQLException e){
             throw new DataAccessException("Fail to add Quest");
         }
