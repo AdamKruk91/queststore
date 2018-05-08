@@ -6,7 +6,9 @@ import model.WalletModel;
 import model.StudentModel;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDao extends ManipulationDao implements StudentDaoInterface {
@@ -18,7 +20,11 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
     @Override
     public StudentModel getStudentById(int id) throws DataAccessException {
         try{
-
+            PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user WHERE id=? AND user_category_id=?;");
+            ps.setInt(1, id);
+            ps.setInt(2, USER_CATEGORY_ID);
+            ResultSet rs = ps.executeQuery();
+            return getCodecoolerFromResultSet(rs);
         }catch (SQLException e) {
             throw new DataAccessException("Get student failed!");
         }
@@ -70,8 +76,19 @@ public class StudentDao extends ManipulationDao implements StudentDaoInterface {
         }
     }
 
-    @Override
-    public void updateWallet(StudentModel student) throws DataAccessException {
-
+    private StudentModel getCodecoolerFromResultSet(ResultSet rs) throws DataAccessException {
+        try {
+            int userId = rs.getInt("id");
+            String login = rs.getString("login");
+            String password = rs.getString("password");
+            String name = rs.getString("name");
+            String surname = rs.getString("surname");
+            String email = rs.getString("email");
+            GroupModel group = gdao.getByID(userId);
+            WalletModel wallet = wdao.getByID(userId);
+            return new StudentModel(userId, login, password, name, surname, email, group, wallet);
+        }catch (SQLException e){
+            throw new DataAccessException("Get student from result set failed!");
+        }
     }
 }
