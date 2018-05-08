@@ -33,12 +33,22 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         insertDataIntoTable(table, columns, values);
     }
 
-    public void updateMentorTable(MentorModel mentor) {
-        String name = mentor.getFirstName();
-        String lastName = mentor.getLastName();
-        int idMentor = mentor.getID();
-        int groupId = mentor.getIdGroup();
-        updateDataInTable("Mentor", "first_name='"+name+"', last_name='"+lastName+"'" + ", id_group='"+groupId+"'", "id_mentor=" + idMentor);
+    public void updateMentor(MentorModel mentor) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "UPDATE user " +
+                            "  SET login=?, password=?, name=?, surname=?, email=? " +
+                            "    WHERE id=?;");
+            ps.setString(1, mentor.getLogin());
+            ps.setString(2, mentor.getPassword());
+            ps.setString(3, mentor.getName());
+            ps.setString(4, mentor.getSurname());
+            ps.setString(5, mentor.getEmail());
+            ps.setInt(6, mentor.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Update mentor error!");
+        }
     }
 
     public List<MentorModel> getAllMentors() throws DataAccessException {
