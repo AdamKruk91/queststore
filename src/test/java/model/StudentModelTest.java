@@ -15,14 +15,14 @@ class StudentModelTest {
     @Test
     void checkIfStudentModelHasWallet(){
         Student student = new Student(1, "Adam", "Kruk", "adam@gmal.com",
-                                                "lala", groupModel, wallet);
-        assertEquals(wallet, student.getMyWallet());
+                                                "lala", "mail", groupModel, wallet);
+        assertEquals(wallet, student.getWallet());
     }
 
     @Test
     void checkIfStudentModelHasGroup(){
         Student student = new Student(1, "Adam", "Kruk", "adam@gmal.com",
-                "lala", groupModel, wallet);
+                "lala", "mail", groupModel, wallet);
         assertEquals(groupModel, student.getGroup());
     }
 }
