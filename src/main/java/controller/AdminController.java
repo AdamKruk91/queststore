@@ -2,11 +2,13 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
+import exceptions.DataAccessException;
 import model.*;
 import view.AdminView;
 
@@ -151,25 +153,33 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         handlePositiveResponse(httpExchange, response);
     }
 
-    private Mentor createMentorFromISR(HttpExchange httpExchange) throws IOException {
+    private Mentor createMentorFromISR(HttpExchange httpExchange) throws IOException, DataAccessException {
         Map<String, String> inputs = getMapFromISR(httpExchange);
+        String login = inputs.get("login");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
         String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        return new Mentor(firstName, lastName, email, password, groupId);
+        Group group = groupDao.getByID(groupId);
+        ArrayList<Group> groups = new ArrayList<>();
+        groups.add(group);
+        return new Mentor(login, password, firstName, lastName, email, groups);
     }
 
-    private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException {
+    private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException, DataAccessException{
         Map<String, String> inputs = getMapFromISR(httpExchange);
         int id = Integer.parseInt(inputs.get("id"));
+        String login = inputs.get("login");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
         String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        return new Mentor(id, firstName, lastName, email, password, groupId);
+        Group group = groupDao.getByID(groupId);
+        ArrayList<Group> groups = new ArrayList<>();
+        groups.add(group);
+        return new Mentor(id, login, password, firstName, lastName, email, groups);
     }
 
     private Admin getAdmin(int id) {
