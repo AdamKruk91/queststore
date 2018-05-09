@@ -9,12 +9,29 @@
     <link rel="stylesheet" href="static\css\user-profile.css">
     <link rel="stylesheet" href="static\css\edit-user.css">
     <title>Display Panel</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.choose-mentors').on('change', function() {
+                var val = $(this).val();
+                var box = $('.box');
+
+                box.hide(); // hide all boxes
+
+                $('.' + val).show(); // show the current one
+
+            })
+        });
+    </script>
 </head>
+
 <body>
 <header>
     <a href ="/admin"><img src="static\img\logo.png" alt="QuestStore logo"></a>
 </header>
-<div class="row">
+
+
+
     <aside class="menu col-3">
         <nav>
             <ul>
@@ -28,27 +45,27 @@
     </aside>
     <section class="col-6">
         <div class="col-6 area">
-            <div class="col-12 dropdown">
-                <label for="dropdown">Choose mentor:</label>
-                <select id="dropdown" name="group" onchange="show(this.options[this.selectedIndex].value)">
-                {% for mentor in mentors %}
-                    <option value="{{ mentor.ID }}" selected>{{ mentor.name }} {{ mentor.surname }}</option>
-                {% endfor %}
-                </select>
-                <script>
-                    function show(dropdownID)
-                    {
-                        var info = document.getElementById(dropdownID)
-                        info.style.display=(info.style.display='none')?'':'none'
-                    }
 
-                </script>
+
+            <div class="col-12 dropdown">
+            <select class="choose-mentors">
+                <option>Choose mentor</option>
+                {% set counter = 0 %}
+                {% for mentor in mentors %}
+                    {% set counter = counter + 1 %}
+                    <option value="mentor{{ counter }}">{{ mentor.name }} {{ mentor.surname }}</option>
+                {% endfor %}
+            </select>
+
+
             </div>
             <div class="col-12">
+                {% set counter = 0 %}
                 {% for mentor in mentors %}
-                    <div id = "{{ mentor.ID }}" style="display:none">
+                    {% set counter = counter + 1 %}
+                <div class = "mentor{{ counter }} box" style="display: none">
                         <div id="hiddenDiv1">
-                            <img class="col-12" src="static\img\emptyprofile.png" alt="Profile picture">
+                            <img class="ol-12" src="static\img\emptyprofile.png" alt="Profile picture">
                             <div class="col-12 profile-info">
                                 <form>
                                 <ul class="edition">
