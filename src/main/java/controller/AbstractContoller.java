@@ -16,7 +16,7 @@ import java.util.UUID;
 
 abstract class AbstractContoller{
 
-    private SessionDAO sessionDAO = new SessionDAOSQL();
+    SessionDAO sessionDAO = new SessionDAOSQL();
 
     void redirectTo(HttpExchange httpExchange, String URI) throws IOException {
         Headers responseHeaders = httpExchange.getResponseHeaders();
