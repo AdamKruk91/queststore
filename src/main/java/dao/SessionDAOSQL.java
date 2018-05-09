@@ -50,6 +50,19 @@ public class SessionDAOSQL extends ManipulationDAOSQL implements SessionDAO {
     }
 
     @Override
+    public void deleteSession(String sessionID) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "DELETE FROM session WHERE id = ?");
+            ps.setString(1, sessionID);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error during deleteSession(userID)");
+        }
+    }
+
+    @Override
     public Session getSession(int userID) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
