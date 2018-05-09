@@ -74,6 +74,10 @@ public abstract class User {
 
     public abstract String getUserCategory();
 
+    public String getFullName(){
+        return name + " " + surname;
+    }
+
     public abstract void setUserCategory(String userCategory);
 }
 

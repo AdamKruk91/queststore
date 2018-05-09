@@ -15,11 +15,10 @@ import java.util.List;
 public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
 
     private MentorDAO mentorDAO = new MentorDAOSQL();
-    private StudentDAO studentDao = new StudentDAOSQL();
     private final int CODECOOLER_CATEGORY_ID = 1;
     private final int MENTOR_CATEGORY_ID = 2;
 
-    public void addNewGroup(Group group) throws DataAccessException {
+    public void add(Group group) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO 'group' (name) VALUES (?);");
@@ -31,7 +30,7 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
     }
 
 
-    public List<Group> getGroupsCollection() throws DataAccessException {
+    public List<Group> getAll() throws DataAccessException {
         try {
             PreparedStatement ps = null;
                 ps = getConnection().prepareStatement("SELECT id FROM 'group';");
@@ -51,7 +50,7 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
     }
 
 
-    public void removeGroup(Group group) throws DataAccessException {
+    public void remove(Group group) throws DataAccessException {
         try {
             PreparedStatement ps = null;
             ps = getConnection().prepareStatement("DELETE FROM 'group' WHERE id=  ?;");
@@ -84,10 +83,11 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
                 int userCategoryID = rs.getInt("user_category_id");
                 switch (userCategoryID) {
                     case CODECOOLER_CATEGORY_ID:
-                        students.add(studentDao.getStudentById(userID));
+                        StudentDAO studentDAO = new StudentDAOSQL();
+                        students.add(studentDAO.get(userID));
                         break;
                     case MENTOR_CATEGORY_ID:
-                        mentors.add(mentorDAO.getMentorById(userID));
+                        mentors.add(mentorDAO.get(userID));
                         break;
                 }
             }

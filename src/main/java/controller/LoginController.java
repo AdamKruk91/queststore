@@ -19,7 +19,6 @@ public class LoginController extends AbstractContoller implements HttpHandler {
     public LoginController() {
         view = new LoginView();
         loginDao = new LoginDAOSQL();
-
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -55,7 +54,6 @@ public class LoginController extends AbstractContoller implements HttpHandler {
     }
 
     private void renderWithoutCookie(HttpExchange httpExchange) throws IOException, DataAccessException {
-
         String response = "";
         String method = httpExchange.getRequestMethod();
 

@@ -12,33 +12,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
-    private WalletDAO wdao = new WalletDAOSQL();
-    private GroupDAO gdao = new GroupDAOSQL();
+    private WalletDAO walletDAO = new WalletDAOSQL();
+    private GroupDAO groupDao = new GroupDAOSQL();
     private final int USER_CATEGORY_ID = 1;
 
 
     @Override
-    public Student getStudentById(int id) throws DataAccessException {
+    public Student get(int id) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user WHERE id=? AND user_category_id=?;");
             ps.setInt(1, id);
             ps.setInt(2, USER_CATEGORY_ID);
             ResultSet rs = ps.executeQuery();
-            return getCodecoolerFromResultSet(rs);
+            return createFrom(rs);
         }catch (SQLException e) {
             throw new DataAccessException("Get student failed!");
         }
     }
 
     @Override
-    public List<Student> getStudentsCollection() throws DataAccessException {
+    public List<Student> getAll() throws DataAccessException {
         try{
             List<Student> mentors = new ArrayList<>();
             PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user WHERE user_category_id=?;");
             ps.setInt(1, USER_CATEGORY_ID);
             ResultSet rs = ps.executeQuery();
             while ( rs.next() ) {
-                mentors.add(getCodecoolerFromResultSet(rs));
+                mentors.add(createFrom(rs));
             }
             return mentors;
         }catch (SQLException e) {
@@ -47,7 +47,7 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
     }
 
     @Override
-    public void addStudent(Student student) throws DataAccessException {
+    public void add(Student student) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO user (login, password, name, surname, email, user_category_id) " +
@@ -64,7 +64,7 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
         }
     }
     @Override
-    public void deleteStudent(Student student) throws DataAccessException {
+    public void delete(Student student) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE FROM user WHERE id = ? AND user_category_id=?;");
             ps.setInt(1, student.getID());
@@ -75,7 +75,7 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
     }
 
     @Override
-    public void updateStudent(Student student) throws DataAccessException {
+    public void update(Student student) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "UPDATE user SET login=?, password=?, name=?, surname=?, email=? WHERE id=?;");
@@ -91,7 +91,7 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
         }
     }
 
-    private Student getCodecoolerFromResultSet(ResultSet rs) throws DataAccessException {
+    private Student createFrom(ResultSet rs) throws DataAccessException {
         try {
             int userId = rs.getInt("id");
             String login = rs.getString("login");
@@ -99,8 +99,8 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
             String name = rs.getString("name");
             String surname = rs.getString("surname");
             String email = rs.getString("email");
-            Group group = gdao.getByID(userId);
-            Wallet wallet = wdao.getByID(userId);
+            Group group = groupDao.getByID(userId);
+            Wallet wallet = walletDAO.get(userId);
             return new Student(userId, login, password, name, surname, email, group, wallet);
         }catch (SQLException e){
             throw new DataAccessException("Get student from result set failed!");

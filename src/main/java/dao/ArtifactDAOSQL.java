@@ -2,6 +2,7 @@ package dao;
 
 import exceptions.DataAccessException;
 import model.Artifact;
+import model.UsableObject;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +13,7 @@ import java.util.List;
 public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
 
 
-    public Artifact getArtifactById(int artifactID) throws DataAccessException{
+    public Artifact getArtifact(int artifactID) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT artifact.id as 'id', artifact.name as 'name', description, price, artifact_category.name as 'category'\n" +
@@ -29,6 +30,23 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
 
     }
 
+    @Override
+    public Artifact getInstantiatedArtifact(int artifactID) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
+                            "artifact.price as 'price', artifact_category.name as 'category name', artifact_status.name as 'status' " +
+                            "FROM user_artifact JOIN artifact ON user_artifact.artifact_id = artifact.id JOIN artifact_status ON " +
+                            " user_artifact.status_id = artifact_status.id JOIN artifact_category ON artifact.category_id = artifact_category.id WHERE" +
+                            " user_artifact.artifact_id = ?");
+            ps.setInt(1, artifactID);
+            ResultSet rs = ps.executeQuery();
+            return getArtifactWithStatus(rs);
+        } catch (SQLException e){
+            throw new DataAccessException("Problem with getting user artifact");
+        }
+    }
+
     public List<Artifact> getArtifactCollection() throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
@@ -43,7 +61,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }
     }
 
-    public void addArtifact(Artifact artifact) throws DataAccessException {
+    public void add(Artifact artifact) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO `artifact`(`name`,`description`,`price`,`category_id`)" +
@@ -59,7 +77,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
 
     }
 
-    public void removeArtifact(Artifact artifact) throws DataAccessException{
+    public void remove(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE " +
                     "FROM artifact" +
@@ -71,7 +89,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }
     }
 
-    public void updateArtifact(Artifact artifact) throws DataAccessException{
+    public void update(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("UPDATE artifact " +
                     " SET name = ?, desciption = ?, price = ?, category_id = ? " +
@@ -128,6 +146,20 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         ps.setInt(2, artifact.getID());
         }catch(SQLException e){
             throw new DataAccessException("Update artifact error");
+        }
+    }
+
+    @Override
+    public void insertTransaction(int userID, int artifactID) throws DataAccessException{
+        try{
+            int statusID = 2; //DEFAULT STATUS IN WALLET
+            PreparedStatement ps = getConnection().prepareStatement("INSERT INTO `user_artifact`(`user_id`,`artifact_id`,`status_id`) " +
+                    "VALUES (?,?,?);\n");
+            ps.setInt(1, userID);
+            ps.setInt(2, artifactID);
+            ps.setInt(3, statusID);
+        }catch(SQLException e){
+            throw new DataAccessException("Insert transaction error");
         }
     }
 

@@ -15,11 +15,11 @@ class TestableDatabaseUnit {
         TestDatabase.prepareTestInstance();
     }
 
-    @BeforeEach
-    void beforeEach() {
-        dao = new ManipulationDAOSQL();
-        dao.executeUpdate("BEGIN TRANSACTION;");
-    }
+//    @BeforeEach
+//    void beforeEach() {
+//        dao = new ManipulationDAOSQL();
+//        dao.executeUpdate("BEGIN TRANSACTION;");
+//    }
 
     @AfterEach
     void afterEach() {
