@@ -63,6 +63,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
         } else if(URI.startsWith("/student/wallet/use/")) {
             useArtifact(httpExchange);
+        } else if(URI.startsWith("/student/wallet/cancel/")) {
+            cancelUseArtifact(httpExchange);
         } else {
 
             switch (URI) {
@@ -85,12 +87,29 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         }
     }
 
+    private void cancelUseArtifact(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/student/wallet/cancel/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        try {
+            Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus("In wallet");
+            artifactDao.updateArtifactStatus(artifact);
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: display error
+        }
+        redirectTo(httpExchange,"/student/wallet");
+    }
+
+
     private void useArtifact(HttpExchange httpExchange) throws IOException {
         final String URI = httpExchange.getRequestURI().toString();
         String artifactStrID = URI.replace("/student/wallet/use/", "");
         int artifactID = Integer.parseInt(artifactStrID);
         try {
             Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus("Use requested");
             artifactDao.updateArtifactStatus(artifact);
         }catch(DataAccessException e){
             e.printStackTrace();
