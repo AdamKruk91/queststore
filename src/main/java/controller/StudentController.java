@@ -48,6 +48,9 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         } catch (SQLException e) {
             e.printStackTrace();
             // TODO : display error message in browser
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: display error page
         }
     }
 
@@ -98,7 +101,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     private void renderProfile(HttpExchange httpExchange, int userID) throws IOException {
         try {
-            Student student = studentDao.getStudent(userID);
+            Student student = studentDao.get(userID);
             int totalExp = student.getWallet().getTotalCoinsEarned();
             Level level;
             level = levelDao.getLevel(totalExp);
@@ -116,7 +119,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     private void renderWallet(HttpExchange httpExchange, int userID) throws IOException {
         try {
-            Student student = studentDao.getStudent(userID);
+            Student student = studentDao.get(userID);
             List<Artifact> artifacts = artifactDao.getUserUnusedArtifacts(student.getID());
             String response = view.getWalletScreen(student, artifacts);
             httpExchange.sendResponseHeaders(200, response.length());
@@ -132,7 +135,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     private void renderWalletPending(HttpExchange httpExchange, int userID) throws IOException {
         try {
-            Student student = studentDao.getStudent(userID);
+            Student student = studentDao.get(userID);
             List<Artifact> artifacts;
             artifacts = artifactDao.getUserRequestedArtifacts(student.getID());
             String response = view.getWalletPendingScreen(student, artifacts);
@@ -148,7 +151,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     private void renderWalletUsed(HttpExchange httpExchange, int userID) throws IOException {
         try {
-            Student student = studentDao.getStudent(userID);
+            Student student = studentDao.get(userID);
             List<Artifact> artifacts;
             artifacts = artifactDao.getUserUsedArtifacts(student.getID());
             String response = view.getWalletUsedScreen(student, artifacts);
@@ -202,7 +205,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     public void controlMenuOptions(int userID) throws DataAccessException {
-        Student student = studentDao.getStudent(userID);
+        Student student = studentDao.get(userID);
         boolean whileRunning = true;
         while (whileRunning) {
             view.displayStudentMenu();
