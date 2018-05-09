@@ -56,7 +56,7 @@
                     {% set counter = counter + 1 %}
                     <tr>
                         <td onclick="switchInfo('artifact{{ counter }}')">{{ artifact.name }}</td>
-                        <td class="use"><a href="/student/wallet/use/{{ artifact.ID }}">Cancel</a></td>
+                        <td class="use"><a href="/student/wallet/cancel/{{ artifact.ID }}">Cancel</a></td>
                     </tr>
                     <tr id="artifact{{ counter }}" style="display:none">
                         <td colspan="2">{{ artifact.description }}</td>
