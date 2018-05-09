@@ -7,7 +7,7 @@ import java.util.List;
 public interface GroupDAO {
 
     void add(Group group) throws DataAccessException;
-    List<Group> getGroupsCollection() throws DataAccessException;
+    List<Group> getAll() throws DataAccessException;
     void remove(Group group) throws DataAccessException;
     Group getByID(int id) throws DataAccessException;
 }

@@ -9,19 +9,19 @@ import model.Admin;
 
 public class AdminDAOSQL extends ManipulationDAOSQL implements AdminDAO {
 
-    public Admin getAdmin(int id) throws DataAccessException {
+    public Admin get(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     " SELECT id, login, password, name, surname, email FROM user WHERE id  = ?;");
             ps.setInt(1, id);
             ResultSet result = ps.executeQuery();
-            return createAdminObject(result);
+            return createFrom(result);
         } catch (SQLException e){
             throw new DataAccessException("Create admin object error");
         }
     }
 
-    private Admin createAdminObject(ResultSet result) throws SQLException {
+    private Admin createFrom(ResultSet result) throws SQLException {
         Admin admin;
         int id = result.getInt("id");
         String login = result.getString("login");
