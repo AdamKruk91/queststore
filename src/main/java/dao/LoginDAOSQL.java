@@ -22,7 +22,6 @@ public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT user_category.name FROM user_category " +
-
                     "  INNER JOIN user ON user_category.id = user.id " +
                     "    WHERE user.id = ?;");
             ps.setInt(1, userID);

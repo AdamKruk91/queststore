@@ -4,7 +4,7 @@ package model;
 public class Student extends User {
     private Group group;
     private Wallet wallet;
-    private String userCategory = "Codecooler";
+    private String userCategory = "Student";
 
     public Student(String login, String password,
                    String name, String surname, String email, Group group) {
