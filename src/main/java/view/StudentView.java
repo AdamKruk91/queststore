@@ -49,4 +49,13 @@ public class StudentView {
         model.with("artifact_list", artifacts);
         return template.render(model);
     }
+
+    public String getStoreScreen(Student student, List<Artifact> artifacts) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/artifact-store.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("coins", student.getWallet().getAmount());
+        model.with("artifacts", artifacts);
+        return template.render(model);
+    }
 }
