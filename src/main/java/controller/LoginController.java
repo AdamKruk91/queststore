@@ -3,6 +3,7 @@ package controller;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.LoginDAOSQL;
+import exceptions.DataAccessException;
 import view.LoginView;
 
 import java.io.*;
@@ -14,12 +15,10 @@ public class LoginController extends AbstractContoller implements HttpHandler {
 
     private LoginView view;
     private LoginDAOSQL loginDao;
-    public static Map<String,Integer> loggedInUsers;
 
     public LoginController() {
         view = new LoginView();
         loginDao = new LoginDAOSQL();
-        loggedInUsers = new HashMap<>();
 
     }
 
@@ -30,16 +29,17 @@ public class LoginController extends AbstractContoller implements HttpHandler {
             } else {
                 renderWithoutCookie(httpExchange);
             }
-        }catch(SQLException e){
+        }catch(DataAccessException e){
+            // TODO: display error page/communicate
             e.printStackTrace();
         }
     }
 
 
-    private void renderWithCookie(HttpExchange httpExchange) throws IOException, SQLException {
+    private void renderWithCookie(HttpExchange httpExchange) throws IOException, DataAccessException {
 
-        int loginID = getLoginIdFromCookie(httpExchange);
-        String userType = loginDao.getUserCategory(loginID);
+        int userID = getLoginIdFromCookie(httpExchange);
+        String userType = loginDao.getUserCategory(userID);
 
         switch (userType) {
             case "Admin":
@@ -54,17 +54,23 @@ public class LoginController extends AbstractContoller implements HttpHandler {
         }
     }
 
-    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException, SQLException {
+    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException, DataAccessException {
+
         String response = "";
         String method = httpExchange.getRequestMethod();
+
         if (method.equals("POST")) {
+
             Map<String, String> inputs = getMapFromISR(httpExchange);
             String login = inputs.get("login");
             String password = inputs.get("password");
-            int loginID = loginDao.getUserId(login, password);
-            createCookie(httpExchange, loginID);
+            int userID = loginDao.getUserId(login, password);
+
+            createCookie(httpExchange, userID);
             renderWithCookie(httpExchange);
+
         } else if (method.equals("GET")) {
+
             response = view.getLoginScreen();
             httpExchange.sendResponseHeaders(200, response.length());
             OutputStream os = httpExchange.getResponseBody();
