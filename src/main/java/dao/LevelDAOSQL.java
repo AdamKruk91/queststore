@@ -70,7 +70,7 @@ public class LevelDAOSQL implements LevelDAO{
                 ps.setInt(1, totalExp);
                 ResultSet rs = ps.executeQuery();
 
-                int id = rs.getInt("id_level");
+                int id = rs.getInt("id");
                 String name = rs.getString("name");
                 int expTier = rs.getInt("experience_amount");
 
