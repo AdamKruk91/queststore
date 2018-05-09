@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
 
+public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
     public int findStatusIdByName(String name) throws DataAccessException {
         try {
             ResultSet result = selectDataFromTable("status", "id_status", "name='" + name + "'");
@@ -22,13 +22,14 @@ public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT user_category.name FROM user_category " +
-                            "  INNER JOIN user ON user_category.id = user.id " +
-                            "    WHERE user.id = ?;");
+
+                    "  INNER JOIN user ON user_category.id = user.id " +
+                    "    WHERE user.id = ?;");
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
             return rs.getString("user_category.name");
-        }catch (SQLException e){
-            throw new DataAccessException("Can't get user category");
+        } catch (SQLException e) {
+            throw new DataAccessException("Login error: getUserId failed");
         }
     }
 
@@ -41,8 +42,8 @@ public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             return rs.getInt("id");
-        } catch (SQLException e){
-            throw new DataAccessException("Can't get user id");
+        } catch (SQLException e) {
+            throw new DataAccessException("Login error: getUserId failed");
         }
     }
 
