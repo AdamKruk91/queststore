@@ -31,7 +31,7 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
     }
 
 
-    public List<Group> getGroupsCollection() throws DataAccessException {
+    public List<Group> getAll() throws DataAccessException {
         try {
             PreparedStatement ps = null;
                 ps = getConnection().prepareStatement("SELECT id FROM 'group';");
