@@ -56,6 +56,13 @@ abstract class AbstractContoller{
         os.close();
     }
 
+    void handleNegativeResponse(HttpExchange httpExchange, String response) throws IOException{
+        httpExchange.sendResponseHeaders(403, response.getBytes().length);
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
     static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
         Map<String, String> map = new HashMap<>();
         String[] pairs = formData.split("&");
