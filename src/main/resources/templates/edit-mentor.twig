@@ -30,27 +30,23 @@
         <div class="col-6 area">
             <div class="col-12 dropdown">
                 <label for="dropdown">Choose mentor:</label>
-                <select id="dropdown" name="group" onchange="java_script_:show(this.options[this.selectedIndex].value)">
+                <select id="dropdown" name="group" onchange="show(this.options[this.selectedIndex].value)">
                 {% for mentor in mentors %}
                     <option value="{{ mentor.ID }}" selected>{{ mentor.name }} {{ mentor.surname }}</option>
                 {% endfor %}
                 </select>
                 <script>
-                    function show(aval) {
-                        var dropdown_length = document.getElementById("dropdown").length;
-                        for (var i = 0; i<=dropdown_length; i++) {
-                            if(i.toString() === aval) {
-                                document.getElementById(aval).style.display = 'inline-block';
-                            } else {
-                                document.getElementById(i.toString()).style.display = 'none';
-                            }
-                        }
+                    function show(dropdownID)
+                    {
+                        var info = document.getElementById(dropdownID)
+                        info.style.display=(info.style.display='none')?'':'none'
                     }
+
                 </script>
             </div>
             <div class="col-12">
                 {% for mentor in mentors %}
-                    <div id = "{{ mentor.id }}" style="display:none">
+                    <div id = "{{ mentor.ID }}" style="display:none">
                         <div id="hiddenDiv1">
                             <img class="col-12" src="static\img\emptyprofile.png" alt="Profile picture">
                             <div class="col-12 profile-info">
