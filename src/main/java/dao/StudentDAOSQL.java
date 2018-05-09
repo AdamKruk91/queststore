@@ -18,7 +18,7 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
 
 
     @Override
-    public Student getStudentById(int id) throws DataAccessException {
+    public Student getStudent(int id) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user WHERE id=? AND user_category_id=?;");
             ps.setInt(1, id);
