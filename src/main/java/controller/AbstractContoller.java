@@ -56,10 +56,12 @@ abstract class AbstractContoller{
         os.close();
     }
 
-    void handleNegativeResponse(HttpExchange httpExchange, String response) throws IOException{
-        httpExchange.sendResponseHeaders(403, response.getBytes().length);
+    void handleNegativeResponse(HttpExchange httpExchange, String URI) throws IOException{
+        Headers responseHeaders = httpExchange.getResponseHeaders();
+        responseHeaders.set("Location", URI);
+        httpExchange.sendResponseHeaders(403, -1);
         OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
+        os.write("".getBytes());
         os.close();
     }
 
