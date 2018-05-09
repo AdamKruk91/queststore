@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private AdminView view = new AdminView();
     private GroupDAO groupDao = new GroupDAOSQL();
     private MentorDAO mentorDao = new MentorDAOSQL();
-    private LoginDao loginDao = new LoginDAOSQL();
+    private LoginDAO loginDAO = new LoginDAOSQL();
     private LevelDAO levelDAO = new LevelDAOSQL();
     private AdminDAO adminDao = new AdminDAOSQL();
 
@@ -28,7 +27,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
                 int loginID = getLoginIdFromCookie(httpExchange);
                 String userType = "";
-                userType = loginDao.getUserCategory(loginID);
+                userType = loginDAO.getUserCategory(loginID);
 
                 if(!userType.equals("Admin")) {
                     redirectTo(httpExchange, "/login");

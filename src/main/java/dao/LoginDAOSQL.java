@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 
 
-public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
+public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDAO {
     public int findStatusIdByName(String name) throws DataAccessException {
         try {
             ResultSet result = selectDataFromTable("status", "id_status", "name='" + name + "'");
