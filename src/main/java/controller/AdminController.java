@@ -189,7 +189,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
     private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException, DataAccessException{
         Map<String, String> inputs = getMapFromISR(httpExchange);
-        int id = Integer.parseInt(inputs.get("id"));
+        int id = Integer.parseInt(inputs.get("ID"));
         String login = inputs.get("login");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
