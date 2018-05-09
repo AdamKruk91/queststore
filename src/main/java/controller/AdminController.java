@@ -13,17 +13,15 @@ import view.AdminView;
 public class AdminController extends AbstractContoller implements HttpHandler {
 
     private AdminView view;
-    private InputController inputController;
-    private GroupDAOSQL groupDao = new GroupDAOSQL();
-    private MentorDAOSQL mentorDao = new MentorDAOSQL();
-    private LoginDAOSQL loginDao = new LoginDAOSQL();
-    private LevelDAOSQL levelDAO = new LevelDAOSQL();
-    private AdminDAOSQL adminDao = new AdminDAOSQL();
+    private GroupDAO groupDao = new GroupDAOSQL();
+    private MentorDAO mentorDao = new MentorDAOSQL();
+    private LoginDao loginDao = new LoginDAOSQL();
+    private LevelDAO levelDAO = new LevelDAOSQL();
+    private AdminDAO adminDao = new AdminDAOSQL();
 
 
     public AdminController() {
         view = new AdminView();
-        inputController = new InputController();
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -83,7 +81,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void renderMentorsData(HttpExchange httpExchange) throws IOException {
-        List<Mentor> allMentors = mentorDao.getAllMentorsCollection();
+        List<Mentor> allMentors = mentorDao.getAll();
         String response = view.getMentorsDisplay(allMentors);
         handlePositiveResponse(httpExchange, response);
     }
@@ -93,7 +91,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         if(method.equals("POST")){
             Mentor mentor = createMentorFromISR(httpExchange);
             try {
-                mentorDao.insertNewMentor(mentor);
+                mentorDao.add(mentor);
                 renderCreateMentorWithMessage(httpExchange, "Mentor creation was successful!");
             } catch (SQLException e){
                 e.printStackTrace();
@@ -105,12 +103,12 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void renderCreateMentor(HttpExchange httpExchange) throws IOException {
-        String response = view.getCreateMentor(groupDao.getGroupsCollection());
+        String response = view.getCreateMentor(groupDao.getAll());
         handlePositiveResponse(httpExchange, response);
     }
 
     private void renderCreateMentorWithMessage(HttpExchange httpExchange, String message) throws IOException {
-        String response = view.getCreateMentorMessage(groupDao.getGroupsCollection(), message);
+        String response = view.getCreateMentorMessage(groupDao.getAll(), message);
         handlePositiveResponse(httpExchange, response);
     }
 
@@ -118,7 +116,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         if(method.equals("POST")) {
             Mentor mentor = createMentorWithIdFromISR(httpExchange);
-            mentorDao.updateMentorTable(mentor);
+            mentorDao.update(mentor);
             renderEditMentor(httpExchange);
         } else {
             renderEditMentor(httpExchange);
@@ -126,7 +124,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void renderEditMentor(HttpExchange httpExchange) throws IOException{
-        String response = view.getEditMentor(mentorDao.getAllMentorsCollection(), groupDao.getGroupsCollection());
+        String response = view.getEditMentor(mentorDao.getAll(), groupDao.getAll());
         handlePositiveResponse(httpExchange, response);
     }
 
@@ -175,7 +173,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private Admin getAdmin(int id) {
-        return adminDao.getAdmin(id);
+        return adminDao.get(id);
     }
 }
 
