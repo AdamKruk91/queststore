@@ -78,7 +78,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
                 case "/student/wallet/used":
                     renderWalletUsed(httpExchange, userID);
                     break;
-
+                case "/student/store":
+                    renderStore(httpExchange, userID);
                 default:
                     System.out.println("Wrong address:" + URI);
             }
@@ -155,6 +156,22 @@ public class StudentController extends AbstractContoller implements HttpHandler 
             List<Artifact> artifacts;
             artifacts = artifactDao.getUserUsedArtifacts(student.getID());
             String response = view.getWalletUsedScreen(student, artifacts);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add erorr page
+        }
+    }
+
+    private void renderStore(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            List<Artifact> artifacts;
+            artifacts = artifactDao.getArtifactCollection();
+            String response = view.getStoreScreen(student, artifacts);
             httpExchange.sendResponseHeaders(200, response.length());
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
