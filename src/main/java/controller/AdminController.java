@@ -57,13 +57,21 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     renderMentorsData(httpExchange);
                     break;
                 case "/admin/create-mentor":
-                    handleCreateMentor(httpExchange);
+                    try {
+                        handleCreateMentor(httpExchange);
+                    } catch (DataAccessException e) {
+                      handleNegativeResponse(httpExchange, "/admin");
+                    }
                     break;
                 case "/admin/create-group":
                     handleCreateGroup(httpExchange);
                     break;
                 case "/admin/edit-mentor":
-                    handleEditMentor(httpExchange);
+                    try {
+                        handleEditMentor(httpExchange);
+                    } catch (DataAccessException e) {
+                        handleNegativeResponse(httpExchange, "/admin");
+                    }
                     break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
@@ -92,9 +100,8 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         }
     }
 
-    private void handleCreateMentor(HttpExchange httpExchange) throws IOException {
-        try {
-            String method = httpExchange.getRequestMethod();
+    private void handleCreateMentor(HttpExchange httpExchange) throws IOException, DataAccessException {
+        String method = httpExchange.getRequestMethod();
             if (method.equals("POST")) {
                 try {
                     Mentor mentor = createMentorFromISR(httpExchange);
@@ -102,15 +109,11 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     String response = view.getCreateMentorMessage(groupDao.getAll(), "Mentor creation was successful!");
                     handlePositiveResponse(httpExchange, response);
                 } catch (DataAccessException e) {
-                    e.printStackTrace();
                     renderCreateMentorWithMessage(httpExchange, "Mentor creation failed!");
                 }
             } else {
                 renderCreateMentor(httpExchange);
             }
-        } catch (DataAccessException e){
-            handleNegativeResponse(httpExchange, "/admin");
-        } // Todo TEST THIS!!!!!
     }
 
     private void renderCreateMentor(HttpExchange httpExchange) throws IOException, DataAccessException {
@@ -123,8 +126,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         handlePositiveResponse(httpExchange, response);
     }
 
-    private void handleEditMentor(HttpExchange httpExchange) throws IOException{
-        try {
+    private void handleEditMentor(HttpExchange httpExchange) throws IOException, DataAccessException{
             String method = httpExchange.getRequestMethod();
             if (method.equals("POST")) {
                 try {
@@ -137,9 +139,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             } else {
                 renderEditMentor(httpExchange);
             }
-        } catch (DataAccessException e){
-            handleNegativeResponse(httpExchange, "/admin"); // Todo Handle this properly
-        }
     }
 
     private void renderEditMentor(HttpExchange httpExchange) throws IOException, DataAccessException{
@@ -177,10 +176,10 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private Mentor createMentorFromISR(HttpExchange httpExchange) throws IOException, DataAccessException {
         Map<String, String> inputs = getMapFromISR(httpExchange);
         String login = inputs.get("login");
+        String password = inputs.get("password");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
-        String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
         Group group = groupDao.getByID(groupId);
         ArrayList<Group> groups = new ArrayList<>();
