@@ -23,6 +23,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private LevelDAO levelDao = new LevelDAOSQL();
     private StudentDAO studentDao = new StudentDAOSQL();
     private ArtifactDAO artifactDao = new ArtifactDAOSQL();
+    private WalletDAO walletDao = new WalletDAOSQL();
 
     StudentController() {
         view = new StudentView();
@@ -63,6 +64,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
         } else if(URI.startsWith("/student/wallet/use/")) {
             useArtifact(httpExchange);
+        } else if(URI.startsWith("/student/store/buy/")) {
+            buyArtifact(httpExchange, userID);
         } else {
 
             switch (URI) {
@@ -98,6 +101,45 @@ public class StudentController extends AbstractContoller implements HttpHandler 
             //TODO: display error
         }
         redirectTo(httpExchange,"/student/wallet");
+    }
+
+    private void buyArtifact(HttpExchange httpExchange, int userID) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/student/store/buy/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        try {
+            Artifact artifact = artifactDao.getArtifact(artifactID);
+            if(artifact != null && buyArtifactSuccess(artifact, userID)) {
+               // TODO: purchase success info display?
+            } else {
+                // TODO: purchase fail display
+            }
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: display error
+        }
+        redirectTo(httpExchange,"/student/store");
+    }
+
+    private boolean buyArtifactSuccess(Artifact artifact, int userID) {
+     try {
+            Student buyer = studentDao.get(userID);
+            int accountBalance = buyer.getWallet().getAmount();
+
+            if(accountBalance >= artifact.getPrice()) {
+
+                accountBalance -= artifact.getPrice();
+                buyer.getWallet().setAmount(accountBalance);
+                walletDao.update(buyer.getWallet());
+                artifactDao.addToWallet(artifact, buyer.getID());
+                // TODO add artifact to wallet
+                return true;
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add error page
+        }
+        return false;
     }
 
     private void renderProfile(HttpExchange httpExchange, int userID) throws IOException {
