@@ -33,6 +33,9 @@ public class AdminView {
     public String getCreateMentor(List<Group> groups) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-mentor.twig");
         JtwigModel model = JtwigModel.newModel();
+        for(Group group: groups){
+            System.out.println(group.getName());
+        }
         model.with("groups", groups);
         return template.render(model);
     }
