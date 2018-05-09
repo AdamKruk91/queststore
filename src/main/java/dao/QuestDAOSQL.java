@@ -14,7 +14,7 @@ public class QuestDAOSQL extends ManipulationDAOSQL implements QuestDAO {
     private final int QUEST_STATUS_ID = 2;
 
     @Override
-    public void addQuest(Quest newQuest) throws DataAccessException {
+    public void add(Quest newQuest) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO quest (name, reward, description, category_id)" +
@@ -32,7 +32,7 @@ public class QuestDAOSQL extends ManipulationDAOSQL implements QuestDAO {
     }
 
     @Override
-    public void removeQuest(Quest removeQuest) throws DataAccessException {
+    public void remove(Quest removeQuest) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE FROM quest WHERE id = ?");
             ps.setInt(1, removeQuest.getID());
@@ -43,7 +43,7 @@ public class QuestDAOSQL extends ManipulationDAOSQL implements QuestDAO {
     }
 
     @Override
-    public void updateQuest(Quest updateQuest) throws DataAccessException {
+    public void update(Quest updateQuest) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "UPDATE quest SET " +
@@ -80,14 +80,14 @@ public class QuestDAOSQL extends ManipulationDAOSQL implements QuestDAO {
     }
 
     @Override
-    public Quest getByID(int id) throws DataAccessException {
+    public Quest get(int id) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("SELECT quest.id, quest.name, quest.reward," +
                     "quest.description, quest_category.name as 'category_name' FROM quest JOIN quest_category " +
                     "ON quest.category_id = quest_category.id WHERE quest.id=?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            return getQuestFromResultSet(rs);
+            return createFrom(rs);
         } catch (SQLException e){
             throw new DataAccessException("Fail to get Quest");
         }
@@ -107,7 +107,7 @@ public class QuestDAOSQL extends ManipulationDAOSQL implements QuestDAO {
         }
     }
 
-    private Quest getQuestFromResultSet(ResultSet rs) throws SQLException {
+    private Quest createFrom(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
         String description = rs.getString("description");
