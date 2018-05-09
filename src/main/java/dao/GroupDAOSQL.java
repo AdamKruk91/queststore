@@ -15,7 +15,6 @@ import java.util.List;
 public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
 
     private MentorDAO mentorDAO = new MentorDAOSQL();
-    private StudentDAO studentDao = new StudentDAOSQL();
     private final int CODECOOLER_CATEGORY_ID = 1;
     private final int MENTOR_CATEGORY_ID = 2;
 
@@ -84,7 +83,8 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
                 int userCategoryID = rs.getInt("user_category_id");
                 switch (userCategoryID) {
                     case CODECOOLER_CATEGORY_ID:
-                        students.add(studentDao.get(userID));
+                        StudentDAO studentDAO = new StudentDAOSQL();
+                        students.add(studentDAO.get(userID));
                         break;
                     case MENTOR_CATEGORY_ID:
                         mentors.add(mentorDAO.get(userID));
