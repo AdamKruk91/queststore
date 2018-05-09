@@ -32,13 +32,13 @@
                 <th>Mentor ID</th>
                 <th>Name</th>
                 <th>Surname</th>
-                <th>Group</th>
+                <th>Email</th>
               </tr>
               {% for mentor in mentors %}
                   <tr>
-                      <td>{{ mentor.id }}</td>
-                      <td>{{ mentor.firstName }}</td>
-                      <td>{{ mentor.lastName }}</td>
+                      <td>{{ mentor.ID }}</td>
+                      <td>{{ mentor.name }}</td>
+                      <td>{{ mentor.surname }}</td>
                       <td>{{ mentor.email }}</td>
                   </tr>
               {% endfor %}

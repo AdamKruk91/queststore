@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private AdminView view = new AdminView();
     private GroupDAO groupDao = new GroupDAOSQL();
     private MentorDAO mentorDao = new MentorDAOSQL();
-    private LoginDao loginDao = new LoginDAOSQL();
+    private LoginDAO loginDAO = new LoginDAOSQL();
     private LevelDAO levelDAO = new LevelDAOSQL();
     private AdminDAO adminDao = new AdminDAOSQL();
 
@@ -28,7 +27,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
                 int loginID = getLoginIdFromCookie(httpExchange);
                 String userType = "";
-                userType = loginDao.getUserCategory(loginID);
+                userType = loginDAO.getUserCategory(loginID);
 
                 if(!userType.equals("Admin")) {
                     redirectTo(httpExchange, "/login");
@@ -58,13 +57,21 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     renderMentorsData(httpExchange);
                     break;
                 case "/admin/create-mentor":
-                    handleCreateMentor(httpExchange);
+                    try {
+                        handleCreateMentor(httpExchange);
+                    } catch (DataAccessException e) {
+                      handleNegativeResponse(httpExchange, "/admin");
+                    }
                     break;
                 case "/admin/create-group":
                     handleCreateGroup(httpExchange);
                     break;
                 case "/admin/edit-mentor":
-                    handleEditMentor(httpExchange);
+                    try {
+                        handleEditMentor(httpExchange);
+                    } catch (DataAccessException e) {
+                        handleNegativeResponse(httpExchange, "/admin");
+                    }
                     break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
@@ -93,9 +100,8 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         }
     }
 
-    private void handleCreateMentor(HttpExchange httpExchange) throws IOException {
-        try {
-            String method = httpExchange.getRequestMethod();
+    private void handleCreateMentor(HttpExchange httpExchange) throws IOException, DataAccessException {
+        String method = httpExchange.getRequestMethod();
             if (method.equals("POST")) {
                 try {
                     Mentor mentor = createMentorFromISR(httpExchange);
@@ -103,15 +109,11 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     String response = view.getCreateMentorMessage(groupDao.getAll(), "Mentor creation was successful!");
                     handlePositiveResponse(httpExchange, response);
                 } catch (DataAccessException e) {
-                    e.printStackTrace();
                     renderCreateMentorWithMessage(httpExchange, "Mentor creation failed!");
                 }
             } else {
                 renderCreateMentor(httpExchange);
             }
-        } catch (DataAccessException e){
-            handleNegativeResponse(httpExchange, "/admin");
-        } // Todo TEST THIS!!!!!
     }
 
     private void renderCreateMentor(HttpExchange httpExchange) throws IOException, DataAccessException {
@@ -124,8 +126,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         handlePositiveResponse(httpExchange, response);
     }
 
-    private void handleEditMentor(HttpExchange httpExchange) throws IOException{
-        try {
+    private void handleEditMentor(HttpExchange httpExchange) throws IOException, DataAccessException{
             String method = httpExchange.getRequestMethod();
             if (method.equals("POST")) {
                 try {
@@ -138,9 +139,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             } else {
                 renderEditMentor(httpExchange);
             }
-        } catch (DataAccessException e){
-            handleNegativeResponse(httpExchange, "/admin"); // Todo Handle this properly
-        }
     }
 
     private void renderEditMentor(HttpExchange httpExchange) throws IOException, DataAccessException{
@@ -178,10 +176,10 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     private Mentor createMentorFromISR(HttpExchange httpExchange) throws IOException, DataAccessException {
         Map<String, String> inputs = getMapFromISR(httpExchange);
         String login = inputs.get("login");
+        String password = inputs.get("password");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
-        String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
         Group group = groupDao.getByID(groupId);
         ArrayList<Group> groups = new ArrayList<>();
@@ -191,7 +189,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
     private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException, DataAccessException{
         Map<String, String> inputs = getMapFromISR(httpExchange);
-        int id = Integer.parseInt(inputs.get("id"));
+        int id = Integer.parseInt(inputs.get("ID"));
         String login = inputs.get("login");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
