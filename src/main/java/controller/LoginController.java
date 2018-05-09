@@ -19,7 +19,7 @@ public class LoginController extends AbstractContoller implements HttpHandler {
     public LoginController() {
         view = new LoginView();
         loginDao = new LoginDAOSQL();
-        loggedInUsers = new HashMap<>();
+
 
     }
 

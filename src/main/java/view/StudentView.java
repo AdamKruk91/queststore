@@ -16,7 +16,7 @@ public class StudentView {
                 + "5 - Exit");
     }
 
-    public void displayCollectionOfItem(List<UsableObject> itemCollection) {
+    public void displayCollectionOfItem(List<Artifact> itemCollection) {
         System.out.println("\nAvailable artifacts: ");
         for (UsableObject item: itemCollection) {
             System.out.println(item.getID() + ". " + item.getName() + " value: " + item.getValue());
@@ -24,7 +24,7 @@ public class StudentView {
         System.out.println("\n");
     }
 
-    public void displayBoughtArtifacts(List<UsableObject>  itemCollection) {
+    public void displayBoughtArtifacts(List<Artifact>  itemCollection) {
         System.out.println("YOUR ARTIFACTS: ");
         for (UsableObject item: itemCollection) {
             System.out.println("==> " + item.getName() + item.getValue());
@@ -54,7 +54,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletScreen (Student student, List<UsableObject> artifacts) {
+    public String getWalletScreen (Student student, List<Artifact> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet.twig");
         JtwigModel model = JtwigModel.newModel();
 
@@ -64,7 +64,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletUsedScreen (Student student, List<UsableObject> artifacts) {
+    public String getWalletUsedScreen (Student student, List<Artifact> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-used.twig");
         JtwigModel model = JtwigModel.newModel();
 
@@ -74,7 +74,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletPendingScreen (Student student, List<UsableObject> artifacts) {
+    public String getWalletPendingScreen (Student student, List<Artifact> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-pending.twig");
         JtwigModel model = JtwigModel.newModel();
 
