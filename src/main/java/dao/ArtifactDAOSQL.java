@@ -43,7 +43,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }
     }
 
-    public void addArtifact(Artifact artifact) throws DataAccessException {
+    public void add(Artifact artifact) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO `artifact`(`name`,`description`,`price`,`category_id`)" +
@@ -59,7 +59,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
 
     }
 
-    public void removeArtifact(Artifact artifact) throws DataAccessException{
+    public void remove(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE " +
                     "FROM artifact" +
@@ -71,7 +71,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }
     }
 
-    public void updateArtifact(Artifact artifact) throws DataAccessException{
+    public void update(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("UPDATE artifact " +
                     " SET name = ?, desciption = ?, price = ?, category_id = ? " +

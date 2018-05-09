@@ -19,7 +19,7 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
     private final int CODECOOLER_CATEGORY_ID = 1;
     private final int MENTOR_CATEGORY_ID = 2;
 
-    public void addNewGroup(Group group) throws DataAccessException {
+    public void add(Group group) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO 'group' (name) VALUES (?);");
@@ -51,7 +51,7 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
     }
 
 
-    public void removeGroup(Group group) throws DataAccessException {
+    public void remove(Group group) throws DataAccessException {
         try {
             PreparedStatement ps = null;
             ps = getConnection().prepareStatement("DELETE FROM 'group' WHERE id=  ?;");

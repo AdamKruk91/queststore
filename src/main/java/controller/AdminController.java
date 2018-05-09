@@ -136,7 +136,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             Map<String, String> inputs = getMapFromISR(httpExchange);
             String name = inputs.get("name");
 
-            groupDao.addNewGroup(name);
+            groupDao.add(name);
             renderCreateGroupWithMessage(httpExchange, "Group creation was successful!");
         } else{
             renderCreateGroup(httpExchange);
