@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,24 +23,26 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
-        if(isCookieValid(httpExchange)) {
-            int loginID = getLoginIdFromCookie(httpExchange);
-            String userType = "";
+        try {
+            if(isCookieValid(httpExchange)) {
 
-            try {
+                int loginID = getLoginIdFromCookie(httpExchange);
+                String userType = "";
                 userType = loginDao.getUserCategory(loginID);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
 
-            if(!userType.equals("Admin")) {
-                redirectTo(httpExchange, "/login");
+                if(!userType.equals("Admin")) {
+                    redirectTo(httpExchange, "/login");
+                } else {
+                    handleRendering(httpExchange, loginID);
+                }
             } else {
-                handleRendering(httpExchange, loginID);
+                redirectTo(httpExchange, "/login");
             }
-        } else {
-            redirectTo(httpExchange, "/login");
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: display error page
         }
+
     }
 
     private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
