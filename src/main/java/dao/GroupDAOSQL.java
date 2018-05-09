@@ -84,10 +84,10 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
                 int userCategoryID = rs.getInt("user_category_id");
                 switch (userCategoryID) {
                     case CODECOOLER_CATEGORY_ID:
-                        students.add(studentDao.getStudentById(userID));
+                        students.add(studentDao.get(userID));
                         break;
                     case MENTOR_CATEGORY_ID:
-                        mentors.add(mentorDAO.getMentorById(userID));
+                        mentors.add(mentorDAO.get(userID));
                         break;
                 }
             }
