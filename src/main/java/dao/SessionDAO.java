@@ -1,9 +1,11 @@
 package dao;
 
+import exceptions.DataAccessException;
 import model.Session;
 
 public interface SessionDAO {
-    void addSession();
-    void deleteSession();
-    Session getSessionByUserId (int user_id);
+    void addSession(Session session) throws DataAccessException;
+    void deleteSession(int userID) throws DataAccessException;
+    Session getSession(int userID) throws DataAccessException;
+    Session getSession(String sessionID) throws DataAccessException;
 }
