@@ -3,6 +3,7 @@ package controller;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.LoginDAOSQL;
+import exceptions.DataAccessException;
 import view.LoginView;
 
 import java.io.*;
@@ -30,13 +31,13 @@ public class LoginController extends AbstractContoller implements HttpHandler {
             } else {
                 renderWithoutCookie(httpExchange);
             }
-        }catch(SQLException e){
+        }catch(DataAccessException e){
             e.printStackTrace();
         }
     }
 
 
-    private void renderWithCookie(HttpExchange httpExchange) throws IOException, SQLException {
+    private void renderWithCookie(HttpExchange httpExchange) throws IOException, DataAccessException {
 
         int loginID = getLoginIdFromCookie(httpExchange);
         String userType = loginDao.getUserCategory(loginID);
@@ -54,7 +55,7 @@ public class LoginController extends AbstractContoller implements HttpHandler {
         }
     }
 
-    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException, SQLException {
+    private void renderWithoutCookie(HttpExchange httpExchange) throws IOException, DataAccessException {
         String response = "";
         String method = httpExchange.getRequestMethod();
         if (method.equals("POST")) {
