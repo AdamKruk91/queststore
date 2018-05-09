@@ -16,9 +16,9 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
     public Artifact getArtifact(int artifactID) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
-                    "SELECT artifact.id as 'id', artifact.name as 'name', description, price, artifact_category.name as 'category'\n" +
-                            "FROM artifact\n" +
-                            "INNER JOIN artifact_category ON category_id = `artifact_category`.id\n" +
+                    "SELECT artifact.id as 'id', artifact.name as 'name', description, price, artifact_category.name as 'category' " +
+                            "FROM artifact " +
+                            "INNER JOIN artifact_category ON category_id = `artifact_category`.id " +
                             "WHERE artifact.id = ?;");
             ps.setInt(1, artifactID);
 
@@ -47,17 +47,17 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }
     }
 
+    @Override
     public List<Artifact> getArtifactCollection() throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
-                    "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
-                            "artifact.price as 'price', artifact_category.name as 'category name', artifact_status.name as 'status' " +
-                            "FROM user_artifact JOIN artifact ON user_artifact.artifact_id = artifact.id JOIN artifact_status ON " +
-                            " user_artifact.status_id = artifact_status.id JOIN artifact_category ON artifact.category_id = artifact_category.id;");
+                    "SELECT artifact.id AS id, artifact.name AS name, description, price, artifact_category.name AS category " +
+                            "  FROM artifact " +
+                            "    INNER JOIN artifact_category ON artifact.category_id = artifact_category.id;");
             ResultSet rs = ps.executeQuery();
-            return getArtifacts(rs);
+            return getStoreArtifacts(rs);
         } catch (SQLException e){
-            throw new DataAccessException("Problem with getting artifact");
+            throw new DataAccessException("Problem with getArtifactCollection");
         }
     }
 
@@ -74,7 +74,6 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }catch(SQLException e){
             throw new DataAccessException("Add artifact error");
         }
-
     }
 
     public void remove(Artifact artifact) throws DataAccessException{
@@ -133,6 +132,18 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
     public List<Artifact> getUserRequestedArtifacts(int userID) throws DataAccessException{
         int REQUEST = 3;
         return getArtifacts(userID, REQUEST);
+    }
+
+    private List<Artifact> getStoreArtifacts(ResultSet rs) throws DataAccessException {
+        List<Artifact> artifacts = new ArrayList<>();
+        try {
+            while(rs.next()) {
+                artifacts.add(getArtifactWithoutStatus(rs));
+            }
+            return artifacts;
+        } catch(SQLException e) {
+           throw new DataAccessException("getStoreArtifacts error");
+        }
     }
 
     public void updateArtifactStatus(Artifact artifact) throws DataAccessException{
