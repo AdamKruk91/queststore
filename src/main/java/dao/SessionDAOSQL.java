@@ -8,6 +8,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SessionDAOSQL extends ManipulationDAOSQL implements SessionDAO {
+
+    @Override
+    public boolean sessionExists(String sessionID) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT * FROM session WHERE id=?;");
+            ps.setString(1, sessionID);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new DataAccessException("Error during sessionExists");
+        }
+    }
+
     @Override
     public void addSession(Session session) throws DataAccessException {
         try {
