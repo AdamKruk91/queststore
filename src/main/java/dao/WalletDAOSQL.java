@@ -12,8 +12,10 @@ import java.util.List;
 
 public class WalletDAOSQL extends ManipulationDAOSQL implements WalletDAO {
 
+    ArtifactDAO artifactDAO = new ArtifactDAOSQL();
+
     @Override
-    public void addWallet(Wallet wallet) throws DataAccessException{
+    public void add(Wallet wallet) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO wallet (user_id, total_coins_earned, amount) " +
@@ -28,7 +30,7 @@ public class WalletDAOSQL extends ManipulationDAOSQL implements WalletDAO {
     }
 
     @Override
-    public void updateWallet(Wallet wallet) throws DataAccessException{
+    public void update(Wallet wallet) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "UPDATE wallet SET total_coins_earned=?, amount=? WHERE user_id=?;");
@@ -42,26 +44,26 @@ public class WalletDAOSQL extends ManipulationDAOSQL implements WalletDAO {
     }
 
     @Override
-    public Wallet getByID(int id) throws DataAccessException{
+    public Wallet get(int id) throws DataAccessException{
         try {
             if (!checkIfExist(id)) {
                 Wallet wallet = new Wallet(id);
-                addWallet(wallet);
+                add(wallet);
             }
             PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM wallet WHERE user_id=?;");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            return getWalletFromResultSet(rs);
+            return createFrom(rs);
         }catch (SQLException e) {
             throw new DataAccessException("Problem with getting wallet by ID");
         }
     }
 
-    private Wallet getWalletFromResultSet(ResultSet rs) throws DataAccessException, SQLException {
+    private Wallet createFrom(ResultSet rs) throws DataAccessException, SQLException {
         int user_id = rs.getInt("user_id");
         int amount = rs.getInt("amount");
         int total_coins_earned = rs.getInt("total_coins_earned");
-        ArrayList<Artifact> OwnedArtifacts = (ArrayList<Artifact>) getArtifactByUserId(user_id);
+        ArrayList<Artifact> OwnedArtifacts = (ArrayList<Artifact>) artifactDAO.getArtifacts(user_id);
         return new Wallet(user_id, amount, total_coins_earned, OwnedArtifacts);
     }
 
@@ -80,37 +82,7 @@ public class WalletDAOSQL extends ManipulationDAOSQL implements WalletDAO {
     }
 
     @Override
-    public List<Artifact> getArtifactByUserId(int user_id) throws DataAccessException{
-        try {
-            PreparedStatement ps = getConnection().prepareStatement(
-                    "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
-                            "artifact.price as 'price', artifact_category.name as 'category name', artifact_status.name as 'status' " +
-                            "FROM user_artifact JOIN artifact ON user_artifact.artifact_id = artifact.id JOIN artifact_status ON " +
-                            " user_artifact.status_id = artifact_status.id JOIN artifact_category ON artifact.category_id = artifact_category.id WHERE" +
-                            " user_artifact.user_id = ?;");
-            ps.setInt(1, user_id);
-            ResultSet rs = ps.executeQuery();
-
-            List<Artifact> userArtifact = new ArrayList<>();
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("artifact name");
-                String description = rs.getString("description");
-                int price = rs.getInt("price");
-                String categoryName= rs.getString("category name");
-                String status = rs.getString("status");
-                Artifact artifact = new Artifact(id, name, description, price, categoryName, status);
-                userArtifact.add(artifact);
-            }
-            return userArtifact;
-        } catch (SQLException e){
-            throw new DataAccessException("Problem with getting user artifact");
-        }
-    }
-
-    @Override
-    public List<Wallet> getWalletsCollection() throws DataAccessException {
+    public List<Wallet> getAll() throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM wallet");
             List<Wallet> wallets = new ArrayList<>();
@@ -119,7 +91,7 @@ public class WalletDAOSQL extends ManipulationDAOSQL implements WalletDAO {
                 int id = rs.getInt("user_id");
                 int totalCoinsEarned = rs.getInt("total_coins_earned");
                 int amount = rs.getInt("amount");
-                ArrayList<Artifact> artifacts = (ArrayList<Artifact>) getArtifactByUserId(id);
+                ArrayList<Artifact> artifacts = (ArrayList<Artifact>) artifactDAO.getArtifacts(id);
                 Wallet wallet = new Wallet(id, amount, totalCoinsEarned, artifacts);
                 wallets.add(wallet);
             }
