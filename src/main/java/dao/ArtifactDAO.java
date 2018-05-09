@@ -12,6 +12,7 @@ public interface ArtifactDAO {
     Artifact getInstantiatedArtifact(int artifactID) throws DataAccessException;
     List<Artifact> getArtifactCollection() throws DataAccessException;
     void add(Artifact artifact) throws DataAccessException;
+    void addToWallet(Artifact artifact, int userID) throws DataAccessException;
     void remove(Artifact artifact) throws DataAccessException;
     void update(Artifact artifact) throws DataAccessException;
     List<Artifact> getUserUnusedArtifacts(int userID) throws DataAccessException;

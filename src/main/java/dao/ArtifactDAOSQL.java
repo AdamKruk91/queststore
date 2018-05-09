@@ -76,6 +76,23 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         }
     }
 
+    @Override
+    public void addToWallet(Artifact artifact, int userID) throws DataAccessException {
+        try{
+            int IN_WALLET_STATUS = 2;
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "INSERT INTO user_artifact( user_id, artifact_id, status_id) \n" +
+                            "  VALUES (?, ?, ?);");
+            ps.setInt(1, userID);
+            ps.setInt(2, artifact.getID());
+            ps.setInt(3, IN_WALLET_STATUS);
+            ps.executeUpdate();
+        }catch(SQLException e){
+            throw new DataAccessException("Add artifact error");
+        }
+
+    }
+
     public void remove(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE " +
