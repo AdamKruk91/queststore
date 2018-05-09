@@ -14,17 +14,12 @@ import view.AdminView;
 
 public class AdminController extends AbstractContoller implements HttpHandler {
 
-    private AdminView view;
+    private AdminView view = new AdminView();
     private GroupDAO groupDao = new GroupDAOSQL();
     private MentorDAO mentorDao = new MentorDAOSQL();
     private LoginDao loginDao = new LoginDAOSQL();
     private LevelDAO levelDAO = new LevelDAOSQL();
     private AdminDAO adminDao = new AdminDAOSQL();
-
-
-    public AdminController() {
-        view = new AdminView();
-    }
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
@@ -77,9 +72,13 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
-        Admin admin = getAdmin(loginID);
-        String response = view.getProfileScreen(admin);
-        handlePositiveResponse(httpExchange, response);
+        try {
+            Admin admin = getAdmin(loginID);
+            String response = view.getProfileScreen(admin);
+            handlePositiveResponse(httpExchange, response);
+        } catch (DataAccessException e){
+            redirectTo(httpExchange, "/login");
+        }
     }
 
     private void renderMentorsData(HttpExchange httpExchange) throws IOException {
@@ -182,7 +181,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         return new Mentor(id, login, password, firstName, lastName, email, groups);
     }
 
-    private Admin getAdmin(int id) {
+    private Admin getAdmin(int id) throws DataAccessException{
         return adminDao.get(id);
     }
 }
