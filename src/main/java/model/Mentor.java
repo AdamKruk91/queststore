@@ -8,9 +8,9 @@ public class Mentor extends User {
     private String userCategory = "Mentor";
 
     public Mentor(String login, String password,
-                  String name, String surname, String email){
+                  String name, String surname, String email, ArrayList<Group> groupList){
         super(login, password, name, surname, email);
-        this.groupList = new ArrayList<Group>();
+        this.groupList = groupList;
     }
 
     public Mentor(int ID, String login, String password,
