@@ -1,7 +1,7 @@
 package dao;
 
 import exceptions.DataAccessException;
-import model.ArtifactModel;
+import model.Artifact;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface {
+public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
 
 
-    public ArtifactModel getArtifactById(int artifactID) throws DataAccessException{
+    public Artifact getArtifactById(int artifactID) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT artifact.id as 'id', artifact.name as 'name', description, price, artifact_category.name as 'category'\n" +
@@ -29,7 +29,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
 
     }
 
-    public List<ArtifactModel> getArtifactCollection() throws DataAccessException {
+    public List<Artifact> getArtifactCollection() throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
@@ -43,7 +43,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    public void addArtifact(ArtifactModel artifact) throws DataAccessException {
+    public void addArtifact(Artifact artifact) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO `artifact`(`name`,`description`,`price`,`category_id`)" +
@@ -59,7 +59,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
 
     }
 
-    public void removeArtifact(ArtifactModel artifact) throws DataAccessException{
+    public void removeArtifact(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE " +
                     "FROM artifact" +
@@ -71,7 +71,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    public void updateArtifact(ArtifactModel artifact) throws DataAccessException{
+    public void updateArtifact(Artifact artifact) throws DataAccessException{
         try{
             PreparedStatement ps = getConnection().prepareStatement("UPDATE artifact " +
                     " SET name = ?, desciption = ?, price = ?, category_id = ? " +
@@ -86,7 +86,7 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    public List<ArtifactModel> getArtifacts(int user_id) throws DataAccessException{
+    public List<Artifact> getArtifacts(int user_id) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
@@ -102,22 +102,22 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    public List<ArtifactModel> getUserUnusedArtifacts(int userID) throws DataAccessException {
+    public List<Artifact> getUserUnusedArtifacts(int userID) throws DataAccessException {
         int IN_WALLET = 2;
         return getArtifacts(userID, IN_WALLET);
     }
 
-    public List<ArtifactModel> getUserUsedArtifacts(int userID) throws DataAccessException{
+    public List<Artifact> getUserUsedArtifacts(int userID) throws DataAccessException{
         int USED = 1;
         return getArtifacts(userID, USED);
     }
 
-    public List<ArtifactModel> getUserRequestedArtifacts(int userID) throws DataAccessException{
+    public List<Artifact> getUserRequestedArtifacts(int userID) throws DataAccessException{
         int REQUEST = 3;
         return getArtifacts(userID, REQUEST);
     }
 
-    public void updateArtifactStatus(ArtifactModel artifact) throws DataAccessException{
+    public void updateArtifactStatus(Artifact artifact) throws DataAccessException{
         try{
         PreparedStatement ps = getConnection().prepareStatement(
                 "UPDATE user_artifact " +
@@ -143,27 +143,27 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    private ArtifactModel getArtifactWithoutStatus(ResultSet rs) throws SQLException {
+    private Artifact getArtifactWithoutStatus(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
         String description = rs.getString("description");
         int price = rs.getInt("price");
         String category = rs.getString("category");
 
-        return new ArtifactModel(id, name, description, price, category);
+        return new Artifact(id, name, description, price, category);
     }
 
-    private ArtifactModel getArtifactWithStatus(ResultSet rs) throws SQLException {
+    private Artifact getArtifactWithStatus(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("artifact name");
         String description = rs.getString("description");
         int price = rs.getInt("price");
         String categoryName= rs.getString("category name");
         String status = rs.getString("status");
-        return new ArtifactModel(id, name, description, price, categoryName, status);
+        return new Artifact(id, name, description, price, categoryName, status);
     }
 
-    private List<ArtifactModel> getArtifacts(int userID, int statusID) throws DataAccessException{
+    private List<Artifact> getArtifacts(int userID, int statusID) throws DataAccessException{
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT user_artifact.id as 'id', artifact.name as 'artifact name', artifact.description as 'description'," +
@@ -180,8 +180,8 @@ public class ArtifactDao extends ManipulationDao implements ArtifactDaoInterface
         }
     }
 
-    private List<ArtifactModel> getArtifacts(ResultSet rs) throws SQLException{
-        List<ArtifactModel> userArtifact = new ArrayList<>();
+    private List<Artifact> getArtifacts(ResultSet rs) throws SQLException{
+        List<Artifact> userArtifact = new ArrayList<>();
         while(rs.next()){
             userArtifact.add(getArtifactWithStatus(rs));
         }

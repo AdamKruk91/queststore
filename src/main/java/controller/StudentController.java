@@ -8,18 +8,18 @@ import java.util.List;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
-import model.UsableObjectModel;
+import model.UsableObject;
 import model.Level;
-import model.StudentModel;
+import model.Student;
 import view.StudentView;
 
 public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
     private InputController inputController;
-    private LoginDao loginDao = new LoginDao();
-    private LevelDao levelDao = new LevelDao();
-    private StudentDao studentDao = new StudentDao();
+    private LoginDAOSQL loginDao = new LoginDAOSQL();
+    private LevelDAOSQL levelDao = new LevelDAOSQL();
+    private StudentDAOSQL studentDao = new StudentDAOSQL();
     private TransactionDao transactionDao = new TransactionDao();
 
     public StudentController() {
@@ -84,13 +84,13 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         final String URI = httpExchange.getRequestURI().toString();
         String artifactStrID = URI.replace("/student/wallet/use/", "");
         int artifactID = Integer.parseInt(artifactStrID);
-        UsableObjectModel artifact = itemDao.getItemByID(artifactID);
+        UsableObject artifact = itemDao.getItemByID(artifactID);
         transactionDao.updateStatusOfTransaction(artifact, 2);
         redirectTo(httpExchange,"/student/wallet");
     }
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
+        Student student = getStudent(loginID);
         int totalExp = student.getMyWallet().getTotalCoolcoins();
         Level level = null;
         // TODO: display error message in browser!
@@ -107,9 +107,9 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     private void renderWallet(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
+        Student student = getStudent(loginID);
         TransactionDao transactionDao = new TransactionDao();
-        List<UsableObjectModel> artifacts = transactionDao.getStudentArtifact(student.getID());
+        List<UsableObject> artifacts = transactionDao.getStudentArtifact(student.getID());
         String response = view.getWalletScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
@@ -118,9 +118,9 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     private void renderWalletPending(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
+        Student student = getStudent(loginID);
         TransactionDao transactionDao = new TransactionDao();
-        List<UsableObjectModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 2);
+        List<UsableObject> artifacts = transactionDao.getStudentArtifact(student.getID(), 2);
         String response = view.getWalletPendingScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
@@ -129,9 +129,9 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     private void renderWalletUsed(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
+        Student student = getStudent(loginID);
         TransactionDao transactionDao = new TransactionDao();
-        List<UsableObjectModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 1);
+        List<UsableObject> artifacts = transactionDao.getStudentArtifact(student.getID(), 1);
         String response = view.getWalletUsedScreen(student, artifacts);
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
@@ -141,36 +141,36 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
 
 
-    private StudentModel getStudent(int id) {
+    private Student getStudent(int id) {
         return studentDao.getStudentById(id);
     }
 
-    private UsableObjectModel selectArtifact() throws SQLException {
-        List<UsableObjectModel> itemCollection  = itemDao.getItemCollectionByType("Artifact");
+    private UsableObject selectArtifact() throws SQLException {
+        List<UsableObject> itemCollection  = itemDao.getItemCollectionByType("Artifact");
         view.displayCollectionOfItem(itemCollection);
         int idArtifact = inputController.getIntInput("Enter artifact id to buy: ");
-        UsableObjectModel matchedArtifact = null;
-        for (UsableObjectModel artifact: itemCollection)
+        UsableObject matchedArtifact = null;
+        for (UsableObject artifact: itemCollection)
             if(artifact.getID() == idArtifact)
                 matchedArtifact = artifact;
         return matchedArtifact;
     }
 
-    private void buyArtifact(StudentModel student) throws SQLException {
-        UsableObjectModel artifact = selectArtifact();
+    private void buyArtifact(Student student) throws SQLException {
+        UsableObject artifact = selectArtifact();
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.insertTransaction(student.getID(), artifact.getID());
     }
 
-    private void  displayWallet(StudentModel student) {
+    private void  displayWallet(Student student) {
         view.displayWallet(student.getWallet());
         TransactionDao transactionDao = new TransactionDao();
-        List<UsableObjectModel> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
+        List<UsableObject> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
         view.displayBoughtArtifacts(artifactsCollection);
     }
 
     public void controlMenuOptions(int loginId) throws SQLException {
-        StudentModel student = getStudent(loginId);
+        Student student = getStudent(loginId);
         boolean whileRunning = true;
         while (whileRunning) {
             view.displayStudentMenu();
@@ -193,7 +193,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
             }
         }
     }
-     private void checkExperience(StudentModel student){
+     private void checkExperience(Student student){
          try {
              int totalExp = student.getMyWallet().getTotalCoolcoins();
              Level level = levelDao.getLevel(totalExp);

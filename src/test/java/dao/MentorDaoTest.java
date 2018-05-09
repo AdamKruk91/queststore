@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MentorDaoTest extends TestableDatabaseUnit {
 
-    private static MentorDao dao = new MentorDao();
+    private static MentorDAOSQL dao = new MentorDAOSQL();
 
     @AfterAll
     static void afterAll() {

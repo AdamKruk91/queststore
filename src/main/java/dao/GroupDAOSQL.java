@@ -1,9 +1,9 @@
 package dao;
 
 import exceptions.DataAccessException;
-import model.GroupModel;
-import model.MentorModel;
-import model.StudentModel;
+import model.Group;
+import model.Mentor;
+import model.Student;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GroupDao extends ManipulationDao implements GroupDaoInterface {
+public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
 
-    private MentorDaoInterface mentorDAO = new MentorDao();
-    private StudentDaoInterface studentDao = new StudentDao();
+    private MentorDAO mentorDAO = new MentorDAOSQL();
+    private StudentDAO studentDao = new StudentDAOSQL();
     private final int CODECOOLER_CATEGORY_ID = 1;
     private final int MENTOR_CATEGORY_ID = 2;
 
-    public void addNewGroup(GroupModel group) throws DataAccessException {
+    public void addNewGroup(Group group) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO 'group' (name) VALUES (?);");
@@ -31,17 +31,17 @@ public class GroupDao extends ManipulationDao implements GroupDaoInterface {
     }
 
 
-    public List<GroupModel> getGroupsCollection() throws DataAccessException {
+    public List<Group> getGroupsCollection() throws DataAccessException {
         try {
             PreparedStatement ps = null;
                 ps = getConnection().prepareStatement("SELECT id FROM 'group';");
 
             ResultSet rs = ps.executeQuery();
 
-            ArrayList<GroupModel> groups = new ArrayList<>();
+            ArrayList<Group> groups = new ArrayList<>();
             while (rs.next()) {
                 int groupID = rs.getInt("id");
-                GroupModel group = getByID(groupID);
+                Group group = getByID(groupID);
                 groups.add(group);
             }
             return groups;
@@ -51,7 +51,7 @@ public class GroupDao extends ManipulationDao implements GroupDaoInterface {
     }
 
 
-    public void removeGroup(GroupModel group) throws DataAccessException {
+    public void removeGroup(Group group) throws DataAccessException {
         try {
             PreparedStatement ps = null;
             ps = getConnection().prepareStatement("DELETE FROM 'group' WHERE id=  ?;");
@@ -62,7 +62,7 @@ public class GroupDao extends ManipulationDao implements GroupDaoInterface {
         }
     }
 
-    public GroupModel getByID(int id) throws DataAccessException {
+    public Group getByID(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT DISTINCT user_id, user_category_id, 'group'.name as group_name FROM 'group' " +
@@ -72,8 +72,8 @@ public class GroupDao extends ManipulationDao implements GroupDaoInterface {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            ArrayList<StudentModel> students = new ArrayList<>();
-            ArrayList<MentorModel> mentors = new ArrayList<MentorModel>();
+            ArrayList<Student> students = new ArrayList<>();
+            ArrayList<Mentor> mentors = new ArrayList<Mentor>();
 
             String groupName = null;
             while (rs.next()) {
@@ -91,7 +91,7 @@ public class GroupDao extends ManipulationDao implements GroupDaoInterface {
                         break;
                 }
             }
-            return new GroupModel(id, groupName, students, mentors);
+            return new Group(id, groupName, students, mentors);
         } catch (SQLException e) {
             throw new DataAccessException("Group getById failed!");
         }

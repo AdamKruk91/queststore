@@ -1,6 +1,6 @@
 package dao;
 
-import model.UsableObjectModel;
+import model.UsableObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,7 +23,7 @@ class TransactionDaoTest extends TestableDatabaseUnit{
 
     @Test
     void testUpdateStatusOfTransaction() {
-        UsableObjectModel mockItem = Mockito.mock(UsableObjectModel.class);
+        UsableObject mockItem = Mockito.mock(UsableObject.class);
         Mockito.when(mockItem.getID()).thenReturn(1);
         transactionDao.updateStatusOfTransaction(mockItem, 1);
 
@@ -39,10 +39,10 @@ class TransactionDaoTest extends TestableDatabaseUnit{
 
     @Test
     void testGetStudentArtifact() {
-        List<UsableObjectModel> usableObjectModel = transactionDao.getStudentArtifact(2);
+        List<UsableObject> usableObject = transactionDao.getStudentArtifact(2);
 
-        assertEquals(usableObjectModel.get(0).getID(), 5);
-        assertEquals(usableObjectModel.get(1).getID(), 3);
+        assertEquals(usableObject.get(0).getID(), 5);
+        assertEquals(usableObject.get(1).getID(), 3);
 
     }
 

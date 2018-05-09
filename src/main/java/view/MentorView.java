@@ -1,9 +1,9 @@
 package view;
 
-import model.UsableObjectModel;
-import model.WalletModel;
-import model.GroupModel;
-import model.StudentModel;
+import model.UsableObject;
+import model.Wallet;
+import model.Group;
+import model.Student;
 
 import java.util.List;
 
@@ -26,32 +26,32 @@ public class MentorView {
                             + "0 - Exit\n");
     }
 
-    public void displayItemCollection(List<UsableObjectModel> itemCollection) {
-        for (UsableObjectModel item: itemCollection)
+    public void displayItemCollection(List<UsableObject> itemCollection) {
+        for (UsableObject item: itemCollection)
             System.out.println("\nid: " + item.getID()
                             + "\ntype: " + item.getType()
                             + "\nname: " +item.getName()
                             + "\nvalue: " + item.getValue());
     }
 
-    public void displayAllStudents(List<StudentModel> studentsCollection) {
-        for (StudentModel student: studentsCollection) {
+    public void displayAllStudents(List<Student> studentsCollection) {
+        for (Student student: studentsCollection) {
             System.out.println(student.getID() + ". " + student.getFullName());
         }
     }
-    public void displayStudentWallet(WalletModel wallet) {
+    public void displayStudentWallet(Wallet wallet) {
         System.out.println("\nBALANCE: " + wallet.getBalance() +
                            "\nTOTAL COOLCOINS: " + wallet.getTotalCoolcoins());
     }
 
-    public void displayStudentArtifacts(List<UsableObjectModel> artifactsCollection) {
+    public void displayStudentArtifacts(List<UsableObject> artifactsCollection) {
         System.out.println("Students artifacts: \n");
-        for (UsableObjectModel artifact : artifactsCollection) {
+        for (UsableObject artifact : artifactsCollection) {
             System.out.println(artifact.getID() + ". " + artifact.getName());
         }
     }
-    public void displayAllGroups(List<GroupModel> groupsCollection) {
-        for (GroupModel group: groupsCollection) {
+    public void displayAllGroups(List<Group> groupsCollection) {
+        for (Group group: groupsCollection) {
             System.out.println(group.getID() + ". "  +group.getGroupName());
         }
     }

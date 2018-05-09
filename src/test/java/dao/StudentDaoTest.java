@@ -1,6 +1,6 @@
 package dao;
 
-import model.WalletModel;
+import model.Wallet;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StudentDaoTest extends TestableDatabaseUnit{
 
-    private static StudentDao studentDao = new StudentDao();
+    private static StudentDAOSQL studentDao = new StudentDAOSQL();
 
     @AfterAll
     static void afterAll(){
@@ -22,7 +22,7 @@ class StudentDaoTest extends TestableDatabaseUnit{
     private StudentModel mockStudent = Mockito.mock(StudentModel.class);
 
     @Mock
-    private WalletModel wallet = Mockito.mock(WalletModel.class);
+    private Wallet wallet = Mockito.mock(Wallet.class);
 
     @Test
     void getStudentByLoginIdReturnsGoodIdTest(){

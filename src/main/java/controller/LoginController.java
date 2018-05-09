@@ -2,7 +2,7 @@ package controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import dao.LoginDao;
+import dao.LoginDAOSQL;
 import view.LoginView;
 
 import java.io.*;
@@ -13,12 +13,12 @@ import java.util.*;
 public class LoginController extends AbstractContoller implements HttpHandler {
 
     private LoginView view;
-    private LoginDao loginDao;
+    private LoginDAOSQL loginDao;
     public static Map<String,Integer> loggedInUsers;
 
     public LoginController() {
         view = new LoginView();
-        loginDao = new LoginDao();
+        loginDao = new LoginDAOSQL();
         loggedInUsers = new HashMap<>();
 
     }

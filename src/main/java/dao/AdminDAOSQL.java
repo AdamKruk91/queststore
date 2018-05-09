@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import exceptions.DataAccessException;
-import model.AdminModel;
+import model.Admin;
 
-public class AdminDao extends ManipulationDao implements AdminDaoInterface{
+public class AdminDAOSQL extends ManipulationDAOSQL implements AdminDAO {
 
-    public AdminModel getAdmin(int id) throws DataAccessException {
+    public Admin getAdmin(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     " SELECT id, login, password, name, surname, email FROM user WHERE id  = ?;");
@@ -21,15 +21,15 @@ public class AdminDao extends ManipulationDao implements AdminDaoInterface{
         }
     }
 
-    private AdminModel createAdminObject(ResultSet result) throws SQLException {
-        AdminModel admin;
+    private Admin createAdminObject(ResultSet result) throws SQLException {
+        Admin admin;
         int id = result.getInt("id");
         String login = result.getString("login");
         String password = result.getString("password");
         String name = result.getString("name");
         String surname = result.getString("surname");
         String email = result.getString("email");
-        admin = new AdminModel(id, login, password, name, surname, email);
+        admin = new Admin(id, login, password, name, surname, email);
         return admin;
     }
 }

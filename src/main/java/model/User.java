@@ -1,7 +1,7 @@
 package model;
 
 
-public abstract class UserModel {
+public abstract class User {
 
     private int ID;
     private String login;
@@ -10,7 +10,7 @@ public abstract class UserModel {
     private String surname;
     private String email;
 
-    public UserModel(int ID, String login, String password, String name, String surname, String email) {
+    public User(int ID, String login, String password, String name, String surname, String email) {
         this.ID = ID;
         this.login = login;
         this.password = password;
@@ -18,7 +18,7 @@ public abstract class UserModel {
         this.surname = surname;
         this.email = email;
     }
-    public UserModel(String login, String password, String name, String surname, String email) {
+    public User(String login, String password, String name, String surname, String email) {
         this.login = login;
         this.password = password;
         this.name = name;

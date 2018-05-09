@@ -1,7 +1,7 @@
 package dao;
 
 import exceptions.DataAccessException;
-import model.QuestModel;
+import model.Quest;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,12 +9,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestDao extends ManipulationDao implements QuestDaoInterface{
+public class QuestDAOSQL extends ManipulationDAOSQL implements QuestDAO {
 
     private final int QUEST_STATUS_ID = 2;
 
     @Override
-    public void addQuest(QuestModel newQuest) throws DataAccessException {
+    public void addQuest(Quest newQuest) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "INSERT INTO quest (name, reward, description, category_id)" +
@@ -32,7 +32,7 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     }
 
     @Override
-    public void removeQuest(QuestModel removeQuest) throws DataAccessException {
+    public void removeQuest(Quest removeQuest) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("DELETE FROM quest WHERE id = ?");
             ps.setInt(1, removeQuest.getID());
@@ -43,7 +43,7 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     }
 
     @Override
-    public void updateQuest(QuestModel updateQuest) throws DataAccessException {
+    public void updateQuest(Quest updateQuest) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement(
                     "UPDATE quest SET " +
@@ -80,7 +80,7 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
     }
 
     @Override
-    public QuestModel getByID(int id) throws DataAccessException {
+    public Quest getByID(int id) throws DataAccessException {
         try{
             PreparedStatement ps = getConnection().prepareStatement("SELECT quest.id, quest.name, quest.reward," +
                     "quest.description, quest_category.name as 'category_name' FROM quest JOIN quest_category " +
@@ -107,12 +107,12 @@ public class QuestDao extends ManipulationDao implements QuestDaoInterface{
         }
     }
 
-    private QuestModel getQuestFromResultSet(ResultSet rs) throws SQLException {
+    private Quest getQuestFromResultSet(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
         String description = rs.getString("description");
         String categoryName = rs.getString("category_name");
         int reward = rs.getInt("reward");
-        return new QuestModel(id, name, description, categoryName, reward);
+        return new Quest(id, name, description, categoryName, reward);
     }
 }

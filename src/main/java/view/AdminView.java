@@ -1,11 +1,10 @@
 package view;
 
-import dao.GroupDao;
+import dao.GroupDAOSQL;
 import model.*;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,7 +30,7 @@ public class AdminView {
                 + "0. exit\n");
     }
 
-    public String displayLevelsMenu(Iterator iterator) {
+    public String displayLevelsMenu(IteratorImpl iterator) {
         displayLevels(iterator);
         System.out.println("\n--------\n" +
                 "1. Add Level\n" +
@@ -41,7 +40,7 @@ public class AdminView {
         return getUserInput().trim();
     }
 
-    public void displayLevels(Iterator iterator) {
+    public void displayLevels(IteratorImpl iterator) {
 
         while (iterator.hasNext()) {
             Level level = (Level) iterator.next();
@@ -49,15 +48,15 @@ public class AdminView {
         }
     }
 
-    public void displayAllMentors(List<MentorModel> mentorsCollection) {
-        for (MentorModel mentor : mentorsCollection) {
+    public void displayAllMentors(List<Mentor> mentorsCollection) {
+        for (Mentor mentor : mentorsCollection) {
             System.out.println(mentor.getID() + ". " + mentor.getFullName());
         }
     }
 
-    public void displayMentorData(MentorModel mentor) {
+    public void displayMentorData(Mentor mentor) {
         int groupId = mentor.getIdGroup();
-        GroupDao dao = new GroupDao();
+        GroupDAOSQL dao = new GroupDAOSQL();
         String groupName = dao.getGroupNameById(groupId);
         System.out.println("\n===MENTOR DATA==\n"
                 + mentor.getFullName()
@@ -66,8 +65,8 @@ public class AdminView {
                 + "\ngroup name: " + groupName + '\n');
     }
 
-    public void displayAllGroups(List<GroupModel> groupsCollection) {
-        for (GroupModel group : groupsCollection) {
+    public void displayAllGroups(List<Group> groupsCollection) {
+        for (Group group : groupsCollection) {
             System.out.println(group.getID() + ". " + group.getGroupName());
         }
     }
@@ -77,7 +76,7 @@ public class AdminView {
         return sc.nextLine().trim();
     }
 
-    public String getProfileScreen(AdminModel adminModel) {
+    public String getProfileScreen(Admin adminModel) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin-profile.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("name", adminModel.getFullName());
@@ -85,21 +84,21 @@ public class AdminView {
         return template.render(model);
     }
 
-    public String getMentorsDisplay(List<MentorModel> mentors) {
+    public String getMentorsDisplay(List<Mentor> mentors) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/display-mentors.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("mentors", mentors);
         return template.render(model);
     }
 
-    public String getCreateMentor(List<GroupModel> groups) {
+    public String getCreateMentor(List<Group> groups) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-mentor.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("groups", groups);
         return template.render(model);
     }
 
-    public String getCreateMentorMessage(List<GroupModel> groups, String message) {
+    public String getCreateMentorMessage(List<Group> groups, String message) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-mentor-message.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("groups", groups);
@@ -120,7 +119,7 @@ public class AdminView {
         return template.render(model);
     }
 
-    public String getEditMentor(List<MentorModel> mentors, List<GroupModel> groups) {
+    public String getEditMentor(List<Mentor> mentors, List<Group> groups) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/edit-mentor.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("mentors", mentors);

@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 
 
-public class ManipulationDao{
+public class ManipulationDAOSQL {
 
     private static DatabaseConnection database = DatabaseConnection.getInstance();
     private static Connection connection;
@@ -16,7 +16,7 @@ public class ManipulationDao{
         return connection;
     }
 
-    public ManipulationDao(){
+    public ManipulationDAOSQL(){
         connection = database.getConnection();
         try {
             this.statement = connection.createStatement();

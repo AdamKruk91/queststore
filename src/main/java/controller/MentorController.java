@@ -2,12 +2,12 @@ package controller;
 
 import dao.*;
 import view.MentorView;
-import model.WalletModel;
-import model.GroupModel;
-import model.UsableObjectModel;
-import model.QuestModel;
-import model.ArtifactModel;
-import model.StudentModel;
+import model.Wallet;
+import model.Group;
+import model.UsableObject;
+import model.Quest;
+import model.Artifact;
+import model.Student;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,8 +17,8 @@ public class MentorController {
 
     private MentorView view;
     private InputController inputController;
-    private StudentDao studentDao = new StudentDao();
-    LoginDao loginDao = new LoginDao();
+    private StudentDAOSQL studentDao = new StudentDAOSQL();
+    LoginDAOSQL loginDao = new LoginDAOSQL();
 
     public MentorController() {
         view = new MentorView();
@@ -73,25 +73,25 @@ public class MentorController {
         }
     }
 
-    private GroupModel selectGroup() {
-        GroupDao groupDao = new GroupDao();
-        List<GroupModel> allGroups =groupDao.getGroupsCollection();
+    private Group selectGroup() {
+        GroupDAOSQL groupDao = new GroupDAOSQL();
+        List<Group> allGroups =groupDao.getGroupsCollection();
         view.displayAllGroups(allGroups);
         int id = inputController.getIntInput("Enter id of the chosen group: ");
-        GroupModel selectedGroup = null;
-        for (GroupModel group: allGroups)
+        Group selectedGroup = null;
+        for (Group group: allGroups)
             if (group.getId() == id)
                 selectedGroup = group;
         return selectedGroup;
     }
 
-    private UsableObjectModel selectItem(String type) throws SQLException {
+    private UsableObject selectItem(String type) throws SQLException {
         ItemDao itemDao = new ItemDao();
-        List<UsableObjectModel> itemCollection = itemDao.getItemCollectionByType(type);
+        List<UsableObject> itemCollection = itemDao.getItemCollectionByType(type);
         view.displayItemCollection(itemCollection);
         int id = inputController.getIntInput("Enter id of item: ");
-        UsableObjectModel matchedItem = null;
-        for (UsableObjectModel item: itemCollection)
+        UsableObject matchedItem = null;
+        for (UsableObject item: itemCollection)
             if (item.getID() == id)
                 matchedItem = item;
         return matchedItem;
@@ -102,11 +102,11 @@ public class MentorController {
         String studentLastName = inputController.getStringInput("Enter student last name: ");
         String studentEmail = inputController.getStringInput("Enter student email: ");
         String studentPassword = inputController.getStringInput("Enter student password: ");
-        GroupModel selectedGroup = selectGroup();
+        Group selectedGroup = selectGroup();
         int idGroup = selectedGroup.getID();
-        StudentDao studentDao = new StudentDao();
-        WalletModel wallet = new WalletModel();
-        StudentModel student = new StudentModel(studentName, studentLastName, studentEmail, studentPassword, idGroup, wallet);
+        StudentDAOSQL studentDao = new StudentDAOSQL();
+        Wallet wallet = new Wallet();
+        Student student = new Student(studentName, studentLastName, studentEmail, studentPassword, idGroup, wallet);
         studentDao.addStudent(student);
     }
 
@@ -114,7 +114,7 @@ public class MentorController {
         String questName = inputController.getStringInput("Enter quest name: ");
         String questDescription = inputController.getStringInput("Enter quest description: ");
         int questValue = inputController.getIntInput("Enter quest value: ");
-        QuestModel newQuest = new QuestModel("Quest", questName, questDescription, questValue);
+        Quest newQuest = new Quest("Quest", questName, questDescription, questValue);
         ItemDao itemDao = new ItemDao();
         itemDao.insertNewItem(newQuest);
     }
@@ -123,66 +123,66 @@ public class MentorController {
         String artifactName = inputController.getStringInput("Enter artifact name: ");
         String artifactDescription = inputController.getStringInput("Enter artifact description: ");
         int artifactValue = inputController.getIntInput("Enter artifact value: ");
-        ArtifactModel newArtifact = new ArtifactModel("Artifact", artifactName, artifactDescription, artifactValue);
+        Artifact newArtifact = new Artifact("Artifact", artifactName, artifactDescription, artifactValue);
         ItemDao itemDao = new ItemDao();
         itemDao.insertNewItem(newArtifact);
     }
 
-    private StudentModel selectStudent() {
-        List<StudentModel> allStudents = studentDao.getStudentsCollection();
+    private Student selectStudent() {
+        List<Student> allStudents = studentDao.getStudentsCollection();
         view.displayAllStudents(allStudents);
         int id = inputController.getIntInput("Enter id of student: ");
-        StudentModel matchedStudent = null;
-        for (StudentModel student: allStudents)
+        Student matchedStudent = null;
+        for (Student student: allStudents)
             if (student.getID().equals(id))
                 matchedStudent = student;
         return matchedStudent;
     }
 
     private void changePriceOfItem(String type) throws SQLException {
-        UsableObjectModel item = selectItem(type);
+        UsableObject item = selectItem(type);
         int newPrice = inputController.getIntInput("Enter new price: ");
         item.setValue(newPrice);
         ItemDao itemDao = new ItemDao();
         itemDao.updateValueOfItem(item);
     }
 
-    private UsableObjectModel chooseItemToMark(String typeName) throws SQLException {
-        StudentModel selectedStudent = selectStudent();
+    private UsableObject chooseItemToMark(String typeName) throws SQLException {
+        Student selectedStudent = selectStudent();
         int studentId = selectedStudent.getID();
         ItemDao itemDao = new ItemDao();
-        List<UsableObjectModel> itemCollection = itemDao.selectStudentsItems(studentId, typeName);
+        List<UsableObject> itemCollection = itemDao.selectStudentsItems(studentId, typeName);
         view.displayItemCollection(itemCollection);
         int id = inputController.getIntInput("Enter id of item: ");
-        UsableObjectModel matchedItem = null;
-        for (UsableObjectModel item: itemCollection)
+        UsableObject matchedItem = null;
+        for (UsableObject item: itemCollection)
             if (item.getID() == id)
                 matchedItem = item;
         return matchedItem;
     }
 
     private void markItem(String typeName) throws SQLException {
-        UsableObjectModel itemToMark = chooseItemToMark(typeName);
+        UsableObject itemToMark = chooseItemToMark(typeName);
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.updateStatusOfTransaction(itemToMark, 1);
     }
 
-    private List<UsableObjectModel> getStudentArtifacts(int id) {
+    private List<UsableObject> getStudentArtifacts(int id) {
         TransactionDao transactionDao = new TransactionDao();
         return transactionDao.getStudentArtifact(id);
     }
 
     private void  displayStudentWallet() {
-        StudentModel student = selectStudent();
-        List<UsableObjectModel> studentArtifacts = getStudentArtifacts(student.getID());
+        Student student = selectStudent();
+        List<UsableObject> studentArtifacts = getStudentArtifacts(student.getID());
         view.displayStudentWallet(student.getMyWallet());
         view.displayStudentArtifacts(studentArtifacts);
     }
 
     private void markStudentQuest(String typeName) throws SQLException {
-        StudentDao studentDao = new StudentDao();
-        StudentModel selectedStudent = selectStudent();
-        UsableObjectModel item = selectItem(typeName);
+        StudentDAOSQL studentDao = new StudentDAOSQL();
+        Student selectedStudent = selectStudent();
+        UsableObject item = selectItem(typeName);
         int itemValue = item.getValue();
         selectedStudent.updateAccountBalance(itemValue);
         studentDao.updateWallet(selectedStudent);
@@ -191,20 +191,20 @@ public class MentorController {
     }
 
     private void showAllStudents(){
-        List<StudentModel> allStudents = studentDao.getStudentsCollection();
+        List<Student> allStudents = studentDao.getStudentsCollection();
         System.out.println(allStudents.size());
         view.displayAllStudents(allStudents);
     }
 
     private void deleteStudent(){
-        StudentModel studentModel = selectStudent();
-        studentDao.deleteStudent(studentModel.getID());
-        studentDao.deleteWallet(studentModel.getID());
-        loginDao.removeLoginByMail(studentModel.getEmail());
+        Student student = selectStudent();
+        studentDao.deleteStudent(student.getID());
+        studentDao.deleteWallet(student.getID());
+        loginDao.removeLoginByMail(student.getEmail());
     }
 
     private void editStudent() throws SQLException {
-        StudentModel studentToEdit = selectStudent();
+        Student studentToEdit = selectStudent();
         String mentorLogin = studentToEdit.getEmail();
         String mentorPassword = studentToEdit.getPassword();
         boolean isChoosed =  true;
@@ -229,7 +229,7 @@ public class MentorController {
                     studentToEdit.setPassword(password);
                     break;
                 case 5:
-                    GroupModel groupModel = selectGroup();
+                    Group groupModel = selectGroup();
                     studentToEdit.setGroup(groupModel);
                 case 6:
                     isChoosed = false;
@@ -242,11 +242,11 @@ public class MentorController {
         updateLoginData(studentToEdit, mentorLogin, mentorPassword);
     }
 
-    private void updateStudentData(StudentModel studentModel){
-        studentDao.updateStudent(studentModel);
+    private void updateStudentData(Student student){
+        studentDao.updateStudent(student);
     }
 
-    private void updateLoginData(StudentModel studentModel, String login, String password) throws SQLException {
-        loginDao.updateLoginTable(studentModel, login, password);
+    private void updateLoginData(Student student, String login, String password) throws SQLException {
+        loginDao.updateLoginTable(student, login, password);
     }
 }

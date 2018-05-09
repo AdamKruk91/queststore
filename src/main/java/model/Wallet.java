@@ -3,20 +3,20 @@ package model;
 
 import java.util.ArrayList;
 
-public class WalletModel {
+public class Wallet {
 
     private final int ID;
     private int amount;
     private int totalCoinsEarned;
-    private ArrayList<ArtifactModel> ownedArtifacts;
+    private ArrayList<Artifact> ownedArtifacts;
 
-    public WalletModel(int ID){
+    public Wallet(int ID){
         this.ID = ID;
         this.amount = 0;
-        this.ownedArtifacts = new ArrayList<ArtifactModel>();
+        this.ownedArtifacts = new ArrayList<Artifact>();
     }
 
-    public WalletModel(int ID, int amount, int totalCoinsEarned, ArrayList<ArtifactModel> ownedArtifacts){
+    public Wallet(int ID, int amount, int totalCoinsEarned, ArrayList<Artifact> ownedArtifacts){
         this.ID = ID;
         this.amount = amount;
         this.totalCoinsEarned = totalCoinsEarned;
@@ -43,15 +43,15 @@ public class WalletModel {
         this.totalCoinsEarned = totalCoinsEarned;
     }
 
-    public void addToArtifact(ArtifactModel artifact){
+    public void addToArtifact(Artifact artifact){
         ownedArtifacts.add(artifact);
     }
 
-    public void removeFromArtifact(ArtifactModel artifact){
+    public void removeFromArtifact(Artifact artifact){
         ownedArtifacts.remove(artifact);
     }
 
-    public Iterator getOwnedArtifactIterator(){
-        return new Iterator<ArtifactModel>(ownedArtifacts);
+    public IteratorImpl getOwnedArtifactIterator(){
+        return new IteratorImpl<Artifact>(ownedArtifacts);
     }
 }

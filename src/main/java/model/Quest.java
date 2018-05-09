@@ -1,15 +1,15 @@
 package model;
 
 
-public class QuestModel extends UsableObjectModel {
+public class Quest extends UsableObject {
     private int reward;
     
-    public QuestModel(int id, String name, String description, String category, int reward) {
+    public Quest(int id, String name, String description, String category, int reward) {
         super(id, name, description, category);
         this.reward = reward;
     }
 
-    public QuestModel(String name, String description,String category, int reward) {
+    public Quest(String name, String description, String category, int reward) {
         super(name, description, category);
         this.reward = reward;
     }

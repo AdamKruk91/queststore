@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
-import model.MentorModel;
+import model.Mentor;
 import exceptions.DataAccessException;
 
-public class MentorDao extends ManipulationDao implements MentorDaoInterface {
+public class MentorDAOSQL extends ManipulationDAOSQL implements MentorDAO {
 
     @Override
-    public void add(MentorModel mentor) throws DataAccessException {
+    public void add(Mentor mentor) throws DataAccessException {
         final int CATEGORY_ID = 2;
         try {
             PreparedStatement ps = getConnection().prepareStatement(
@@ -31,7 +31,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
     }
 
     @Override
-    public void update(MentorModel mentor) throws DataAccessException {
+    public void update(Mentor mentor) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "UPDATE user " +
@@ -50,9 +50,9 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
     }
 
     @Override
-    public List<MentorModel> getAll() throws DataAccessException {
+    public List<Mentor> getAll() throws DataAccessException {
 
-        List<MentorModel> mentors = new ArrayList<>();
+        List<Mentor> mentors = new ArrayList<>();
 
         try {
             PreparedStatement ps = getConnection().prepareStatement(
@@ -81,7 +81,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
     }
 
     @Override
-    public MentorModel get(int id) throws DataAccessException {
+    public Mentor get(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
                     "SELECT * FROM user WHERE id=?;");
@@ -93,7 +93,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
         }
     }
 
-    private MentorModel createFrom(ResultSet rs) throws DataAccessException {
+    private Mentor createFrom(ResultSet rs) throws DataAccessException {
         try {
             int id = rs.getInt("id");
             String login = rs.getString("login");
@@ -102,7 +102,7 @@ public class MentorDao extends ManipulationDao implements MentorDaoInterface {
             String surname = rs.getString("surname");
             String email = rs.getString("email");
             // TODO: create groupList
-            return new MentorModel(id, login, password, name, surname, email, null);
+            return new Mentor(id, login, password, name, surname, email, null);
         } catch (SQLException e) {
             throw new DataAccessException("Create mentor error!");
         }

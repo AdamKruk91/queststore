@@ -16,23 +16,23 @@ public class StudentView {
                 + "5 - Exit");
     }
 
-    public void displayCollectionOfItem(List<UsableObjectModel> itemCollection) {
+    public void displayCollectionOfItem(List<UsableObject> itemCollection) {
         System.out.println("\nAvailable artifacts: ");
-        for (UsableObjectModel item: itemCollection) {
+        for (UsableObject item: itemCollection) {
             System.out.println(item.getID() + ". " + item.getName() + " value: " + item.getValue());
         }
         System.out.println("\n");
     }
 
-    public void displayBoughtArtifacts(List<UsableObjectModel>  itemCollection) {
+    public void displayBoughtArtifacts(List<UsableObject>  itemCollection) {
         System.out.println("YOUR ARTIFACTS: ");
-        for (UsableObjectModel item: itemCollection) {
+        for (UsableObject item: itemCollection) {
             System.out.println("==> " + item.getName() + item.getValue());
         }
         System.out.println("\n");
     }
 
-    public void displayWallet(WalletModel wallet) {
+    public void displayWallet(Wallet wallet) {
         System.out.println("\nBALANCE: " + wallet.getBalance() +
                            "\nTOTAL COOLCOINS: " + wallet.getTotalCoolcoins());
     }
@@ -42,19 +42,19 @@ public class StudentView {
                                          "\nYour level: %s", totalExp, levelName));
     }
 
-    public String getProfileScreen (StudentModel studentModel, Level level) {
+    public String getProfileScreen (Student student, Level level) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-profile.twig");
         JtwigModel model = JtwigModel.newModel();
-        model.with("name", studentModel.getFullName());
-        model.with("email", studentModel.getEmail());
-        model.with("group", studentModel.getGroup().getGroupName());
-        int totalExp = studentModel.getMyWallet().getTotalCoolcoins();
+        model.with("name", student.getFullName());
+        model.with("email", student.getEmail());
+        model.with("group", student.getGroup().getGroupName());
+        int totalExp = student.getMyWallet().getTotalCoolcoins();
         String levelStr = String.format("%s (%d EXP)", level.getName(), totalExp);
         model.with("level", levelStr); // Todo add reading level
         return template.render(model);
     }
 
-    public String getWalletScreen (StudentModel student, List<UsableObjectModel> artifacts) {
+    public String getWalletScreen (Student student, List<UsableObject> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet.twig");
         JtwigModel model = JtwigModel.newModel();
 
@@ -64,7 +64,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletUsedScreen (StudentModel student, List<UsableObjectModel> artifacts) {
+    public String getWalletUsedScreen (Student student, List<UsableObject> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-used.twig");
         JtwigModel model = JtwigModel.newModel();
 
@@ -74,7 +74,7 @@ public class StudentView {
         return template.render(model);
     }
 
-    public String getWalletPendingScreen (StudentModel student, List<UsableObjectModel> artifacts) {
+    public String getWalletPendingScreen (Student student, List<UsableObject> artifacts) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-wallet-pending.twig");
         JtwigModel model = JtwigModel.newModel();
 

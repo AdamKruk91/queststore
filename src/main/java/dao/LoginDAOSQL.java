@@ -1,13 +1,11 @@
 package dao;
 
-import model.UserModel;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class LoginDao extends ManipulationDao {
+public class LoginDAOSQL extends ManipulationDAOSQL {
 
     public int findStatusIdByName(String name) throws SQLException {
         ResultSet result = selectDataFromTable("status", "id_status", "name='" + name + "'");

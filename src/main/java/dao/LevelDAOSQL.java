@@ -1,6 +1,6 @@
 package dao;
 
-import model.Iterator;
+import model.IteratorImpl;
 import model.Level;
 
 import java.sql.Connection;
@@ -9,10 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class LevelDao {
+public class LevelDAOSQL {
     private Connection connection;
 
-    public LevelDao() {
+    public LevelDAOSQL() {
         DatabaseConnection database = DatabaseConnection.getInstance();
         connection = database.getConnection();
     }
@@ -32,7 +32,7 @@ public class LevelDao {
         ps.executeUpdate();
     }
 
-    public Iterator getLevels() throws SQLException {
+    public IteratorImpl getLevels() throws SQLException {
         PreparedStatement ps = connection.prepareStatement(
                 "SELECT id_level, name, experience_amount FROM Level ORDER BY experience_amount DESC;");
         ResultSet rs = ps.executeQuery();
@@ -44,7 +44,7 @@ public class LevelDao {
             Level newLevel = new Level(ID, name, experience_amount);
             levels.add(newLevel);
         }
-        return new Iterator<>(levels);
+        return new IteratorImpl<>(levels);
     }
 
     public Level getLevel(int totalExp) throws SQLException {

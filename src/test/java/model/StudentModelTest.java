@@ -9,20 +9,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentModelTest {
 
     @Mock
-    private WalletModel walletModel = Mockito.mock(WalletModel.class);
-    private GroupModel groupModel = Mockito.mock(GroupModel.class);
+    private Wallet wallet = Mockito.mock(Wallet.class);
+    private Group groupModel = Mockito.mock(Group.class);
 
     @Test
     void checkIfStudentModelHasWallet(){
-        StudentModel studentModel = new StudentModel(1, "Adam", "Kruk", "adam@gmal.com",
-                                                "lala", groupModel, walletModel);
-        assertEquals(walletModel, studentModel.getMyWallet());
+        Student student = new Student(1, "Adam", "Kruk", "adam@gmal.com",
+                                                "lala", groupModel, wallet);
+        assertEquals(wallet, student.getMyWallet());
     }
 
     @Test
     void checkIfStudentModelHasGroup(){
-        StudentModel studentModel = new StudentModel(1, "Adam", "Kruk", "adam@gmal.com",
-                "lala", groupModel, walletModel);
-        assertEquals(groupModel, studentModel.getGroup());
+        Student student = new Student(1, "Adam", "Kruk", "adam@gmal.com",
+                "lala", groupModel, wallet);
+        assertEquals(groupModel, student.getGroup());
     }
 }
