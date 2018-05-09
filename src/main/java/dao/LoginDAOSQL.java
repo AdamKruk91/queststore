@@ -21,14 +21,14 @@ public class LoginDAOSQL extends ManipulationDAOSQL implements LoginDao{
     public String getUserCategory(int userID) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
-                    "SELECT user_category.name FROM user_category " +
-                    "  INNER JOIN user ON user_category.id = user.id " +
+                    "SELECT user_category.name as 'category' FROM user_category " +
+                    "  INNER JOIN user ON user_category.id = user.user_category_id " +
                     "    WHERE user.id = ?;");
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
-            return rs.getString("user_category.name");
+            return rs.getString("category");
         } catch (SQLException e) {
-            throw new DataAccessException("Login error: getUserId failed");
+            throw new DataAccessException("Login error: getUserId failed when getCategory");
         }
     }
 
