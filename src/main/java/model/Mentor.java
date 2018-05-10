@@ -5,20 +5,16 @@ import java.util.List;
 
 public class Mentor extends User {
 
-    private ArrayList<Group> groupList;
     private String userCategory = "Mentor";
 
     public Mentor(String login, String password,
-                  String name, String surname, String email, ArrayList<Group> groupList){
+                  String name, String surname, String email){
         super(login, password, name, surname, email);
-        this.groupList = groupList;
     }
 
     public Mentor(int ID, String login, String password,
-                  String name, String surname, String email,
-                  ArrayList<Group> groupList){
+                  String name, String surname, String email){
         super(ID, login, password, name, surname, email);
-        this.groupList = groupList;
     }
 
     public String getUserCategory() {
@@ -29,20 +25,4 @@ public class Mentor extends User {
         this.userCategory = userCategory;
     }
 
-    public void addGroup(Group group){
-        groupList.add(group);
-    }
-
-    public void removeGroup(Group group){
-        groupList.remove(group);
-    }
-
-    public IteratorImpl getGroupIterator() {
-        IteratorImpl<Group> iterator = new IteratorImpl<Group>(groupList);
-        return iterator;
-    }
-
-    public List<Group> getGroup(){
-        return groupList;
-    }
 }
