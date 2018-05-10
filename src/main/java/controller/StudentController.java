@@ -18,7 +18,6 @@ import view.StudentView;
 public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
-    private InputController inputController;
     private LoginDAO loginDao = new LoginDAOSQL();
     private LevelDAO levelDao = new LevelDAOSQL();
     private StudentDAO studentDao = new StudentDAOSQL();
