@@ -75,6 +75,8 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                         handleNegativeResponse(httpExchange, "/admin");
                     }
                     break;
+                case "/admin/manage-level":
+                    handleManageLevel(httpExchange);
                 case "/admin":
                     renderProfile(httpExchange, loginID);
                     break;
@@ -214,6 +216,33 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             e.printStackTrace();
         }
         redirectTo(httpExchange, "/admin/display-mentors");
+    }
+
+    private void handleManageLevel(HttpExchange httpExchange) throws IOException{
+        String method = httpExchange.getRequestMethod();
+        if(method.equals("POST")){
+            try {
+                Map<String, String> inputs = getMapFromISR(httpExchange);
+                String name = inputs.get("name");
+                int experience = Integer.parseInt(inputs.get("experience"));
+                levelDAO.add(name, experience);
+                renderCreateLevelWithMessage(httpExchange, "Level creation was successful!");
+            } catch (DataAccessException e){
+                renderCreateLevelWithMessage(httpExchange, "Level creation was unsuccessful!");
+            }
+        } else{
+            renderCreateLevel(httpExchange);
+        }
+    }
+
+    private void renderCreateLevel(HttpExchange httpExchange) throws IOException {
+        String response = view.getCreateLevel();
+        handlePositiveResponse(httpExchange, response);
+    }
+
+    private void renderCreateLevelWithMessage(HttpExchange httpExchange, String message) throws IOException {
+        String response = view.getCreateLevelWithMessage(message);
+        handlePositiveResponse(httpExchange, response);
     }
 
     private Admin getAdmin(int id) throws DataAccessException{
