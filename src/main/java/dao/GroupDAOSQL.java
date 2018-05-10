@@ -38,6 +38,17 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
             ps.setInt(3, ID);
             ps.executeUpdate();
         } catch (SQLException e) {
+            throw new DataAccessException("Update user group failed");
+        }
+    }
+
+    public void addUserToGroup(int ID, int groupID) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement("INSERT INTO user_group (user_id, group_id) VALUES(?,?);");
+            ps.setInt(1, ID);
+            ps.setInt(2, groupID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
             throw new DataAccessException("Add user to group failed");
         }
     }

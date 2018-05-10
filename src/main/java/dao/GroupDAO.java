@@ -14,5 +14,6 @@ public interface GroupDAO {
     Group getByUser(int id) throws DataAccessException;
     Group getByGroup(int id) throws DataAccessException;
     void updateUserGroup(int ID, int groupID) throws DataAccessException;
+    void addUserToGroup(int ID, int groupID) throws DataAccessException;
 
 }
