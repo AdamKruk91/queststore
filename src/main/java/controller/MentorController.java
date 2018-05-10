@@ -9,8 +9,8 @@ import view.MentorView;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 
 public class MentorController extends AbstractContoller implements HttpHandler {
@@ -19,7 +19,6 @@ public class MentorController extends AbstractContoller implements HttpHandler {
     private ArtifactDAO artifactDao = new ArtifactDAOSQL();
     private MentorDAO mentorDao = new MentorDAOSQL();
     private MentorView view = new MentorView();
-    private StudentDAO studentDao = new StudentDAOSQL();
 
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
@@ -61,9 +60,9 @@ public class MentorController extends AbstractContoller implements HttpHandler {
                 case "/mentor/request":
                     renderRequest(httpExchange, userID);
                     break;
-//                case "/student/wallet/pending":
-//                    renderWalletPending(httpExchange, userID);
-//                    break;
+                case "/mentor/create-artifact":
+                    handleCreateArtifact(httpExchange);
+                    break;
 //                case "/student/wallet/used":
 //                    renderWalletUsed(httpExchange, userID);
 //                    break;
@@ -73,6 +72,38 @@ public class MentorController extends AbstractContoller implements HttpHandler {
             }
         }
     }
+
+    private void handleCreateArtifact(HttpExchange httpExchange) throws IOException {
+        String method = httpExchange.getRequestMethod();
+        if (method.equals("POST")) {
+            try {
+                Artifact artifact = createArtifactFromISR(httpExchange);
+                artifactDao.add(artifact);
+                createArtifact(httpExchange);
+                //TODO: message if positive
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            createArtifact(httpExchange);
+        }
+    }
+
+    private Artifact createArtifactFromISR(HttpExchange httpExchange) throws IOException {
+            Map<String, String> inputs = getMapFromISR(httpExchange);
+            String name = inputs.get("name");
+            String description = inputs.get("description");
+            int price = Integer.valueOf(inputs.get("price"));
+            return new Artifact(name, description, price, "Normal");
+        }
+
+
+    private void createArtifact(HttpExchange httpExchange) throws IOException {
+        String response = view.getCreateArtifactScreen();
+        handlePositiveResponse(httpExchange, response);
+    }
+
+
 
     private void renderRequest(HttpExchange httpExchange, int userID) throws IOException {
         try {
