@@ -7,7 +7,7 @@ public class DatabaseConnection {
 
     private static DatabaseConnection instance = null;
     private static Connection connection = null;
-    private static String DBNAME = "jdbc:sqlite:TestQueststore.db";
+    private static String DBNAME = "jdbc:sqlite:NewDatabase.db";
 
     private DatabaseConnection() {
         getConnectionToDatabase();

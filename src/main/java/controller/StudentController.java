@@ -2,38 +2,39 @@ package controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpCookie;
 import java.sql.SQLException;
 import java.util.List;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
-import model.ItemModel;
+import exceptions.DataAccessException;
+import model.Artifact;
+import model.Group;
 import model.Level;
+import model.Student;
 import view.StudentView;
-import model.StudentModel;
+
 
 public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
-    private InputController inputController;
-    private LoginDao loginDao = new LoginDao();
-    private LevelDao levelDao = new LevelDao();
-    private ItemDao itemDao = new ItemDao();
-    private StudentDao studentDao = new StudentDao();
-    private TransactionDao transactionDao = new TransactionDao();
+    private LoginDAO loginDao = new LoginDAOSQL();
+    private LevelDAO levelDao = new LevelDAOSQL();
+    private StudentDAO studentDao = new StudentDAOSQL();
+    private ArtifactDAO artifactDao = new ArtifactDAOSQL();
+    private WalletDAO walletDao = new WalletDAOSQL();
+    private GroupDAO groupDAO = new GroupDAOSQL();
 
-    public StudentController() {
+    StudentController() {
         view = new StudentView();
-        inputController = new InputController();
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
             if (isCookieValid(httpExchange)) {
                 int loginID = getLoginIdFromCookie(httpExchange);
-                String userType = loginDao.findStatusByLoginId(loginID);
+                String userType = loginDao.getUserCategory(loginID);
 
 
                 if (!userType.equals("Student")) {
@@ -48,10 +49,13 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         } catch (SQLException e) {
             e.printStackTrace();
             // TODO : display error message in browser
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: display error page
         }
     }
 
-    private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException, SQLException {
+    private void handleRendering(HttpExchange httpExchange, int userID) throws IOException, SQLException {
 
         final String URI = httpExchange.getRequestURI().toString();
 
@@ -60,148 +64,208 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
         } else if(URI.startsWith("/student/wallet/use/")) {
             useArtifact(httpExchange);
+        } else if(URI.startsWith("/student/store/buy/")) {
+            buyArtifact(httpExchange, userID);
+        } else if(URI.startsWith("/student/wallet/cancel/")) {
+            cancelUseArtifact(httpExchange);
+        } else if(URI.startsWith("/student/profile/")) {
+            displayProfile(httpExchange);
         } else {
 
             switch (URI) {
                 case "/student":
-                    renderProfile(httpExchange, loginID);
+                    renderProfile(httpExchange, userID);
                     break;
                 case "/student/wallet":
-                    renderWallet(httpExchange, loginID);
+                    renderWallet(httpExchange, userID);
                     break;
                 case "/student/wallet/pending":
-                    renderWalletPending(httpExchange, loginID);
+                    renderWalletPending(httpExchange, userID);
                     break;
                 case "/student/wallet/used":
-                    renderWalletUsed(httpExchange, loginID);
+                    renderWalletUsed(httpExchange, userID);
                     break;
-
+                case "/student/store":
+                    renderStore(httpExchange, userID);
+                case "/student/myclass":
+                    renderMyClass(httpExchange, userID);
                 default:
                     System.out.println("Wrong address:" + URI);
             }
         }
     }
 
-    private void useArtifact(HttpExchange httpExchange) throws SQLException, IOException {
+    private void cancelUseArtifact(HttpExchange httpExchange) throws IOException {
         final String URI = httpExchange.getRequestURI().toString();
-        String artifactStrID = URI.replace("/student/wallet/use/", "");
+        String artifactStrID = URI.replace("/student/wallet/cancel/", "");
         int artifactID = Integer.parseInt(artifactStrID);
-        ItemModel artifact = itemDao.getItemByID(artifactID);
-        transactionDao.updateStatusOfTransaction(artifact, 2);
+        try {
+            Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus("In wallet");
+            artifactDao.updateArtifactStatus(artifact);
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: display error
+        }
         redirectTo(httpExchange,"/student/wallet");
     }
 
-    private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
-        int totalExp = student.getMyWallet().getTotalCoolcoins();
-        Level level = null;
-        // TODO: display error message in browser!
+
+    private void useArtifact(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/student/wallet/use/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
         try {
-            level = levelDao.getLevel(totalExp);
-        } catch (SQLException e) {
+            Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus("Use requested");
+            artifactDao.updateArtifactStatus(artifact);
+        }catch(DataAccessException e){
             e.printStackTrace();
+            //TODO: display error
         }
-        String response = view.getProfileScreen(student, level);
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        redirectTo(httpExchange,"/student/wallet");
     }
 
-    private void renderWallet(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
-        TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID());
-        String response = view.getWalletScreen(student, artifacts);
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-    private void renderWalletPending(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
-        TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 2);
-        String response = view.getWalletPendingScreen(student, artifacts);
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-    private void renderWalletUsed(HttpExchange httpExchange, int loginID) throws IOException {
-        StudentModel student = getStudent(loginID);
-        TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifacts = transactionDao.getStudentArtifact(student.getID(), 1);
-        String response = view.getWalletUsedScreen(student, artifacts);
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-
-
-    private StudentModel getStudent(int idLogin) {
-        return studentDao.getStudentByIdLogin(idLogin);
-    }
-
-    private ItemModel selectArtifact() throws SQLException {
-        List<ItemModel> itemCollection  = itemDao.getItemCollectionByType("Artifact");
-        view.displayCollectionOfItem(itemCollection);
-        int idArtifact = inputController.getIntInput("Enter artifact id to buy: ");
-        ItemModel matchedArtifact = null;
-        for (ItemModel artifact: itemCollection)
-            if(artifact.getID() == idArtifact)
-                matchedArtifact = artifact;
-        return matchedArtifact;
-    }
-
-    private void buyArtifact(StudentModel student) throws SQLException {
-        ItemModel artifact = selectArtifact();
-        TransactionDao transactionDao = new TransactionDao();
-        transactionDao.insertTransaction(student.getID(), artifact.getID());
-    }
-
-    private void  displayWallet(StudentModel student) {
-        view.displayWallet(student.getMyWallet());
-        TransactionDao transactionDao = new TransactionDao();
-        List<ItemModel> artifactsCollection = transactionDao.getStudentArtifact(student.getID());
-        view.displayBoughtArtifacts(artifactsCollection);
-    }
-
-    public void controlMenuOptions(int loginId) throws SQLException {
-        StudentModel student = getStudent(loginId);
-        boolean whileRunning = true;
-        while (whileRunning) {
-            view.displayStudentMenu();
-            int userChoice = inputController.getIntInput("SELECT AN OPTION: ");
-            switch (userChoice) {
-                case 1:
-                    displayWallet(student);
-                    break;
-                case 2:
-                    buyArtifact(student);
-                    break;
-                case 3:
-                    //Buy artifact together with teammates; CHYBA TNIEMY
-                    break;
-                case 4:
-                    checkExperience(student);
-                    break;
-                default:
-                    break;
+    private void buyArtifact(HttpExchange httpExchange, int userID) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/student/store/buy/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        try {
+            Artifact artifact = artifactDao.getArtifact(artifactID);
+            if(artifact != null && buyArtifactSuccess(artifact, userID)) {
+               // TODO: purchase success info display?
+            } else {
+                // TODO: purchase fail display
             }
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: display error
+        }
+        redirectTo(httpExchange,"/student/store");
+    }
+
+    private boolean buyArtifactSuccess(Artifact artifact, int userID) {
+     try {
+            Student buyer = studentDao.get(userID);
+            int accountBalance = buyer.getWallet().getAmount();
+
+            if(accountBalance >= artifact.getPrice()) {
+
+                accountBalance -= artifact.getPrice();
+                buyer.getWallet().setAmount(accountBalance);
+                walletDao.update(buyer.getWallet());
+                artifactDao.addToWallet(artifact, buyer.getID());
+                // TODO add artifact to wallet
+                return true;
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add error page
+        }
+        return false;
+    }
+
+    private void renderProfile(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            int totalExp = student.getWallet().getTotalCoinsEarned();
+            Level level;
+            level = levelDao.getLevel(totalExp);
+            String response = view.getProfileScreen(student, level);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add error page
+        }
+
+    }
+
+    private void displayProfile(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String userIDStr = URI.replace("/student/profile/", "");
+        int userID = Integer.parseInt(userIDStr);
+            renderProfile(httpExchange, userID);
+    }
+
+    private void renderWallet(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            List<Artifact> artifacts = artifactDao.getUserUnusedArtifacts(student.getID());
+            String response = view.getWalletScreen(student, artifacts);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: add error page
+        }
+
+    }
+
+    private void renderWalletPending(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            List<Artifact> artifacts;
+            artifacts = artifactDao.getUserRequestedArtifacts(student.getID());
+            String response = view.getWalletPendingScreen(student, artifacts);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add erorr page
         }
     }
-     private void checkExperience(StudentModel student){
-         try {
-             int totalExp = student.getMyWallet().getTotalCoolcoins();
-             Level level = levelDao.getLevel(totalExp);
-             view.displayCurrentExperience(totalExp, level.getName());
-         } catch (SQLException e) {
-             e.printStackTrace();
-         }
-     }
+
+    private void renderWalletUsed(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            List<Artifact> artifacts;
+            artifacts = artifactDao.getUserUsedArtifacts(student.getID());
+            String response = view.getWalletUsedScreen(student, artifacts);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add erorr page
+        }
+    }
+
+    private void renderStore(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            List<Artifact> artifacts;
+            artifacts = artifactDao.getArtifactCollection();
+            String response = view.getStoreScreen(student, artifacts);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add erorr page
+        }
+    }
+
+    private void renderMyClass(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            Group group = groupDAO.getByUser(userID);
+            String response = view.getMyClassScreen(student, group);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add erorr page
+        }
+    }
 }

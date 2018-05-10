@@ -1,61 +1,56 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dao.*;
+import exceptions.DataAccessException;
 import model.*;
 import view.AdminView;
 
-
-
 public class AdminController extends AbstractContoller implements HttpHandler {
 
-    private AdminView view;
-    private InputController inputController;
-    private GroupDao groupDao = new GroupDao();
-    private MentorDao mentorDao = new MentorDao();
-    private LoginDao loginDao = new LoginDao();
-    private LevelDao levelDAO = new LevelDao();
-    private AdminDao adminDao = new AdminDao();
-
-
-    public AdminController() {
-        view = new AdminView();
-        inputController = new InputController();
-    }
+    private AdminView view = new AdminView();
+    private GroupDAO groupDao = new GroupDAOSQL();
+    private MentorDAO mentorDao = new MentorDAOSQL();
+    private LoginDAO loginDAO = new LoginDAOSQL();
+    private LevelDAO levelDAO = new LevelDAOSQL();
+    private AdminDAO adminDao = new AdminDAOSQL();
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
-        if(isCookieValid(httpExchange)) {
-            int loginID = getLoginIdFromCookie(httpExchange);
-            String userType = "";
+        try {
+            if(isCookieValid(httpExchange)) {
 
-            try {
-                userType = loginDao.findStatusByLoginId(loginID);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                int loginID = getLoginIdFromCookie(httpExchange);
+                String userType = "";
+                userType = loginDAO.getUserCategory(loginID);
 
-            if(!userType.equals("Admin")) {
-                redirectTo(httpExchange, "/login");
+                if(!userType.equals("Admin")) {
+                    redirectTo(httpExchange, "/login");
+                } else {
+                    handleRendering(httpExchange, loginID);
+                }
             } else {
-                handleRendering(httpExchange, loginID);
+                redirectTo(httpExchange, "/login");
             }
-        } else {
-            redirectTo(httpExchange, "/login");
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            handleNegativeResponse(httpExchange, "/error");
         }
+
     }
 
     private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
-        //TODO get URI and do switch on it
         String URI = httpExchange.getRequestURI().toString();
 
         if(URI.contains("/static")) {
             redirectTo(httpExchange, URI.substring(URI.indexOf("/static")));
+        } else if(URI.contains("/admin/display-mentors/delete/")){
+            handleDeleteMentor(httpExchange);
         } else {
             System.out.println(URI);
             switch (URI) {
@@ -63,13 +58,24 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     renderMentorsData(httpExchange);
                     break;
                 case "/admin/create-mentor":
-                    handleCreateMentor(httpExchange);
+                    try {
+                        handleCreateMentor(httpExchange);
+                    } catch (DataAccessException e) {
+                      handleNegativeResponse(httpExchange, "/admin/error");
+                    }
                     break;
                 case "/admin/create-group":
                     handleCreateGroup(httpExchange);
                     break;
                 case "/admin/edit-mentor":
-                    handleEditMentor(httpExchange);
+                    try {
+                        handleEditMentor(httpExchange);
+                    } catch (DataAccessException e) {
+                        handleNegativeResponse(httpExchange, "/admin/error");
+                    }
+                    break;
+                case "/admin/manage-level":
+                    handleManageLevel(httpExchange);
                     break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
@@ -79,67 +85,86 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void renderProfile(HttpExchange httpExchange, int loginID) throws IOException {
-        AdminModel admin = getAdmin(loginID);
-        String response = view.getProfileScreen(admin);
-        handlePositiveResponse(httpExchange, response);
+        try {
+            Admin admin = getAdmin(loginID);
+            String response = view.getProfileScreen(admin);
+            handlePositiveResponse(httpExchange, response);
+        } catch (DataAccessException e){
+            redirectTo(httpExchange, "/login");
+        }
     }
 
     private void renderMentorsData(HttpExchange httpExchange) throws IOException {
-        List<MentorModel> allMentors = mentorDao.getAllMentorsCollection();
-        String response = view.getMentorsDisplay(allMentors);
-        handlePositiveResponse(httpExchange, response);
+        try {
+            List<Mentor> allMentors = mentorDao.getAll();
+            String response = view.getMentorsDisplay(allMentors);
+            handlePositiveResponse(httpExchange, response);
+        } catch (DataAccessException e){
+            handleNegativeResponse(httpExchange, "/error");
+        }
     }
 
-    private void handleCreateMentor(HttpExchange httpExchange) throws IOException {
+    private void handleCreateMentor(HttpExchange httpExchange) throws IOException, DataAccessException {
         String method = httpExchange.getRequestMethod();
-        if(method.equals("POST")){
-            MentorModel mentorModel = createMentorFromISR(httpExchange);
-            try {
-                mentorDao.insertNewMentor(mentorModel);
-                renderCreateMentorWithMessage(httpExchange, "Mentor creation was successful!");
-            } catch (SQLException e){
-                e.printStackTrace();
-                renderCreateMentorWithMessage(httpExchange, "Mentor creation failed!");
+            if (method.equals("POST")) {
+                try {
+                    Mentor mentor = createMentorFromISR(httpExchange);
+                    mentorDao.add(mentor);
+                    int id = mentorDao.getByLogin(mentor.getLogin());
+                    groupDao.addUserToGroup(id, mentor.getGroupID());
+                    String response = view.getCreateMentorMessage(groupDao.getAll(), "Mentor creation was successful!");
+                    handlePositiveResponse(httpExchange, response);
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                    renderCreateMentorWithMessage(httpExchange, "Mentor creation failed!");
+                }
+            } else {
+                renderCreateMentor(httpExchange);
             }
-        } else{
-            renderCreateMentor(httpExchange);
-        }
     }
 
-    private void renderCreateMentor(HttpExchange httpExchange) throws IOException {
-        String response = view.getCreateMentor(groupDao.getGroupsCollection());
+    private void renderCreateMentor(HttpExchange httpExchange) throws IOException, DataAccessException {
+        String response = view.getCreateMentor(groupDao.getAll());
         handlePositiveResponse(httpExchange, response);
     }
 
-    private void renderCreateMentorWithMessage(HttpExchange httpExchange, String message) throws IOException {
-        String response = view.getCreateMentorMessage(groupDao.getGroupsCollection(), message);
+    private void renderCreateMentorWithMessage(HttpExchange httpExchange, String message) throws IOException, DataAccessException {
+        String response = view.getCreateMentorMessage(groupDao.getAll(), message);
         handlePositiveResponse(httpExchange, response);
     }
 
-    private void handleEditMentor(HttpExchange httpExchange) throws IOException{
-        String method = httpExchange.getRequestMethod();
-        if(method.equals("POST")) {
-            MentorModel mentorModel = createMentorWithIdFromISR(httpExchange);
-            mentorDao.updateMentorTable(mentorModel);
-            renderEditMentor(httpExchange);
-        } else {
-            renderEditMentor(httpExchange);
-        }
+    private void handleEditMentor(HttpExchange httpExchange) throws IOException, DataAccessException{
+            String method = httpExchange.getRequestMethod();
+            if (method.equals("POST")) {
+                try {
+                    Mentor mentor = createMentorWithIdFromISR(httpExchange);
+                    mentorDao.update(mentor);
+                    renderEditMentor(httpExchange);
+                } catch (DataAccessException e) {
+                    handleNegativeResponse(httpExchange, "/error");
+                }
+            } else {
+                renderEditMentor(httpExchange);
+            }
     }
 
-    private void renderEditMentor(HttpExchange httpExchange) throws IOException{
-        String response = view.getEditMentor(mentorDao.getAllMentorsCollection(), groupDao.getGroupsCollection());
+    private void renderEditMentor(HttpExchange httpExchange) throws IOException, DataAccessException{
+        String response = view.getEditMentor(mentorDao.getAll(), groupDao.getAll());
         handlePositiveResponse(httpExchange, response);
     }
 
     private void handleCreateGroup(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
         if(method.equals("POST")){
-            Map<String, String> inputs = getMapFromISR(httpExchange);
-            String name = inputs.get("name");
-
-            groupDao.addNewGroup(name);
-            renderCreateGroupWithMessage(httpExchange, "Group creation was successful!");
+            try {
+                Map<String, String> inputs = getMapFromISR(httpExchange);
+                String name = inputs.get("name");
+                Group group = new Group(name);
+                groupDao.add(group);
+                renderCreateGroupWithMessage(httpExchange, "Group creation was successful!");
+            } catch (DataAccessException e){
+                renderCreateGroupWithMessage(httpExchange, "Group creation was unsuccessful!");
+            }
         } else{
             renderCreateGroup(httpExchange);
         }
@@ -155,145 +180,71 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         handlePositiveResponse(httpExchange, response);
     }
 
-    private MentorModel createMentorFromISR(HttpExchange httpExchange) throws IOException {
+    private Mentor createMentorFromISR(HttpExchange httpExchange) throws IOException, DataAccessException {
         Map<String, String> inputs = getMapFromISR(httpExchange);
+        String login = inputs.get("login");
+        String password = inputs.get("password");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
-        String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        return new MentorModel(firstName, lastName, email, password, groupId);
+        return new Mentor(login, password, firstName, lastName, email, groupId);
     }
 
-    private MentorModel createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException {
+    private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException, DataAccessException{
         Map<String, String> inputs = getMapFromISR(httpExchange);
         int id = Integer.parseInt(inputs.get("id"));
+        String login = inputs.get("login");
         String firstName = inputs.get("name");
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
         String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        return new MentorModel(id, firstName, lastName, email, password, groupId);
+        groupDao.updateUserGroup(id, groupId);
+        return new Mentor(id, login, password, firstName, lastName, email);
     }
 
-    private AdminModel getAdmin(int idLogin) {
-        return adminDao.getAdminByIdLogin(idLogin);
-    }
-
-    private MentorModel selectMentor() {
-        List<MentorModel> allMentors = mentorDao.getAllMentorsCollection();
-        view.displayAllMentors(allMentors);
-        int id = inputController.getIntInput("Enter mentor id to edit: ");
-        MentorModel matchedMentor = null;
-        for (MentorModel mentor : allMentors) {
-            if (mentor.getID().equals(id))
-                matchedMentor = mentor;
-        }
-        return matchedMentor;
-    }
-
-    private void deleteMentor(){
-        MentorModel mentorModel = selectMentor();
-        mentorDao.deleteMentor(mentorModel.getID());
-        loginDao.removeLoginByMail(mentorModel.getEmail());
-    }
-
-    private void manageLevels() throws SQLException {
-        boolean running = true;
-
-        while(running) {
-            Iterator levelsIterator = levelDAO.getLevels();
-            String userInput = view.displayLevelsMenu(levelsIterator);
-
-            switch (userInput) {
-                case "1":
-                    createNewLevel();
-                    break;
-                case "2":
-                    removeLevel();
-                    break;
-                case "0":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid input");
-                    break;
-            }
-        }
-    }
-
-    private void createNewLevel() {
-        String name = inputController.getStringInput("Please enter name:");
-        int expTier = inputController.getIntInput("Please enter exp amount:");
+    private void handleDeleteMentor(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String mentorStrID = URI.replace("/admin/display-mentors/delete/", "");
+        int mentorID = Integer.parseInt(mentorStrID);
         try {
-            levelDAO.addLevel(name, expTier);
-        } catch (SQLException e) {
-            System.out.println("ERROR: Level with this name or exp amount already exists!");
-        }
-    }
-
-    private void removeLevel() throws SQLException {
-        // TODO: Screen is cleared, levels not visible
-        view.displayLevels(levelDAO.getLevels());
-        String userInput = inputController.getStringInput("Choose ID to remove level: ");
-        int levelID = Integer.parseInt(userInput);
-        // TODO: check if exists first?
-        try {
-            levelDAO.deleteLevel(levelID);
-        } catch (SQLException e) {
+            mentorDao.delete(mentorID);
+        }catch (DataAccessException e){
             e.printStackTrace();
+        }
+        redirectTo(httpExchange, "/admin/display-mentors");
+    }
 
+    private void handleManageLevel(HttpExchange httpExchange) throws IOException{
+        String method = httpExchange.getRequestMethod();
+        if(method.equals("POST")){
+            try {
+                Map<String, String> inputs = getMapFromISR(httpExchange);
+                String name = inputs.get("name");
+                int experience = Integer.parseInt(inputs.get("experience"));
+                levelDAO.add(name, experience);
+                renderCreateLevelWithMessage(httpExchange, "Level creation was successful!");
+            } catch (DataAccessException e){
+                renderCreateLevelWithMessage(httpExchange, "Level creation was unsuccessful!");
+            }
+        } else{
+            renderCreateLevel(httpExchange);
         }
     }
 
+    private void renderCreateLevel(HttpExchange httpExchange) throws IOException {
+        String response = view.getCreateLevel();
+        handlePositiveResponse(httpExchange, response);
+    }
+
+    private void renderCreateLevelWithMessage(HttpExchange httpExchange, String message) throws IOException {
+        String response = view.getCreateLevelWithMessage(message);
+        handlePositiveResponse(httpExchange, response);
+    }
+
+    private Admin getAdmin(int id) throws DataAccessException{
+        return adminDao.get(id);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

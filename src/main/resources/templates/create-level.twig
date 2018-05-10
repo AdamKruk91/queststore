@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="static\css\style.css">
+    <link rel="stylesheet" href="static\css\create-user.css">
+    <title>Admin Panel</title>
+</head>
+<body>
+<header>
+    <a href ="/admin"><img src="static\img\logo.png" alt="QuestStore logo"></a>
+</header>
+<div class="row">
+    <aside class="menu col-3">
+        <nav>
+            <ul>
+                <li><a href="/admin/create-mentor" class="button">Create Mentor</a></li>
+                <li><a href="/admin/create-group" class="button">Create Group</a></li>
+                <li><a href="/admin/edit-mentor" class="button">Edit Mentor</a></li>
+                <li><a href="/admin/display-mentors" class="button">Display Mentors</a></li>
+                <li><a href="/admin/manage-level" class="button">Manage Levels</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <section class="col-6">
+        <div class="col-6 area">
+            <h2>Create level!</h2>
+            <form>
+                <input class="col-12" type="text" name="name" placeholder="name" required>
+                <input class="col-12" type="number" name="experience" placeholder="experience" required>
+                <input class="col-4 submit-button" type="submit" value="Add new level!" formmethod="post">
+            </form>
+        </div>
+    </section>
+
+    <aside class="col-3 right-panel">
+        <a href="/logout" class="sign-out-button button">Sign out</a>
+        <script id="calendar" type="text/javascript" src="http://404bajery.pl/kalendarz/kal.php?tlo=8eb0e7&czcionka=FFFFFF&nag=8eb0e7&dni=8eb0e7&dzis=0099CC&szer=200"></script>
+    </aside>
+</div>
+<footer class="col-12">
+    All rights reserved.
+</footer>
+</body>
+</html>

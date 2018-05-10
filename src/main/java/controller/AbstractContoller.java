@@ -2,6 +2,10 @@ package controller;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import dao.SessionDAO;
+import dao.SessionDAOSQL;
+import exceptions.DataAccessException;
+import model.Session;
 
 import java.io.*;
 import java.net.HttpCookie;
@@ -12,6 +16,8 @@ import java.util.UUID;
 
 abstract class AbstractContoller{
 
+    SessionDAO sessionDAO = new SessionDAOSQL();
+
     void redirectTo(HttpExchange httpExchange, String URI) throws IOException {
         Headers responseHeaders = httpExchange.getResponseHeaders();
         responseHeaders.set("Location", URI);
@@ -21,38 +27,51 @@ abstract class AbstractContoller{
         os.close();
     }
 
-    void createCookie(HttpExchange httpExchange, int loginID) throws IOException {
+    void createCookie(HttpExchange httpExchange, int loginID) throws IOException, DataAccessException {
         final UUID uuid = UUID.randomUUID();
+
         HttpCookie cookie = new HttpCookie("sessionId", uuid.toString());
         httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
-        LoginController.loggedInUsers.put(uuid.toString(), loginID);
+
+        Session session = new Session(uuid.toString(), loginID);
+        sessionDAO.addSession(session);
         redirectTo(httpExchange,"/login");
     }
 
-    boolean isCookieValid(HttpExchange httpExchange) {
+    boolean isCookieValid(HttpExchange httpExchange) throws DataAccessException {
         String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
         HttpCookie cookie;
 
         if (cookieStr != null) {
             cookie = HttpCookie.parse(cookieStr).get(0);
-            if(LoginController.loggedInUsers.containsKey(cookie.getValue())) {
-                return true;
-            }
+            String sessionID = cookie.getValue();
+            return sessionDAO.sessionExists(sessionID);
         }
         return false;
     }
 
-    int getLoginIdFromCookie(HttpExchange httpExchange) {
+    int getLoginIdFromCookie(HttpExchange httpExchange) throws DataAccessException {
         String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
         HttpCookie cookie;
         cookie = HttpCookie.parse(cookieStr).get(0);
-        return LoginController.loggedInUsers.get(cookie.getValue());
+        String sessionID = cookie.getValue();
+        Session session = sessionDAO.getSession(sessionID);
+        return session.getUserID();
     }
 
     void handlePositiveResponse(HttpExchange httpExchange, String response) throws IOException{
         httpExchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
+        os.close();
+    }
+
+    void handleNegativeResponse(HttpExchange httpExchange, String URI) throws IOException{
+        Headers responseHeaders = httpExchange.getResponseHeaders();
+        responseHeaders.set("Location", URI);
+        httpExchange.sendResponseHeaders(403, -1);
+        OutputStream os = httpExchange.getResponseBody();
+        os.write("".getBytes());
         os.close();
     }
 

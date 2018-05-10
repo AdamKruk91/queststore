@@ -20,7 +20,7 @@
                 <li><a href="/admin/create-group" class="button">Create Group</a></li>
                 <li><a href="/admin/edit-mentor" class="button">Edit Mentor</a></li>
                 <li><a href="/admin/display-mentors" class="button">Display Mentors</a></li>
-                <li><a href="#" class="button">Manage Levels</a></li>
+                <li><a href="/admin/manage-level" class="button">Manage Levels</a></li>
             </ul>
         </nav>
     </aside>
@@ -28,15 +28,16 @@
         <div class="col-6 area">
             <h2>Create mentor!</h2>
             <form>
-                <input class="col-12" type="text" name="name" placeholder="Name">
-                <input class="col-12" type="text" name="surname" placeholder="Surname">
-                <input class="col-12" type="email" name="email" placeholder="Email">
-                <input class="col-12" type="password" name="password" placeholder="Password">
+                <input class="col-12" type="text" name="login" placeholder="Login" required>
+                <input class="col-12" type="text" name="password" placeholder="Password" required>
+                <input class="col-12" type="text" name="name" placeholder="Name" required>
+                <input class="col-12" type="text" name="surname" placeholder="Surname" required>
+                <input class="col-12" type="email" name="email" placeholder="Email" required>
                 <div class="col-12 dropdown">
                     <label>Choose Group:</label>
                     <select name="dropdown">
                         {% for group in groups %}
-                        <option value="{{group.id}}">{{group.groupName}}</option>
+                        <option value="{{group.ID}}">{{group.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
