@@ -10,6 +10,8 @@ import model.Group;
 import model.Mentor;
 import exceptions.DataAccessException;
 
+import javax.xml.crypto.Data;
+
 public class MentorDAOSQL extends ManipulationDAOSQL implements MentorDAO {
 
     @Override
@@ -106,6 +108,18 @@ public class MentorDAOSQL extends ManipulationDAOSQL implements MentorDAO {
             return new Mentor(id, login, password, name, surname, email);
         } catch (SQLException e) {
             throw new DataAccessException("Create mentor error!");
+        }
+    }
+
+    public int getByLogin(String login)throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT id FROM user WHERE login=?;");
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+            return rs.getInt("id");
+        } catch (SQLException e) {
+            throw new DataAccessException("Get mentor error!");
         }
     }
 }

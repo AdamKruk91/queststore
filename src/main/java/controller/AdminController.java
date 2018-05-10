@@ -110,9 +110,12 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                 try {
                     Mentor mentor = createMentorFromISR(httpExchange);
                     mentorDao.add(mentor);
+                    int id = mentorDao.getByLogin(mentor.getLogin());
+                    groupDao.addUserToGroup(id, mentor.getGroupID());
                     String response = view.getCreateMentorMessage(groupDao.getAll(), "Mentor creation was successful!");
                     handlePositiveResponse(httpExchange, response);
                 } catch (DataAccessException e) {
+                    e.printStackTrace();
                     renderCreateMentorWithMessage(httpExchange, "Mentor creation failed!");
                 }
             } else {
@@ -185,10 +188,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        Group group = groupDao.getByGroup(groupId);
-        ArrayList<Group> groups = new ArrayList<>();
-        groups.add(group);
-        return new Mentor(login, password, firstName, lastName, email);
+        return new Mentor(login, password, firstName, lastName, email, groupId);
     }
 
     private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException, DataAccessException{
@@ -200,9 +200,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String email = inputs.get("email");
         String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        Group group = groupDao.getByGroup(groupId);
-        ArrayList<Group> groups = new ArrayList<>();
-        groups.add(group);
+        groupDao.updateUserGroup(id, groupId);
         return new Mentor(id, login, password, firstName, lastName, email);
     }
 
