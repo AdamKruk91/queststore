@@ -35,3 +35,25 @@
 .buy a:hover {
     color: #8eb0e7;
 }
+
+#coolcoins {
+    font-size: 20px;
+    text-align: center;
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#artifact-store {
+    color: goldenrod;
+    font-size: 30px;
+    text-align: center;
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#artifact-price {
+    color: darkgoldenrod;
+    font-weight: bold;
+}
