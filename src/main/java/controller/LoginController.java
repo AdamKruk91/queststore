@@ -7,7 +7,6 @@ import exceptions.DataAccessException;
 import view.LoginView;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.*;
 
 

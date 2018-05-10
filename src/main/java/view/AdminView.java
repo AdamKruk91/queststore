@@ -1,19 +1,12 @@
 package view;
 
-import dao.GroupDAOSQL;
 import model.*;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
 import java.util.List;
-import java.util.Scanner;
 
-public class AdminView {
-
-    private String getUserInput() {
-        Scanner sc = new Scanner(System.in);
-        return sc.nextLine().trim();
-    }
+public class AdminView extends AbstractView{
 
     public String getProfileScreen(Admin adminModel) {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin-profile.twig");
@@ -49,16 +42,11 @@ public class AdminView {
     }
 
     public String getCreateGroup() {
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-group.twig");
-        JtwigModel model = JtwigModel.newModel();
-        return template.render(model);
+        return createTwigWithoutArgs("templates/create-group.twig");
     }
 
     public String getCreateGroupMessage(String message) {
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-group-message.twig");
-        JtwigModel model = JtwigModel.newModel();
-        model.with("message", message);
-        return template.render(model);
+        return createTwigWithMessage("templates/create-group-message.twig", message);
     }
 
     public String getEditMentor(List<Mentor> mentors, List<Group> groups) {
@@ -67,5 +55,14 @@ public class AdminView {
         model.with("mentors", mentors);
         model.with("groups", groups);
         return template.render(model);
+    }
+
+    public String getCreateLevel() {
+        return createTwigWithoutArgs("templates/create-level.twig");
+
+    }
+
+    public String getCreateLevelWithMessage(String message) {
+        return createTwigWithMessage("templates/create-level-message.twig", message);
     }
 }

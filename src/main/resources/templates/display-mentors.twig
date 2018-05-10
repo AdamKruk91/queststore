@@ -20,7 +20,7 @@
                 <li><a href="/admin/create-group" class="button">Create Group</a></li>
                 <li><a href="/admin/edit-mentor" class="button">Edit Mentor</a></li>
                 <li><a href="/admin/display-mentors" class="button">Display Mentors</a></li>
-                <li><a href="#" class="button">Manage Levels</a></li>
+                <li><a href="/admin/manage-level" class="button">Manage Levels</a></li>
             </ul>
         </nav>
     </aside>
@@ -33,6 +33,7 @@
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Email</th>
+                <th>Action</th>
               </tr>
               {% for mentor in mentors %}
                   <tr>
@@ -40,6 +41,7 @@
                       <td>{{ mentor.name }}</td>
                       <td>{{ mentor.surname }}</td>
                       <td>{{ mentor.email }}</td>
+                      <td class = "use"><a href="/admin/display-mentors/delete/{{ mentor.ID }}">Delete</a> </td>
                   </tr>
               {% endfor %}
         </table>
