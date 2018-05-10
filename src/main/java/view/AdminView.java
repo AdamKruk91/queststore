@@ -68,4 +68,17 @@ public class AdminView {
         model.with("groups", groups);
         return template.render(model);
     }
+
+    public String getCreateLevel() {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-level.twig");
+        JtwigModel model = JtwigModel.newModel();
+        return template.render(model);
+    }
+
+    public String getCreateLevelWithMessage(String message) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/create-level-message.twig");
+        JtwigModel model = JtwigModel.newModel();
+        model.with("message", message);
+        return template.render(model);
+    }
 }
