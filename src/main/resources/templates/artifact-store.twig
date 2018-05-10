@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="static\css\style.css">
     <link rel="stylesheet" href="static\css\store.css">
     <title>Display Panel</title>
+    <script>
+        function switchInfo(dropdownID)
+        {
+            var info = document.getElementById(dropdownID)
+            info.style.display=(info.style.display=='none')?'':'none'
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -27,17 +34,26 @@
         <div class="col-12 area">
           <h2 class="fas fa-shopping-cart" id="artifact-store"> Artifact Store</h2>
             <h3 class="far fa-closed-captioning" id="coolcoins"> : {{ coins }}</h3>
+            <h3 class="fas fa-info-circle" id="info"> click on artifact for description</h3>
           <table class="default-table">
               <tr>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Action</th>
               </tr>
+              {% set counter = 0 %}
+              {% if artifacts|length == 0 %}
+                  <tr><td colspan="3">There are no artifacts here.</td></tr>
+              {% endif %}
               {% for artifact in artifacts %}
+                  {% set counter = counter + 1 %}
                   <tr>
-                      <td>{{ artifact.name }}</td>
+                      <td onclick="switchInfo('artifact{{ counter }}')">{{ artifact.name }}</td>
                       <td id="artifact-price">{{ artifact.price }}</td>
                       <td class="buy"><a href="/student/store/buy/{{ artifact.ID }}">Buy</a></td>
+                  </tr>
+                  <tr id="artifact{{ counter }}" style="display:none">
+                      <td colspan="3">{{ artifact.description }}</td>
                   </tr>
               {% endfor %}
         </table>
