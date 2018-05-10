@@ -185,9 +185,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        Group group = groupDao.getByGroup(groupId);
-        ArrayList<Group> groups = new ArrayList<>();
-        groups.add(group);
+//        groupDao.addUserToGroup(id, groupId);
         return new Mentor(login, password, firstName, lastName, email);
     }
 
@@ -200,9 +198,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String email = inputs.get("email");
         String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        Group group = groupDao.getByGroup(groupId);
-        ArrayList<Group> groups = new ArrayList<>();
-        groups.add(group);
+        groupDao.updateUserGroup(id, groupId);
         return new Mentor(id, login, password, firstName, lastName, email);
     }
 

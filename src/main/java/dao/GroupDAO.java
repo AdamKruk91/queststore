@@ -13,6 +13,6 @@ public interface GroupDAO {
     void remove(Group group) throws DataAccessException;
     Group getByUser(int id) throws DataAccessException;
     Group getByGroup(int id) throws DataAccessException;
-    void addUserToGroup(int ID, Group group) throws DataAccessException;
+    void updateUserGroup(int ID, int groupID) throws DataAccessException;
 
 }
