@@ -19,7 +19,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     private StudentView view;
     private InputController inputController;
-    private LoginDAOSQL loginDao = new LoginDAOSQL();
+    private LoginDAO loginDao = new LoginDAOSQL();
     private LevelDAO levelDao = new LevelDAOSQL();
     private StudentDAO studentDao = new StudentDAOSQL();
     private ArtifactDAO artifactDao = new ArtifactDAOSQL();
@@ -83,6 +83,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
                     break;
                 case "/student/store":
                     renderStore(httpExchange, userID);
+                case "/student/myclass":
+                    renderMyClass(httpExchange, userID);
                 default:
                     System.out.println("Wrong address:" + URI);
             }
@@ -209,6 +211,22 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     }
 
     private void renderStore(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Student student = studentDao.get(userID);
+            List<Artifact> artifacts;
+            artifacts = artifactDao.getArtifactCollection();
+            String response = view.getStoreScreen(student, artifacts);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add erorr page
+        }
+    }
+
+    private void renderMyClass(HttpExchange httpExchange, int userID) throws IOException {
         try {
             Student student = studentDao.get(userID);
             List<Artifact> artifacts;
