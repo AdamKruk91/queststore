@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Mentor extends User {
 
@@ -39,5 +40,9 @@ public class Mentor extends User {
     public IteratorImpl getGroupIterator() {
         IteratorImpl<Group> iterator = new IteratorImpl<Group>(groupList);
         return iterator;
+    }
+
+    public List<Group> getGroup(){
+        return groupList;
     }
 }
