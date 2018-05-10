@@ -33,6 +33,7 @@
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Email</th>
+                <th>Action</th>
               </tr>
               {% for mentor in mentors %}
                   <tr>
@@ -40,6 +41,7 @@
                       <td>{{ mentor.name }}</td>
                       <td>{{ mentor.surname }}</td>
                       <td>{{ mentor.email }}</td>
+                      <td class = "use"><a href="/admin/display-mentors/delete/{{ mentor.ID }}">Delete</a> </td>
                   </tr>
               {% endfor %}
         </table>
