@@ -2,6 +2,8 @@ package dao;
 
 import exceptions.DataAccessException;
 import model.Group;
+import model.User;
+
 import java.util.List;
 
 public interface GroupDAO {
@@ -11,5 +13,6 @@ public interface GroupDAO {
     void remove(Group group) throws DataAccessException;
     Group getByUser(int id) throws DataAccessException;
     Group getByGroup(int id) throws DataAccessException;
+    void addUserToGroup(User user, Group group) throws DataAccessException;
 
 }

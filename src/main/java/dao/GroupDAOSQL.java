@@ -4,6 +4,7 @@ import exceptions.DataAccessException;
 import model.Group;
 import model.Mentor;
 import model.Student;
+import model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,6 +30,16 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
         }
     }
 
+    public void addUserToGroup(User user, Group group) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement("INSERT INTO user_group (user_id, group_id) VALUES(?, ?);");
+            ps.setInt(1, user.getID());
+            ps.setInt(2, group.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Add user to group failed");
+        }
+    }
 
     public List<Group> getAll() throws DataAccessException {
         try {
