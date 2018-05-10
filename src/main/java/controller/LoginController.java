@@ -45,7 +45,7 @@ public class LoginController extends AbstractContoller implements HttpHandler {
                 redirectTo(httpExchange, "/admin");
                 break;
             case "Mentor":
-                // todo
+                redirectTo(httpExchange, "/mentor/request");
                 break;
             case "Student":
                 redirectTo(httpExchange, "/student");

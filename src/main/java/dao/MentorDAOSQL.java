@@ -95,14 +95,19 @@ public class MentorDAOSQL extends ManipulationDAOSQL implements MentorDAO {
 
     private Mentor createFrom(ResultSet rs) throws DataAccessException {
         try {
-            int id = rs.getInt("id");
+            int id = rs.getInt(
+                    "id");
             String login = rs.getString("login");
             String password = rs.getString("password");
             String name = rs.getString("name");
             String surname = rs.getString("surname");
             String email = rs.getString("email");
+            ArrayList<Group> group = new ArrayList();
+            GroupDAO groupDao = new GroupDAOSQL();
+            Group group1 = groupDao.getByID(groupDao.getByUserID(id).getID());
+            group.add(group1);
             // TODO: create groupList
-            return new Mentor(id, login, password, name, surname, email, null);
+            return new Mentor(id, login, password, name, surname, email, group);
         } catch (SQLException e) {
             throw new DataAccessException("Create mentor error!");
         }
