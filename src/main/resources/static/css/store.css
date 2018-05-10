@@ -1,0 +1,71 @@
+.default-table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+.default-table td, .default-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.default-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.default-table tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.default-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #8eb0e7;
+    color: white;
+}
+
+.buy a {
+    text-decoration: none;
+    color: #e10aca;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.buy a:hover {
+    color: #8eb0e7;
+}
+
+#coolcoins {
+    font-size: 20px;
+    text-align: center;
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#artifact-store {
+    color: goldenrod;
+    font-size: 30px;
+    text-align: center;
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#info {
+    color: #8eb0e7;
+    font-size: 17px;
+    font-style: italic;
+    text-align: center;
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#artifact-price {
+    color: darkgoldenrod;
+    font-weight: bold;
+}
