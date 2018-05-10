@@ -14,17 +14,12 @@ import java.util.List;
 
 public class MentorView {
 
-    public String getRequestScreen(Mentor mentor) {
+    public String getRequestScreen(Mentor mentor) throws DataAccessException {
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor-request.twig");
             JtwigModel model = JtwigModel.newModel();
             GroupDAO groupDAO = new GroupDAOSQL();
-            Group group = null;
-            try {
-                group = groupDAO.getByUser(mentor.getID());
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
-        List<Student> students = new ArrayList<>();
+            Group group = groupDAO.getByUser(mentor.getID());
+            List<Student> students = new ArrayList<>();
             students.addAll(group.getStudents());
             model.with("student_list", students);
             return template.render(model);

@@ -17,8 +17,7 @@ public class StudentView {
         model.with("name", student.getFullName());
         model.with("email", student.getEmail());
         GroupDAO groupDAO = new GroupDAOSQL();
-        Group group = null;
-        group = groupDAO.getByUser(student.getID());
+        Group group = groupDAO.getByUser(student.getID());
         model.with("group", group.getName());
         int totalExp = student.getWallet().getTotalCoinsEarned();
         String levelStr = String.format("%s (%d EXP)", level.getName(), totalExp);
