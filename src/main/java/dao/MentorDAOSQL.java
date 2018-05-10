@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
+import model.Group;
 import model.Mentor;
 import exceptions.DataAccessException;
 
@@ -102,7 +103,7 @@ public class MentorDAOSQL extends ManipulationDAOSQL implements MentorDAO {
             String surname = rs.getString("surname");
             String email = rs.getString("email");
             // TODO: create groupList
-            return new Mentor(id, login, password, name, surname, email, null);
+            return new Mentor(id, login, password, name, surname, email);
         } catch (SQLException e) {
             throw new DataAccessException("Create mentor error!");
         }

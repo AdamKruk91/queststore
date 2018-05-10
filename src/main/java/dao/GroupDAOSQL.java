@@ -14,7 +14,7 @@ import java.util.List;
 
 public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
 
-    private MentorDAO mentorDAO = new MentorDAOSQL();
+//    private MentorDAO mentorDAO = new MentorDAOSQL();
     private final int CODECOOLER_CATEGORY_ID = 1;
     private final int MENTOR_CATEGORY_ID = 2;
 
@@ -40,7 +40,7 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
             ArrayList<Group> groups = new ArrayList<>();
             while (rs.next()) {
                 int groupID = rs.getInt("id");
-                Group group = getByID(groupID);
+                Group group = getByGroup(groupID);
                 groups.add(group);
             }
             return groups;
@@ -61,10 +61,10 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
         }
     }
 
-    public Group getByID(int id) throws DataAccessException {
+    public Group getByGroup(int id) throws DataAccessException {
         try {
             PreparedStatement ps = getConnection().prepareStatement(
-                    "SELECT DISTINCT user_id, user_category_id, 'group'.name as group_name FROM 'group' " +
+                    "SELECT DISTINCT user_id, user_category_id, 'group'.id as 'groupID', 'group'.name as group_name FROM 'group' " +
                             "  LEFT JOIN 'user_group' ON 'group'.id = 'user_group'.group_id" +
                             "    LEFT JOIN 'user' ON user.id = user_group.user_id" +
                             "      WHERE 'group'.id = ?;");
@@ -73,13 +73,16 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
 
             ArrayList<Student> students = new ArrayList<>();
             ArrayList<Mentor> mentors = new ArrayList<Mentor>();
-
             String groupName = null;
+            int groupID = 0;
             while (rs.next()) {
-                if (groupName == null) {
+                if(groupName == null) {
                     groupName = rs.getString("group_name");
                 }
                 int userID = rs.getInt("user_id");
+                if(groupID == 0) {
+                    groupID = rs.getInt("groupID");
+                }
                 int userCategoryID = rs.getInt("user_category_id");
                 switch (userCategoryID) {
                     case CODECOOLER_CATEGORY_ID:
@@ -87,11 +90,28 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
                         students.add(studentDAO.get(userID));
                         break;
                     case MENTOR_CATEGORY_ID:
+                        MentorDAO mentorDAO = new MentorDAOSQL();
                         mentors.add(mentorDAO.get(userID));
                         break;
+
                 }
             }
-            return new Group(id, groupName, students, mentors);
+            return new Group(groupID, groupName, students, mentors);
+        } catch (SQLException e) {
+            throw new DataAccessException("Group getById failed!");
+        }
+    }
+
+    public Group getByUser(int id) throws DataAccessException {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(
+                    "SELECT DISTINCT 'group'.id as 'groupID' FROM 'group' " +
+                            "  LEFT JOIN 'user_group' ON 'group'.id = 'user_group'.group_id" +
+                            "    LEFT JOIN 'user' ON user.id = user_group.user_id" +
+                            "      WHERE 'user'.id = ?;");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return getByGroup(rs.getInt("groupID"));
         } catch (SQLException e) {
             throw new DataAccessException("Group getById failed!");
         }

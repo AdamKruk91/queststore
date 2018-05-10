@@ -18,8 +18,12 @@ import view.StudentView;
 public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
+<<<<<<< HEAD
     private InputController inputController;
     private LoginDAO loginDao = new LoginDAOSQL();
+=======
+    private LoginDAOSQL loginDao = new LoginDAOSQL();
+>>>>>>> refactor-week-1.0
     private LevelDAO levelDao = new LevelDAOSQL();
     private StudentDAO studentDao = new StudentDAOSQL();
     private ArtifactDAO artifactDao = new ArtifactDAOSQL();
@@ -27,7 +31,6 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     StudentController() {
         view = new StudentView();
-        inputController = new InputController();
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -66,6 +69,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
             useArtifact(httpExchange);
         } else if(URI.startsWith("/student/store/buy/")) {
             buyArtifact(httpExchange, userID);
+        } else if(URI.startsWith("/student/wallet/cancel/")) {
+            cancelUseArtifact(httpExchange);
         } else {
 
             switch (URI) {
@@ -91,12 +96,29 @@ public class StudentController extends AbstractContoller implements HttpHandler 
         }
     }
 
+    private void cancelUseArtifact(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/student/wallet/cancel/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        try {
+            Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus("In wallet");
+            artifactDao.updateArtifactStatus(artifact);
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: display error
+        }
+        redirectTo(httpExchange,"/student/wallet");
+    }
+
+
     private void useArtifact(HttpExchange httpExchange) throws IOException {
         final String URI = httpExchange.getRequestURI().toString();
         String artifactStrID = URI.replace("/student/wallet/use/", "");
         int artifactID = Integer.parseInt(artifactStrID);
         try {
             Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus("Use requested");
             artifactDao.updateArtifactStatus(artifact);
         }catch(DataAccessException e){
             e.printStackTrace();

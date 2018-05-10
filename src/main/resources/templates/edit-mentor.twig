@@ -9,12 +9,29 @@
     <link rel="stylesheet" href="static\css\user-profile.css">
     <link rel="stylesheet" href="static\css\edit-user.css">
     <title>Display Panel</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.choose-mentors').on('change', function() {
+                var val = $(this).val();
+                var box = $('.box');
+
+                box.hide(); // hide all boxes
+
+                $('.' + val).show(); // show the current one
+
+            })
+        });
+    </script>
 </head>
+
 <body>
 <header>
     <a href ="/admin"><img src="static\img\logo.png" alt="QuestStore logo"></a>
 </header>
-<div class="row">
+
+
+
     <aside class="menu col-3">
         <nav>
             <ul>
@@ -22,50 +39,47 @@
                 <li><a href="/admin/create-group" class="button">Create Group</a></li>
                 <li><a href="/admin/edit-mentor" class="button">Edit Mentor</a></li>
                 <li><a href="/admin/display-mentors" class="button">Display Mentors</a></li>
-                <li><a href="#" class="button">Manage Levels</a></li>
+                <li><a href="/admin/manage-level" class="button">Manage Levels</a></li>
             </ul>
         </nav>
     </aside>
     <section class="col-6">
         <div class="col-6 area">
+
+
             <div class="col-12 dropdown">
-                <label for="dropdown">Choose mentor:</label>
-                <select id="dropdown" name="group" onchange="java_script_:show(this.options[this.selectedIndex].value)">
+            <select class="choose-mentors">
+                <option>Choose mentor</option>
+                {% set counter = 0 %}
                 {% for mentor in mentors %}
-                    <option value="{{ mentor.id }}" selected>{{ mentor.firstName }} {{ mentor.lastName }}</option>
+                    {% set counter = counter + 1 %}
+                    <option value="mentor{{ counter }}">{{ mentor.name }} {{ mentor.surname }}</option>
                 {% endfor %}
-                </select>
-                <script>
-                    function show(aval) {
-                        var dropdown_length = document.getElementById("dropdown").length;
-                        for (var i = 1; i<=dropdown_length; i++) {
-                            if(i.toString() === aval) {
-                                document.getElementById(aval).style.display = 'inline-block';
-                            } else {
-                                document.getElementById(i.toString()).style.display = 'none';
-                            }
-                        }
-                    }
-                </script>
+            </select>
+
+
             </div>
             <div class="col-12">
+                {% set counter = 0 %}
                 {% for mentor in mentors %}
-                    <div id = "{{ mentor.id }}" style="display:none">
-                        <div id="hiddenDiv1">
-                            <img class="col-12" src="static\img\emptyprofile.png" alt="Profile picture">
+                    {% set counter = counter + 1 %}
+                <div class = "mentor{{ counter }} box" style="display: none">
+                        <div id="hiddenDiv">
+                            <img class="ol-12" src="static\img\emptyprofile.png" alt="Profile picture">
                             <div class="col-12 profile-info">
                                 <form>
                                 <ul class="edition">
-                                    <li><input type="text" name="id" value="{{ mentor.id }}" readonly></li>
-                                    <li><input type="text" name="name" value="{{ mentor.firstName }}"></li>
-                                    <li><input type="text" name="surname" value="{{ mentor.LastName }}"></li>
-                                    <li><input type="text" name="email" value="{{ mentor.email }}" readonly></li>
-                                    <li><input type="text" name="password" value="{{ mentor.password }}" readonly></li>
+                                    <li><input type="text" name="id" value="{{ mentor.ID }}" readonly></li>
+                                    <li><input type="text" name="login" value="{{ mentor.login }}"></li>
+                                    <li><input type="text" name="password" value="{{ mentor.password }}"></li>
+                                    <li><input type="text" name="name" value="{{ mentor.name }}"></li>
+                                    <li><input type="text" name="surname" value="{{ mentor.surname }}"></li>
+                                    <li><input type="text" name="email" value="{{ mentor.email }}"></li>
                                     <div class="col-12 dropdown">
                                         <label>Choose Group:</label>
                                         <select name="dropdown">
                                             {% for group in groups %}
-                                                <option value="{{group.id}}">{{group.groupName}}</option>
+                                                <option value="{{group.ID}}">{{group.name}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>

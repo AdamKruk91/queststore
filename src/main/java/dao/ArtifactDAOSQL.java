@@ -38,8 +38,9 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
                             "artifact.price as 'price', artifact_category.name as 'category name', artifact_status.name as 'status' " +
                             "FROM user_artifact JOIN artifact ON user_artifact.artifact_id = artifact.id JOIN artifact_status ON " +
                             " user_artifact.status_id = artifact_status.id JOIN artifact_category ON artifact.category_id = artifact_category.id WHERE" +
-                            " user_artifact.artifact_id = ?");
+                            " user_artifact.id = ?");
             ps.setInt(1, artifactID);
+
             ResultSet rs = ps.executeQuery();
             return getArtifactWithStatus(rs);
         } catch (SQLException e){
@@ -71,6 +72,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
             ps.setInt(3, artifact.getPrice());
             int category = getCategoryID(artifact.getCategory());
             ps.setInt(4, category);
+            ps.executeUpdate();
         }catch(SQLException e){
             throw new DataAccessException("Add artifact error");
         }
@@ -100,6 +102,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
                     " WHERE" +
                     " id = ?");
             ps.setInt(1, artifact.getID());
+            ps.executeUpdate();
         }catch(SQLException e){
             throw new DataAccessException("Remove artifact error");
         }
@@ -115,6 +118,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
             int categoryID = getCategoryID(artifact.getCategory());
             ps.setInt(3, categoryID);
             ps.setInt(4, artifact.getID());
+            ps.executeUpdate();
         }catch (SQLException e){
             throw new DataAccessException("Update artifact error");
         }
@@ -172,6 +176,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
         int statusID = getStatusID(artifact.getStatus());
         ps.setInt(1, statusID);
         ps.setInt(2, artifact.getID());
+        ps.executeUpdate();
         }catch(SQLException e){
             throw new DataAccessException("Update artifact error");
         }
@@ -186,6 +191,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
             ps.setInt(1, userID);
             ps.setInt(2, artifactID);
             ps.setInt(3, statusID);
+            ps.executeUpdate();
         }catch(SQLException e){
             throw new DataAccessException("Insert transaction error");
         }
@@ -234,6 +240,7 @@ public class ArtifactDAOSQL extends ManipulationDAOSQL implements ArtifactDAO {
             ps.setInt(1, userID);
             ps.setInt(2, statusID);
             ResultSet rs = ps.executeQuery();
+
             return getArtifacts(rs);
         } catch (SQLException e){
             throw new DataAccessException("Problem with getting user artifact");

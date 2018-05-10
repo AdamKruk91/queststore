@@ -2,6 +2,7 @@ package model;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Wallet {
 
@@ -53,5 +54,8 @@ public class Wallet {
 
     public IteratorImpl getOwnedArtifactIterator(){
         return new IteratorImpl<Artifact>(ownedArtifacts);
+    }
+    public List<Artifact> getOwnedArtifact(){
+        return ownedArtifacts;
     }
 }

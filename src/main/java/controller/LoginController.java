@@ -7,7 +7,6 @@ import exceptions.DataAccessException;
 import view.LoginView;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.*;
 
 
@@ -45,7 +44,7 @@ public class LoginController extends AbstractContoller implements HttpHandler {
                 redirectTo(httpExchange, "/admin");
                 break;
             case "Mentor":
-                // todo
+                redirectTo(httpExchange, "/mentor/request");
                 break;
             case "Student":
                 redirectTo(httpExchange, "/student");
