@@ -185,10 +185,10 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String lastName = inputs.get("surname");
         String email = inputs.get("email");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        Group group = groupDao.getByID(groupId);
+        Group group = groupDao.getByGroup(groupId);
         ArrayList<Group> groups = new ArrayList<>();
         groups.add(group);
-        return new Mentor(login, password, firstName, lastName, email, groups);
+        return new Mentor(login, password, firstName, lastName, email);
     }
 
     private Mentor createMentorWithIdFromISR(HttpExchange httpExchange) throws IOException, DataAccessException{
@@ -200,10 +200,10 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         String email = inputs.get("email");
         String password = inputs.get("password");
         int groupId = Integer.parseInt(inputs.get("dropdown"));
-        Group group = groupDao.getByID(groupId);
+        Group group = groupDao.getByGroup(groupId);
         ArrayList<Group> groups = new ArrayList<>();
         groups.add(group);
-        return new Mentor(id, login, password, firstName, lastName, email, groups);
+        return new Mentor(id, login, password, firstName, lastName, email);
     }
 
     private void handleDeleteMentor(HttpExchange httpExchange) throws IOException {

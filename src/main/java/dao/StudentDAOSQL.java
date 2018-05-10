@@ -13,7 +13,6 @@ import java.util.List;
 
 public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
     private WalletDAO walletDAO = new WalletDAOSQL();
-    private GroupDAO groupDao = new GroupDAOSQL();
     private final int USER_CATEGORY_ID = 1;
 
 
@@ -33,18 +32,38 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
     @Override
     public List<Student> getAll() throws DataAccessException {
         try{
-            List<Student> mentors = new ArrayList<>();
+            List<Student> students = new ArrayList<>();
             PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user WHERE user_category_id=?;");
             ps.setInt(1, USER_CATEGORY_ID);
             ResultSet rs = ps.executeQuery();
             while ( rs.next() ) {
-                mentors.add(createFrom(rs));
+                students.add(createFrom(rs));
             }
-            return mentors;
+            return students;
         }catch (SQLException e) {
             throw new DataAccessException("Getting student collection failed!");
         }
     }
+
+    @Override
+    public List<Student> getAll(int groupID) throws DataAccessException {
+        try{
+            List<Student> students = new ArrayList<>();
+            PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM user INNER JOIN user_group ON user_group.user_id = user.id" +
+                    " WHERE user_category_id=? AND user_group.group_id=?;");
+            ps.setInt(1, USER_CATEGORY_ID);
+            ps.setInt(2, groupID);
+            ResultSet rs = ps.executeQuery();
+            while ( rs.next() ) {
+                students.add(createFrom(rs));
+            }
+            return students;
+        }catch (SQLException e) {
+            throw new DataAccessException("Getting student collection failed!");
+        }
+    }
+
+
 
     @Override
     public void add(Student student) throws DataAccessException {
@@ -99,9 +118,8 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
             String name = rs.getString("name");
             String surname = rs.getString("surname");
             String email = rs.getString("email");
-            Group group = groupDao.getByID(userId);
             Wallet wallet = walletDAO.get(userId);
-            return new Student(userId, login, password, name, surname, email, group, wallet);
+            return new Student(userId, login, password, name, surname, email, wallet);
         }catch (SQLException e){
             throw new DataAccessException("Get student from result set failed!");
         }

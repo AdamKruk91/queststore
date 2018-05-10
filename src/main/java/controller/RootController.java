@@ -15,6 +15,7 @@ public class RootController {
             server.createContext("/login", new LoginController());
             server.createContext("/static", new Static());
             server.createContext("/student", new StudentController());
+            server.createContext("/mentor", new MentorController());
             server.createContext("/logout", new LogoutController());
             server.createContext("/admin", new AdminController());
             server.createContext("/error", new ErrorController());

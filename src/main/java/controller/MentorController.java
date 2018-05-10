@@ -1,19 +1,120 @@
 package controller;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import dao.*;
+import exceptions.DataAccessException;
+import model.*;
 import view.MentorView;
-import model.Wallet;
-import model.Group;
-import model.UsableObject;
-import model.Quest;
-import model.Artifact;
-import model.Student;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
 
 
-public class MentorController {
+public class MentorController extends AbstractContoller implements HttpHandler {
+
+    private LoginDAO loginDao = new LoginDAOSQL();
+    private ArtifactDAO artifactDao = new ArtifactDAOSQL();
+    private MentorDAO mentorDao = new MentorDAOSQL();
+    private MentorView view = new MentorView();
+    private StudentDAO studentDao = new StudentDAOSQL();
+
+    public void handle(HttpExchange httpExchange) throws IOException {
+        try {
+            if (isCookieValid(httpExchange)) {
+                int userID = getLoginIdFromCookie(httpExchange);
+                String userType = loginDao.getUserCategory(userID);
+                if (!userType.equals("Mentor")) {
+                    redirectTo(httpExchange, "/login");
+                } else {
+                    handleRendering(httpExchange, userID);
+                }
+            } else {
+                redirectTo(httpExchange, "/login");
+            }
+            System.out.println("Success i guess");
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            // TODO : display error message in browser
+        }
+    }
+
+    private void handleRendering(HttpExchange httpExchange, int userID) throws IOException {
+
+        final String URI = httpExchange.getRequestURI().toString();
+
+        if (URI.contains("/static")) {
+            redirectTo(httpExchange, URI.substring(URI.indexOf("/static")));
+
+        } else if (URI.startsWith("/mentor/request/accept/")) {
+            acceptRequest(httpExchange);
+        } else if (URI.startsWith("/mentor/request/cancel/")) {
+            cancelRequest(httpExchange);
+        } else {
+
+            switch (URI) {
+//                case "/mentor":
+//                    renderProfile(httpExchange, userID);
+//                    break;
+                case "/mentor/request":
+                    renderRequest(httpExchange, userID);
+                    break;
+//                case "/student/wallet/pending":
+//                    renderWalletPending(httpExchange, userID);
+//                    break;
+//                case "/student/wallet/used":
+//                    renderWalletUsed(httpExchange, userID);
+//                    break;
+//
+                default:
+                    System.out.println("Wrong address:" + URI);
+            }
+        }
+    }
+
+    private void renderRequest(HttpExchange httpExchange, int userID) throws IOException {
+        try {
+            Mentor mentor = mentorDao.get(userID);
+            String response = view.getRequestScreen(mentor);
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            //TODO: add error page
+        }
+    }
+
+    private void acceptRequest(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/mentor/request/accept/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        useRequest(artifactID, "Used");
+        redirectTo(httpExchange,"/mentor/request");
+    }
+
+    private void cancelRequest(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String artifactStrID = URI.replace("/mentor/request/cancel/", "");
+        int artifactID = Integer.parseInt(artifactStrID);
+        useRequest(artifactID, "In wallet");
+        redirectTo(httpExchange,"/mentor/request");
+    }
+
+    private void useRequest(int artifactID, String status){
+        try {
+            Artifact artifact = artifactDao.getInstantiatedArtifact(artifactID);
+            artifact.setStatus(status);
+            artifactDao.updateArtifactStatus(artifact);
+        }catch(DataAccessException e){
+            e.printStackTrace();
+            //TODO: display error
+        }
+
+}
 
 //    private MentorView view;
 //    private InputController inputController;

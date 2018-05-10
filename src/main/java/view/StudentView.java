@@ -1,5 +1,8 @@
 package view;
 
+import dao.GroupDAO;
+import dao.GroupDAOSQL;
+import exceptions.DataAccessException;
 import model.*;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
@@ -8,12 +11,15 @@ import java.util.List;
 
 public class StudentView {
 
-    public String getProfileScreen (Student student, Level level) {
+    public String getProfileScreen (Student student, Level level) throws DataAccessException {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-profile.twig");
         JtwigModel model = JtwigModel.newModel();
         model.with("name", student.getFullName());
         model.with("email", student.getEmail());
-        model.with("group", student.getGroup().getName());
+        GroupDAO groupDAO = new GroupDAOSQL();
+        Group group = null;
+        group = groupDAO.getByUser(student.getID());
+        model.with("group", group.getName());
         int totalExp = student.getWallet().getTotalCoinsEarned();
         String levelStr = String.format("%s (%d EXP)", level.getName(), totalExp);
         model.with("level", levelStr); // Todo add reading level

@@ -18,7 +18,6 @@ import view.StudentView;
 public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
-    private InputController inputController;
     private LoginDAOSQL loginDao = new LoginDAOSQL();
     private LevelDAO levelDao = new LevelDAOSQL();
     private StudentDAO studentDao = new StudentDAOSQL();
@@ -26,7 +25,6 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     StudentController() {
         view = new StudentView();
-        inputController = new InputController();
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
