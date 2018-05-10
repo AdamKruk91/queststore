@@ -65,8 +65,4 @@ public class AdminView extends AbstractView{
     public String getCreateLevelWithMessage(String message) {
         return createTwigWithMessage("templates/create-level-message.twig", message);
     }
-
-    public String getSomethingWentWrongPage(){
-        return createTwigWithoutArgs("templates/error-page-admin.twig");
-    }
 }
