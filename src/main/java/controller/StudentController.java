@@ -18,12 +18,8 @@ import view.StudentView;
 public class StudentController extends AbstractContoller implements HttpHandler {
 
     private StudentView view;
-<<<<<<< HEAD
     private InputController inputController;
     private LoginDAO loginDao = new LoginDAOSQL();
-=======
-    private LoginDAOSQL loginDao = new LoginDAOSQL();
->>>>>>> refactor-week-1.0
     private LevelDAO levelDao = new LevelDAOSQL();
     private StudentDAO studentDao = new StudentDAOSQL();
     private ArtifactDAO artifactDao = new ArtifactDAOSQL();
