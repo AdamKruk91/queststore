@@ -89,6 +89,10 @@ public class GroupDAOSQL extends ManipulationDAOSQL implements GroupDAO {
                         StudentDAO studentDAO = new StudentDAOSQL();
                         students.add(studentDAO.get(userID));
                         break;
+                    case MENTOR_CATEGORY_ID:
+                        MentorDAO mentorDAO = new MentorDAOSQL();
+                        mentors.add(mentorDAO.get(userID));
+                        break;
 
                 }
             }
