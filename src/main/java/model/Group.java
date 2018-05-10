@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Group {
 
@@ -57,5 +58,9 @@ public class Group {
     public IteratorImpl getMentorsIterator(){
         IteratorImpl iterator = new IteratorImpl<Mentor>(mentorsList);
         return iterator;
+    }
+
+    public List<Student> getStudents(){
+        return studentsList;
     }
 }
