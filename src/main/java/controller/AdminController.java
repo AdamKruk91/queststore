@@ -45,7 +45,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
     }
 
     private void handleRendering(HttpExchange httpExchange, int loginID) throws IOException {
-        //TODO get URI and do switch on it
         String URI = httpExchange.getRequestURI().toString();
 
         if(URI.contains("/static")) {
@@ -142,7 +141,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     mentorDao.update(mentor);
                     renderEditMentor(httpExchange);
                 } catch (DataAccessException e) {
-                    renderEditMentor(httpExchange); // Todo Something went wrong with editing mentor
+                    handleNegativeResponse(httpExchange, "/admin/error");
                 }
             } else {
                 renderEditMentor(httpExchange);
