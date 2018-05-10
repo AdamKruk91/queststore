@@ -63,4 +63,12 @@ public class StudentView {
         model.with("artifacts", artifacts);
         return template.render(model);
     }
+
+    public String getMyClassScreen(Student student, Group group) {
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student-myclass.twig");
+        JtwigModel model = JtwigModel.newModel();
+
+        model.with("group", group);
+        return template.render(model);
+    }
 }

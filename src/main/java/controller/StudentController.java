@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpHandler;
 import dao.*;
 import exceptions.DataAccessException;
 import model.Artifact;
+import model.Group;
 import model.Level;
 import model.Student;
 import view.StudentView;
@@ -23,6 +24,7 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private StudentDAO studentDao = new StudentDAOSQL();
     private ArtifactDAO artifactDao = new ArtifactDAOSQL();
     private WalletDAO walletDao = new WalletDAOSQL();
+    private GroupDAO groupDAO = new GroupDAOSQL();
 
     StudentController() {
         view = new StudentView();
@@ -66,6 +68,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
             buyArtifact(httpExchange, userID);
         } else if(URI.startsWith("/student/wallet/cancel/")) {
             cancelUseArtifact(httpExchange);
+        } else if(URI.startsWith("/student/profile/")) {
+            displayProfile(httpExchange);
         } else {
 
             switch (URI) {
@@ -179,6 +183,13 @@ public class StudentController extends AbstractContoller implements HttpHandler 
 
     }
 
+    private void displayProfile(HttpExchange httpExchange) throws IOException {
+        final String URI = httpExchange.getRequestURI().toString();
+        String userIDStr = URI.replace("/student/profile/", "");
+        int userID = Integer.parseInt(userIDStr);
+            renderProfile(httpExchange, userID);
+    }
+
     private void renderWallet(HttpExchange httpExchange, int userID) throws IOException {
         try {
             Student student = studentDao.get(userID);
@@ -246,9 +257,8 @@ public class StudentController extends AbstractContoller implements HttpHandler 
     private void renderMyClass(HttpExchange httpExchange, int userID) throws IOException {
         try {
             Student student = studentDao.get(userID);
-            List<Artifact> artifacts;
-            artifacts = artifactDao.getArtifactCollection();
-            String response = view.getStoreScreen(student, artifacts);
+            Group group = groupDAO.getByUser(userID);
+            String response = view.getMyClassScreen(student, group);
             httpExchange.sendResponseHeaders(200, response.length());
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
