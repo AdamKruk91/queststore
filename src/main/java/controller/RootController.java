@@ -1,6 +1,5 @@
 package controller;
 
-
 import com.sun.net.httpserver.HttpServer;
 import view.Static;
 
@@ -10,7 +9,6 @@ public class RootController {
 
     public static void main(String[] args) {
 
-
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
@@ -19,6 +17,7 @@ public class RootController {
             server.createContext("/student", new StudentController());
             server.createContext("/logout", new LogoutController());
             server.createContext("/admin", new AdminController());
+            server.createContext("/error", new ErrorController());
             server.setExecutor(null);
 
             server.start();
