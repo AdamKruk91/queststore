@@ -51,7 +51,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         if(URI.contains("/static")) {
             redirectTo(httpExchange, URI.substring(URI.indexOf("/static")));
         } else if(URI.contains("/admin/display-mentors/delete/")){
-            deleteMentor(httpExchange);
+            handleDeleteMentor(httpExchange);
         } else {
             System.out.println(URI);
             switch (URI) {
@@ -204,7 +204,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
         return new Mentor(id, login, password, firstName, lastName, email, groups);
     }
 
-    private void deleteMentor(HttpExchange httpExchange) throws IOException {
+    private void handleDeleteMentor(HttpExchange httpExchange) throws IOException {
         final String URI = httpExchange.getRequestURI().toString();
         String mentorStrID = URI.replace("/admin/display-mentors/delete/", "");
         int mentorID = Integer.parseInt(mentorStrID);
