@@ -13,7 +13,6 @@ import java.util.List;
 
 public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
     private WalletDAO walletDAO = new WalletDAOSQL();
-    private GroupDAO groupDao = new GroupDAOSQL();
     private final int USER_CATEGORY_ID = 1;
 
 
@@ -119,9 +118,8 @@ public class StudentDAOSQL extends ManipulationDAOSQL implements StudentDAO {
             String name = rs.getString("name");
             String surname = rs.getString("surname");
             String email = rs.getString("email");
-            Group group = groupDao.getByID(userId);
             Wallet wallet = walletDAO.get(userId);
-            return new Student(userId, login, password, name, surname, email, group, wallet);
+            return new Student(userId, login, password, name, surname, email, wallet);
         }catch (SQLException e){
             throw new DataAccessException("Get student from result set failed!");
         }
