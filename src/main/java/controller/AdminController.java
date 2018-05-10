@@ -39,7 +39,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             }
         } catch (DataAccessException e) {
             e.printStackTrace();
-            //TODO: display error page
+            handleNegativeResponse(httpExchange, "/error");
         }
 
     }
@@ -77,9 +77,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                 case "/admin/manage-level":
                     handleManageLevel(httpExchange);
                     break;
-                case "/admin/error":
-                    handleErrorPage(httpExchange);
-                    break;
                 case "/admin":
                     renderProfile(httpExchange, loginID);
                     break;
@@ -103,7 +100,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
             String response = view.getMentorsDisplay(allMentors);
             handlePositiveResponse(httpExchange, response);
         } catch (DataAccessException e){
-            handleNegativeResponse(httpExchange, "/admin/error");
+            handleNegativeResponse(httpExchange, "/error");
         }
     }
 
@@ -141,7 +138,7 @@ public class AdminController extends AbstractContoller implements HttpHandler {
                     mentorDao.update(mentor);
                     renderEditMentor(httpExchange);
                 } catch (DataAccessException e) {
-                    handleNegativeResponse(httpExchange, "/admin/error");
+                    handleNegativeResponse(httpExchange, "/error");
                 }
             } else {
                 renderEditMentor(httpExchange);
@@ -245,11 +242,6 @@ public class AdminController extends AbstractContoller implements HttpHandler {
 
     private void renderCreateLevelWithMessage(HttpExchange httpExchange, String message) throws IOException {
         String response = view.getCreateLevelWithMessage(message);
-        handlePositiveResponse(httpExchange, response);
-    }
-
-    private void handleErrorPage(HttpExchange httpExchange) throws IOException{
-        String response = view.getSomethingWentWrongPage();
         handlePositiveResponse(httpExchange, response);
     }
 
