@@ -81,4 +81,10 @@ public class AdminView {
         model.with("message", message);
         return template.render(model);
     }
+
+    public String getSomethingWentWrongPage(){
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/error-page-admin.twig");
+        JtwigModel model = JtwigModel.newModel();
+        return template.render(model);
+    }
 }
