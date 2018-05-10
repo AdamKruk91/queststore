@@ -12,7 +12,7 @@ import org.jtwig.JtwigTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MentorView {
+public class MentorView extends AbstractView{
 
     public String getRequestScreen(Mentor mentor) throws DataAccessException {
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor-request.twig");
@@ -22,6 +22,11 @@ public class MentorView {
             List<Student> students = new ArrayList<>();
             students.addAll(group.getStudents());
             model.with("student_list", students);
+            model.with("group", group.getName());
             return template.render(model);
         }
+
+    public String getCreateArtifactScreen() {
+        return createTwigWithoutArgs("templates/create-artifact.twig");
     }
+}

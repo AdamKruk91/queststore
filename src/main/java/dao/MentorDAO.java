@@ -12,4 +12,5 @@ public interface MentorDAO {
     List<Mentor> getAll() throws DataAccessException;
     void delete(int id) throws DataAccessException;
     Mentor get(int id) throws DataAccessException;
+    int getByLogin(String login) throws DataAccessException;
 }

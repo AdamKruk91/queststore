@@ -3,10 +3,17 @@ package model;
 public class Mentor extends User {
 
     private String userCategory = "Mentor";
+    private int groupID;
 
     public Mentor(String login, String password,
                   String name, String surname, String email){
         super(login, password, name, surname, email);
+    }
+
+    public Mentor(String login, String password,
+                  String name, String surname, String email, int groupID){
+        super(login, password, name, surname, email);
+        this.groupID = groupID;
     }
 
     public Mentor(int ID, String login, String password,
@@ -22,4 +29,7 @@ public class Mentor extends User {
         this.userCategory = userCategory;
     }
 
+    public int getGroupID() {
+        return groupID;
+    }
 }
