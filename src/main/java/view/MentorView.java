@@ -15,7 +15,7 @@ public class MentorView {
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/mentor-request.twig");
             JtwigModel model = JtwigModel.newModel();
             List<Group> groups = mentor.getGroup();
-            List<Student> students = new ArrayList();
+            List<Student> students = new ArrayList<>();
             for(Group group : groups) {
                 students.addAll(group.getStudents());
             }
