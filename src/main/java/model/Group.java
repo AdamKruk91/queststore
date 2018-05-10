@@ -34,33 +34,11 @@ public class Group {
         this.name = name;
     }
 
-    public void addCodecooler(Student student){
-        studentsList.add(student);
-    }
-
-    public void removeCodecooler(Student student){
-        studentsList.remove(student);
-    }
-
-    public void addMentor(Mentor mentor){
-        mentorsList.add(mentor);
-    }
-
-    public void removeMentor(Mentor mentor){
-        mentorsList.remove(mentor);
-    }
-
-    public IteratorImpl getCodecoolersIterator(){
-        IteratorImpl iterator = new IteratorImpl<Student>(studentsList);
-        return iterator;
-    }
-
-    public IteratorImpl getMentorsIterator(){
-        IteratorImpl iterator = new IteratorImpl<Mentor>(mentorsList);
-        return iterator;
-    }
-
     public List<Student> getStudents(){
         return studentsList;
+    }
+
+    public ArrayList<Mentor> getMentors() {
+        return mentorsList;
     }
 }
