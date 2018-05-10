@@ -27,6 +27,8 @@
         <nav>
             <ul>
                 <li><a href="/mentor/request" class="button">Display request</a></li>
+                <li><a href="/mentor/create-artifact" class="button">Create artifact</a></li>
+
             </ul>
         </nav>
     </aside>
@@ -52,7 +54,7 @@
                         {% if artifact.status == "Use requested" %}
                             {% set counter = counter + 1 %}
                         <td>{{ student.name }} {{ student.surname }}</td>
-                        <td>{{ student.group.name }}</td>
+                        <td>{{ group }}</td>
                         <td onclick="switchInfo('artifact{{ counter }}')">{{ artifact.name }}</td>
                         <td><a href="/mentor/request/accept/{{ artifact.ID }}">Accept</a>
                             <a href="/mentor/request/cancel/{{ artifact.ID }}">Cancel</a></td>
